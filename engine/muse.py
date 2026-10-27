@@ -51,7 +51,31 @@ def _load_key():
     raise MuseError("No MODEL_API_KEY found. Put it in muse-circle/.env as MODEL_API_KEY=...")
 
 
+# Rashad's Meta credits are $150. Stop at $100 so he hears about it before the money runs low.
+BUDGET_STOP = float(os.environ.get("MUSE_BUDGET_STOP", "100"))
+PRICE_IN, PRICE_OUT, PRICE_IMAGE = 1.25, 4.25, 0.01   # Muse Spark list prices per million tokens; per image
+
+
+def spent():
+    """Estimated dollars spent so far, from the usage log (list prices; Meta's billing page is exact)."""
+    total = 0.0
+    try:
+        for line in USAGE_LOG.read_text().splitlines():
+            try:
+                u = json.loads(line).get("usage") or {}
+            except ValueError:
+                continue
+            total += (u.get("prompt_tokens", 0) or 0) / 1e6 * PRICE_IN + (u.get("completion_tokens", 0) or 0) / 1e6 * PRICE_OUT
+            total += (u.get("images", 0) or 0) * PRICE_IMAGE
+    except OSError:
+        pass
+    return total
+
+
 def _post(path, body, timeout=120):
+    so_far = spent()
+    if so_far >= BUDGET_STOP:
+        raise MuseError(f"Budget stop: about ${so_far:.2f} spent, at or over the ${BUDGET_STOP:.0f} limit. Ask Rashad before going on.")
     req = urllib.request.Request(
         BASE_URL + path,
         data=json.dumps(body).encode("utf-8"),
@@ -62,7 +86,10 @@ def _post(path, body, timeout=120):
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=timeout, context=_SSL) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+        data = json.loads(resp.read().decode("utf-8"))
+    if path.startswith("/images"):
+        _log_usage(body.get("model", "image"), {"images": len(data.get("data", []))}, "image")
+    return data
 
 
 def _log_usage(model, usage, label):
