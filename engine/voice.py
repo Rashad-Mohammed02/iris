@@ -17,7 +17,7 @@ BANNED = {
     "reason or signal": [
         "because", "since", "after", "due to", "scrolling", "up late", "late nights", "reels", "reel",
         "hasn't replied", "quiet lately", "messages", "journal", "pattern", "noticed", "muse saw", "data",
-        "instagram", "online", "posting",
+        "instagram", "online", "posting", "lately",
     ],
     "therapy": [
         "support", "self-care", "holding space", "validate", "process", "boundaries", "mental health", "wellbeing",

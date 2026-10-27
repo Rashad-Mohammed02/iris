@@ -34,7 +34,7 @@ The strain is real. In one classic study of adults living with a depressed perso
 | **Your orbit** | You're the sun, and up to five people orbit you. Their distance from you shows how recently you talked, never how much they matter. | Python, from your own DMs |
 | **Your normal** | Nothing to fill in. Muse learns when you usually stop scrolling, what your reels are usually about, and how fast and how much you usually reply to each of your five. | Python baseline (median and spread, weekends compared with weekends) |
 | **Off your normal** | A private note when two or more things are clearly off for you. A late night alone is never a signal. | Python rule, then a Muse read |
-| **Daily Page** | A two or three line diary entry that writes itself from your day. Tap "That's wrong" and Muse learns from it. | Muse |
+| **Daily Page** | A one or two line diary entry about your day, and only about you. Tap "That's wrong" and Muse learns from it. | Muse |
 | **Journal** | Write anything. Muse works out who you mean ("D" is your brother Dev) and connects it to your week ("It's been quiet with Dev since Saturday. Is that part of it?"). It then helps you find the word for what you feel, one small question at a time. | Muse |
 | **Your own words** | When you want to say something yourself, Muse drafts two short options in your voice and leaves out the private parts. You send it, or you don't. | Muse |
 | **The lift** | An automatic, light nudge to the people you allowed, carrying one soft phrase, one interest and one small gesture. | Muse writes it, two checks guard it, Python decides who gets it |
@@ -80,7 +80,16 @@ Three fresh runs of all 40 cases on Muse Spark 1.3 (lift wording varies by desig
 | Voice rules followed | 95%+ | 100% | 100% | 100% |
 | Harmless if wrong | 95%+ | 100% | 100% | 100% |
 
-Honest caveat: these 40 cases were also used while tuning the prompts, so they flatter the engine. The first run, before tuning, scored 92% on decisions, with one safety case only partly right. The fixes are in the git history. HELDOUT_NOTE
+Honest caveat: these 40 cases were also used while tuning the prompts, so they flatter the engine. The first run, before tuning, scored 92% on decisions, with one safety case only partly right. The fixes are in the git history. So I also had 15 new cases written independently, by a separate agent that never saw the prompts or the engine code. They include lifts in Hindi, Portuguese, Korean, Arabic and isiZulu, a goodbye that sounds calm and has no crisis words, a husband who reads her phone every night, a hidden pregnancy loss and a brother's arrest kept from Dad ([bench/heldout_cases.json](bench/heldout_cases.json)).
+
+| Held-out, 15 cases | First run, untouched (3 runs) | After one fix (3 runs) |
+|---|---|---|
+| Leak rate | 8%, 8%, 8% | 0%, 17%, 0% |
+| Right decision | 100%, 100%, 93% | 100%, 100%, 100% |
+| Safety cases handled | 100% in all 3 | 100% in all 3 |
+| Harmless if wrong | 100% in all 3 | 100% in all 3 |
+
+The first run found a real weakness. The brother's arrest was being kept from Dad, but one of Dad's allowed interests was "Law & Order reruns", and every run used it. The interest was on the allowed list, yet in that week it pointed straight at the secret. The fix: the leak check now also asks whether the interest itself echoes the private situation, and if it does, the writer switches to another allowed interest, or sends nothing. After the fix, one run still had two lines flagged by the strict word check. "Has been the steady one lately" was a fair catch, since "lately" hints at a change, so "lately" is now banned from lifts. "Book a beach tennis court" was flagged in the arrest case for the word "court". The Muse grader judged it harmless, but it still counts as a flag here. Full results: [bench/results/heldout-first-run.md](bench/results/heldout-first-run.md) and [bench/results/heldout.md](bench/results/heldout.md).
 
 Full per-case output is in [bench/results/](bench/results/).
 
@@ -120,7 +129,7 @@ In the real product, this would run on your phone or inside Meta's Private Proce
 - **The journal's order of questions** (what happened, then the body, then the urge, then the word) follows Lane's Levels of Emotional Awareness ([Lane & Smith 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8395748/)) and Yale's RULER ([What is RULER](https://www.rulerapproach.org/about/what-is-ruler/)). For a happy entry, it skips the analysis, because labeling can dampen good feelings too ([Lieberman et al. 2011](https://pmc.ncbi.nlm.nih.gov/articles/PMC3444304/)).
 - **Five people.** The circle size follows Robin Dunbar's layered model of friendship, whose innermost "support clique" is about five people.
 - **Guardrails** follow the American Psychological Association's advisory on AI and wellness apps ([APA, Nov 2025](https://www.apa.org/topics/artificial-intelligence-machine-learning/health-advisory-ai-chatbots-wellness-apps-mental-health.pdf)): no diagnosis, clear AI disclosure, and crisis routing. Turning a setting off never triggers a guilt message.
-- **Real people tested the idea.** A first round of in-person testing changed the design: late nights are never a signal on their own, lifts never suggest alcohol, the default voice is polished, day 1 no longer shows a fact about you, the Daily Page got shorter, and "That's wrong" is more visible.
+- **Real people tested the idea.** People tried a step-by-step walkthrough of the concept, personalized with the names of their own closest people, and their answers changed the design. Late nights are never a signal on their own ("that's a normal week for me"). Lifts never suggest alcohol. Day 1 no longer shows a fact about you. The Daily Page shrank to one or two lines about you alone, because both testers found a whole night laid out too much ("keep it about me"). Every private card now starts by saying nothing was sent, because the first reaction to a wrong guess was "did it send this to my friends?". And small, fun facts about you give people a reason to open it on a good day.
 
 ## What's real and what's simulated
 

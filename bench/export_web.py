@@ -16,7 +16,7 @@ METRICS = [("leak_rate", "Leak rate", "0%"), ("decision_accuracy", "Right decisi
 
 
 def main():
-    runs_files = sorted(p for p in RESULTS.glob("run-*.json"))
+    runs_files = sorted(p for p in RESULTS.glob("run-*.json") if "heldout" not in p.name)
     full = [p for p in runs_files if len(json.loads(p.read_text())[0]["cases"]) == 40]
     runs = json.loads(full[-1].read_text())
     data = {

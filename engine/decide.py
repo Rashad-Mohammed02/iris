@@ -121,6 +121,10 @@ def decide(situation, reading=None, write_lifts=True):
         for m, kind in to_write:
             recent = situation.get("recent_lines", {}).get(m["name"], []) + today
             w = lift_writer.write(situation, m, kind, recent)
+            if w is None:
+                # Every allowed interest would hint at something private this week. Send nothing.
+                out["not_sent"].append({"name": m["name"], "why": "No interest was safe to mention this week"})
+                continue
             today.append(w["text"])
             w.update(status="queued", undo_minutes=UNDO_MINUTES)
             out["lifts"].append(w)

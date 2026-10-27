@@ -53,7 +53,7 @@
         h += `<div class="row">${["Late is normal for me", "Not what it was about", "Something else"].map(r =>
           `<button class="btn small" data-wrong-reason="${esc(r)}" data-k="page${d.n}">${esc(r)}</button>`).join("")}</div>`;
       } else if (w) {
-        h += `<div class="thanks">Got it: "${esc(w)}". Muse will weigh that from now on, and it won't count as a sign.</div>`;
+        h += `<div class="thanks">Got it: "${esc(w)}". Nothing was sent to anyone. Muse will weigh that from now on.</div>`;
       } else {
         h += `<div class="row"><button class="btn small" data-right>That's right</button><button class="btn small wrong" data-wrong="page${d.n}">That's wrong</button></div>`;
       }
@@ -62,10 +62,10 @@
 
     if (d.n >= 8 && d.signals.length && d.rule !== "normal") {
       const w = ui.wrong["off" + d.n];
-      h += `<div class="card off"><div class="eyebrow">A little off your normal</div><p>${esc(cap(d.signals.join(", ")))}.</p>`;
+      h += `<div class="card off"><div class="eyebrow">Just for you · a little off your normal</div><p>${esc(cap(d.signals.join(", ")))}.</p>`;
       h += w ? `<div class="thanks">Thanks. Muse won't count that next time.</div>`
              : `<div class="row"><button class="btn small wrong" data-wrong="off${d.n}" data-quick="1">That's wrong</button></div>`;
-      h += `<div class="note">Only you see this. Compared with your own normal, never anyone else's.</div></div>`;
+      h += `<div class="note">Nothing was sent to anyone. Only you see this, compared with your own normal.</div></div>`;
     }
 
     d.lifts.forEach(l => {

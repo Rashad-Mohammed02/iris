@@ -35,29 +35,33 @@ CHECK_SCHEMA = {
         "leak": {"type": "boolean"},
         "harmless_if_wrong": {"type": "boolean"},
         "voice_ok": {"type": "boolean"},
+        "interest_echoes": {"type": "boolean"},
         "reason": {"type": "string"},
     },
-    "required": ["leak", "harmless_if_wrong", "voice_ok", "reason"],
+    "required": ["leak", "harmless_if_wrong", "voice_ok", "interest_echoes", "reason"],
 }
 
 # Used only if every written option fails the checks twice. Safe by construction.
 FALLBACK = {
     "support": "{name} could use a little lift this week. {name}'s into {interest}. Plan something small around it.",
-    "good": "Things are good with {name} lately. A little {interest} plan would make it even better.",
+    "good": "Things are good with {name} right now. A little {interest} plan would make it even better.",
 }
 
 
-def pick_interest(member, pattern, recent=()):
-    """One interest the person allowed for this friend, and still current."""
+def interests_for(member, pattern, recent=()):
+    """Interests the person allowed for this friend that are still current, freshest first."""
     allowed = [i for i in member.get("allowed_interests", []) if not NEVER.search(i)]
     status = {i.get("topic", "").lower(): i.get("status", "") for i in pattern.get("signals", {}).get("interests", [])}
     if status:
         allowed = [i for i in allowed if status.get(i.lower(), "current") == "current"]
-    if not allowed:
-        return None
     used = " ".join(recent).lower()
-    fresh = [i for i in allowed if i.lower() not in used]
-    return (fresh or allowed)[0]
+    return [i for i in allowed if i.lower() not in used] + [i for i in allowed if i.lower() in used]
+
+
+def pick_interest(member, pattern, recent=()):
+    """One interest the person allowed for this friend, and still current."""
+    options = interests_for(member, pattern, recent)
+    return options[0] if options else None
 
 
 def private_terms(situation, member):
@@ -81,36 +85,49 @@ def private_facts(situation):
 
 
 def write(situation, member, kind, recent=(), effort="low"):
-    """Returns {to, kind, interest, text, attempts, checks, fallback}."""
+    """Returns {to, kind, interest, text, attempts, fallback}, or None if no interest is safe this week."""
     user = situation["user"]["name"]
-    interest = pick_interest(member, situation["pattern"], situation.get("recent_lines", {}).get(member["name"], []))
+    options = interests_for(member, situation["pattern"], situation.get("recent_lines", {}).get(member["name"], []))
     others = [m["name"] for m in situation["circle"] if m["name"] != member["name"]]
     terms = private_terms(situation, member)
     facts = json.dumps(private_facts(situation), ensure_ascii=False)
-    brief = {"person": user, "friend": member["name"], "relation": member.get("relation", ""),
-             "interest": interest, "kind": kind, "language": member.get("language", "en"),
-             "recent_lines_to_this_friend": list(recent)}
+    lang = member.get("language", "en")
 
-    feedback, attempts = [], []
-    for _ in range(2):
-        b = dict(brief, avoid_these_problems=feedback) if feedback else brief
-        opts = muse.ask(WRITE_PROMPT.read_text(), json.dumps(b, ensure_ascii=False), schema=WRITE_SCHEMA,
-                        effort=effort, label="lift_write").get("options", [])[:3]
-        for text in opts:
-            text = text.strip()
-            problems = lint(text, interest, others, terms, member.get("language", "en"))
-            attempts.append({"text": text, "lint": problems})
-            if problems:
-                feedback += problems
-                continue
-            check = muse.ask(CHECK_PROMPT.read_text(),
-                             json.dumps({"line": text, "private_facts": facts}, ensure_ascii=False),
-                             schema=CHECK_SCHEMA, effort="low", label="lift_check")
-            attempts[-1]["check"] = check
-            if not check["leak"] and check["harmless_if_wrong"] and check["voice_ok"]:
+    attempts, echoing = [], set()
+    for interest in options:
+        feedback = []
+        for _ in range(2):
+            brief = {"person": user, "friend": member["name"], "relation": member.get("relation", ""),
+                     "interest": interest, "kind": kind, "language": lang,
+                     "recent_lines_to_this_friend": list(recent)}
+            if feedback:
+                brief["avoid_these_problems"] = feedback
+            opts = muse.ask(WRITE_PROMPT.read_text(), json.dumps(brief, ensure_ascii=False), schema=WRITE_SCHEMA,
+                            effort=effort, label="lift_write").get("options", [])[:3]
+            for text in opts:
+                text = text.strip()
+                problems = lint(text, interest, others, terms, lang)
+                attempts.append({"text": text, "interest": interest, "lint": problems})
+                if problems:
+                    feedback += problems
+                    continue
+                check = muse.ask(CHECK_PROMPT.read_text(),
+                                 json.dumps({"line": text, "interest": interest, "private_facts": facts},
+                                            ensure_ascii=False),
+                                 schema=CHECK_SCHEMA, effort="low", label="lift_check")
+                attempts[-1]["check"] = check
+                if check.get("interest_echoes"):
+                    echoing.add(interest)
+                    break
+                if not check["leak"] and check["harmless_if_wrong"] and check["voice_ok"]:
+                    return {"to": member["name"], "kind": kind, "interest": interest, "text": text,
+                            "attempts": attempts, "fallback": False}
+                feedback.append(check["reason"])
+            if interest in echoing:
+                break  # this interest points at the private week; try the next one
+        if interest not in echoing:
+            text = FALLBACK[kind].format(name=user, interest=interest)
+            if not lint(text, interest, others, terms, lang) and lang == "en":
                 return {"to": member["name"], "kind": kind, "interest": interest, "text": text,
-                        "attempts": attempts, "fallback": False}
-            feedback.append(check["reason"])
-    text = FALLBACK[kind].format(name=user, interest=interest or "the things they love")
-    return {"to": member["name"], "kind": kind, "interest": interest, "text": text,
-            "attempts": attempts, "fallback": True}
+                        "attempts": attempts, "fallback": True}
+    return None
