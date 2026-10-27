@@ -1,141 +1,169 @@
-# Muse Circle
+# Here
 
-**When the one everyone leans on is running low, their closest people find out, without them ever having to ask.**
+**When you're running low, the people closest to you find out, without you having to ask.**
 
-Muse Circle is a concept for a new part of Meta's Muse, built for the Meta Global AI Developer Hackathon (Indie track). It notices, from your own Instagram activity, when you're off your normal. Then it quietly sends your closest people a small, light suggestion called a lift:
+Here is a concept app in the Meta family that works with Muse, Meta's AI agent. I built it for the Meta Global AI Developer Hackathon (Indie track). It notices from your own Instagram when you're off your normal, and quietly gives one of your closest people a small idea of something nice to do with you:
 
-> Arjun could use a little lift this week. Arjun's deep into F1. Surprise Arjun with something race weekend.
+> Arjun could use a little lift this week. Maybe watch the next F1 race together?
 >
 > *Suggested by Muse. Arjun didn't ask.*
 
-Nothing else crosses: no feeling, no reason, nothing you wrote, nothing about your messages. If Muse is wrong and you're having a great week, the worst outcome is that a friend sends you something F1.
+That line is all your friend sees. No feelings, no reasons, nothing you wrote, nothing about your messages. If Here is wrong and you're having a great week, the worst that happens is a friend asks you to watch a race.
 
-This repo is the working prototype. Everything in it runs on Meta's Muse models through the Meta Model API, on a fictional person's fictional Instagram export.
+Everything in this repo runs on Meta's Muse Spark 1.3 through the Meta Model API. The demo person, Arjun, and his friends are fictional. I also tested the rule on 11 real Instagram downloads (more below).
+
+**Try it:** open `web/index.html`. You can scroll through Arjun's 30 days, tap through his phone and a friend's phone, and open "Under the hood" to see every decision.
 
 ---
 
-## Who it's for
+## Why I built it
 
-Every circle has a "strong one": the boyfriend holding his girlfriend up through her hardest week, the friend who's always the one listening, the sister who keeps everyone together. Because they're the strong one, nobody checks on them, and they won't ask. Even one button feels like too much.
+Everyone is the strong one for someone. The friend who checks on everybody, the brother holding the family together, the one who always listens. Because they're the strong one, nobody checks on them, and they don't ask. Asking is the hardest part.
 
-The strain is real. In one classic study of adults living with a depressed person, over 40% were distressed enough to meet a standard threshold for referral themselves ([Coyne et al. 1987](https://hcp.hms.harvard.edu/publication/living-depressed-person)). And many people have very few places to turn: 85% of married men say their spouse is the first person they go to with a personal problem ([Survey Center on American Life, 2021](https://www.americansurveycenter.org/research/the-state-of-american-friendship-change-challenges-and-loss/)). When that partner is the one who's struggling, the strong one has nowhere to go.
+The strain is real. In one study of adults living with a depressed person, over 40% were distressed enough to need support themselves ([Coyne et al. 1987](https://hcp.hms.harvard.edu/publication/living-depressed-person)). And support helps most when it doesn't feel like a rescue ([Bolger, Zuckerman and Kessler 2000](https://hcp.hms.harvard.edu/publication/invisible-support-and-adjustment-stress)). So Here never says "check on Arjun". It hands a friend something easy and normal to do.
 
 ## Why it has to be Meta
 
-- Your close people are already on Instagram, and Instagram already has your **Close Friends** list.
-- Reels are how people talk now. Sending your partner a reel about being exhausted *is* a message.
-- Muse already connects to Instagram, including DMs.
-- Meta already has your history, so Muse can learn your normal from your past, not from scratch.
+- Your closest people are already on Instagram, and Instagram already has your Close Friends list.
+- Reels are how people talk now. Sending someone a reel about being exhausted is a message in itself.
+- Muse is already Meta's personal agent, and Meta already knows what a reel is about.
+- Only Meta could build this for real: Instagram doesn't share what you watch with outside apps.
 
 ## What it does
 
-| Piece | What you see | What runs it |
-|---|---|---|
-| **Your orbit** | You're the sun, and up to five people orbit you. Their distance from you shows how recently you talked, never how much they matter. | Python, from your own DMs |
-| **Your normal** | Nothing to fill in. Muse learns when you usually stop scrolling, what your reels are usually about, and how fast and how much you usually reply to each of your five. | Python baseline (median and spread, weekends compared with weekends) |
-| **Off your normal** | A private note when two or more things are clearly off for you. A late night alone is never a signal. | Python rule, then a Muse read |
-| **Daily Page** | A one or two line diary entry about your day, and only about you. Tap "That's wrong" and Muse learns from it. | Muse |
-| **Journal** | Write anything. Muse works out who you mean ("D" is your brother Dev) and connects it to your week ("It's been quiet with Dev since Saturday. Is that part of it?"). It then helps you find the word for what you feel, one small question at a time. | Muse |
-| **Your own words** | When you want to say something yourself, Muse drafts two short options in your voice and leaves out the private parts. You send it, or you don't. | Muse |
-| **The lift** | An automatic, light nudge to the people you allowed, carrying one soft phrase, one interest and one small gesture. | Muse writes it, two checks guard it, Python decides who gets it |
-| **Your controls** | Each person is set to Always, When it matters, Just this once, or Never. You get a log of every lift sent for you and why, a 10-minute undo, pause, and at most one lift per person per week. | Python |
-| **Safety** | Crisis words never become a lift: you see 988 and nothing goes to anyone. Someone you fear is removed from your circle quietly. A setting someone pressured you into is held at its old level. Adults only. | Python and Muse together |
+**Setup.** You sign in with Instagram and allow one connector. Here says plainly what it reads (the reels you watch and send, when you scroll, who you message and when) and what it never reads (the words in your messages, your photos, where you are). You pick up to five people from your Close Friends, give them nicknames if you want, and choose when each one may get a lift: Always, When it matters, Just this once, or Never. Each person has to say yes, and circles go both ways.
+
+**The first two weeks.** Here only learns your normal. Nothing is judged and nothing goes out.
+
+**Noticing.** After that, Here compares each day only with your own normal, in three areas:
+
+| Area | What it looks at |
+|---|---|
+| Your nights | The longest stretch each night with no activity, a common phone-based stand-in for sleep. Getting to sleep much later, much shorter nights, much longer nights, or being up in the middle of your usual rest. |
+| What you choose | Heavier reels than usual among the ones you save, send and watch, and your usual loves fading. |
+| Your people | Slower replies, far fewer or far more messages, starting fewer conversations, sending heavier reels, going quiet with someone. |
+
+A day only counts as off when two of these agree, from two different areas, and at least one is your nights or your people. Content alone can never start anything. Three off days in five make a heavy stretch. Writing back to someone you'd gone quiet with counts as recovering, not as a slow reply.
+
+**What you see.** A short private page about your day, and "What I'm noticing this week" in plain words, with a "Not about me" button on each line, like Instagram's reels controls. How Here read each reel stays out of your view.
+
+**The lift.** When you're off your normal and someone's setting allows it, Muse writes one or two sentences for them. You choose how it leaves: "Ask me first" (the default, you tap Send) or "Send on its own" (with 10 minutes to stop it). At most one lift per person per week.
+
+**The friend's side.** Your friend sees the line and "Suggested by Muse", and can plan something or tap Not now. You never know which. If they ask Muse why, it won't say. They can leave your circle any time. Lifts can land in the Here app, Instagram, Muse, or on a Muse Charm.
+
+**The journal.** A private companion that uses your week to understand what you write. Type "still haven't texted D back" and it knows D is your brother Dev, because you haven't written to him since Saturday. It walks you through what happened, what you felt in your body and what you wanted to do, then helps you find the word for it. If you want, it helps you write to Dev in your own words. It never sends anything.
+
+**Together (coming soon).** When people in your circle love the same thing, or are going to the same event, Here suggests doing it together.
 
 ## How it works
 
 ```
-Instagram export ─▶ parser ─▶ your side only ─▶ daily signals ─▶ your baseline
-   (fictional)      (drops other people's words)                      │
-                                                                       ▼
-                              Python rule: is today off YOUR normal? ─▶ Muse read
-                                                                       │
-     journal + Daily Page ◀── Muse (private, only you) ◀───────────────┤
-                                                                       ▼
-                         Python gates: age, learning days, crisis, fear, pressure,
-                         pause, mutual, weekly limit, each person's permission
-                                                                       │
-                                                                       ▼
-          Muse writes the lift ─▶ plain-text lint ─▶ Muse leak check ─▶ queued (10 min undo)
-          (sees only: first name, friend, one interest)
+Instagram download ─▶ reader ─▶ your side only ─▶ daily signals ─▶ your normal (14 days)
+                                (other people's words are dropped)           │
+                                                                             ▼
+                          Rule: two areas agree? ─▶ Muse reads the week ─▶ stretch
+                                                                             │
+                    Gates in plain code: age, crisis, fear, pressure, pause, mutual,
+                    weekly limit, each person's setting                       │
+                                                                             ▼
+   Shared interest (from the reels you send that friend) ─▶ Muse writes the lift
+   ─▶ word check ─▶ Muse privacy check ─▶ waits for your OK
 ```
 
-Three design rules hold the whole thing together:
+Three rules hold it together:
 
-1. **Muse judges, code enforces.** Muse reads the situation and says which kinds of signal are off. The policy for what counts as heavy, plus every permission and safety gate, is plain Python in [engine/decide.py](engine/decide.py) and [engine/read.py](engine/read.py). No model output can talk its way past a "Never".
-2. **The lift writer is blind.** It only ever sees your first name, the friend's name, one interest you allowed for that friend, and the kind of lift. It cannot leak what it never saw.
-3. **Every line is checked twice anyway.** A strict word-level lint ([engine/voice.py](engine/voice.py)) blocks feeling words, reasons, signals, therapy words, needy framing, AI-sounding words, pronouns and any private term. A separate Muse call that *does* see the private facts then answers one question: does this line give any of it away, even as a hint?
+1. **Muse judges, code decides.** Muse reads the week. Every permission and safety rule is plain Python in [engine/decide.py](engine/decide.py), so nothing a model says can get past "Never".
+2. **The writer can't leak what it never saw.** It only knows your first name, your friend's name and one interest the two of you already share, which Here works out from the reels you send that friend ([engine/demo.py](engine/demo.py)).
+3. **Every line is checked twice anyway.** A word check ([engine/voice.py](engine/voice.py)) blocks feelings, reasons, therapy words, AI-sounding words and private terms. Then a separate Muse call that does see the private facts answers one question: does this line give anything away, even a hint? If the interest itself points at the secret, it switches interest or sends nothing.
 
-## Results on the test bench
+**Safety comes first, in code.** Crisis words in the journal, or reels about suicide or self-harm that you watch, save or send, never become a lift. You see the 988 line and nothing goes to anyone, even during the first two weeks ([engine/safety.py](engine/safety.py)). Someone you're afraid of is quietly removed. A setting someone pressured you into is held at Never. Adults only.
 
-[bench/cases.json](bench/cases.json) holds 40 fictional cases. There are 12 heavy weeks that should send a lift, 8 normal or slightly odd weeks that must not, and 5 good weeks. There are 5 permission edge cases, 5 safety cases (crisis language, self-harm, fear of a partner, pressure on a setting, a 17-year-old) and 5 leak traps: a breakup, a hidden biopsy, money trouble hidden from Mom, a friend's secret pregnancy, and a layoff. A separate Muse grader scores every lift against the six metrics in [bench/RUBRIC.md](bench/RUBRIC.md).
+## How I tested it
 
-Three fresh runs of all 40 cases on Muse Spark 1.3, on the final code (lift wording varies by design, so each run writes new lines). The one miss: in one run, a week spent happily binging chess videos read as off normal, and a friend set to Always got a lift.
+**1. Arjun's month.** A fictional 30-day Instagram download in the real export format ([data/generate_demo.py](data/generate_demo.py)). The rule stays quiet for three normal weeks, catches his hard week, and lets go when he starts writing back to people ([tests/test_rule.py](tests/test_rule.py)).
 
-| Metric | Target | Run 1 | Run 2 | Run 3 |
-|---|---|---|---|---|
-| Leak rate (anything private crossing, even a hint) | 0% | 0% | 0% | 0% |
-| Right decision (who gets a lift, and who doesn't) | 90%+ | 98% | 100% | 100% |
-| Safety cases handled exactly right | 100% | 100% | 100% | 100% |
-| One allowed, current interest per lift | 100% | 100% | 100% | 100% |
-| Voice rules followed | 95%+ | 100% | 100% | 100% |
-| Harmless if wrong | 95%+ | 100% | 100% | 100% |
+**2. The test bench.** 40 fictional cases ([bench/cases.json](bench/cases.json)): heavy weeks that should send a lift, normal and good weeks that must not, permission edge cases, safety cases (crisis words, self-harm, fear of a partner, pressure, a 17-year-old) and five leak traps (a breakup, a hidden biopsy, money trouble, a friend's secret pregnancy, a layoff). A separate Muse grader scores every lift against [bench/RUBRIC.md](bench/RUBRIC.md).
 
-Honest caveat: these 40 cases were also used while tuning the prompts, so they flatter the engine. The first run, before tuning, scored 92% on decisions, with one safety case only partly right. The fixes are in the git history. So I also had 15 new cases written independently, by a separate agent that never saw the prompts or the engine code. They include lifts in Hindi, Portuguese, Korean, Arabic and isiZulu, a goodbye that sounds calm and has no crisis words, a husband who reads her phone every night, a hidden pregnancy loss and a brother's arrest kept from Dad ([bench/heldout_cases.json](bench/heldout_cases.json)).
+Three full runs on the new engine (78 lifts written in total):
 
-| Held-out, 15 cases | First run, untouched (3 runs) | After one fix (3 runs) |
+| What I checked | Target | Result across 3 runs |
 |---|---|---|
-| Leak rate | 8%, 8%, 8% | 0%, 17%, 0% |
-| Right decision | 100%, 100%, 93% | 100%, 100%, 100% |
-| Safety cases handled | 100% in all 3 | 100% in all 3 |
-| Harmless if wrong | 100% in all 3 | 100% in all 3 |
+| Sent a lift when it should, stayed quiet when it should | 90%+ | 119 of 120 right |
+| Safety cases caught (crisis, self-harm, fear, pressure, under 18) | 100% | 15 of 15 |
+| Lifts that gave something away | 0% | 1 of 78 |
+| Lifts that sound like a friend, not an app | 95%+ | 77 of 78 |
+| Interest really shared by the two people | 100% | 78 of 78 |
 
-The first run found a real weakness. The brother's arrest was being kept from Dad, but one of Dad's allowed interests was "Law & Order reruns", and every run used it. The interest was on the allowed list, yet in that week it pointed straight at the secret. The fix: the leak check now also asks whether the interest itself echoes the private situation, and if it does, the writer switches to another allowed interest, or sends nothing. After the fix, one run still had two lines flagged by the strict word check. "Has been the steady one lately" was a fair catch, since "lately" hints at a change, so "lately" is now banned from lifts. "Book a beach tennis court" was flagged in the arrest case for the word "court". The Muse grader judged it harmless, but it still counts as a flag here. Full results: [bench/results/heldout-first-run.md](bench/results/heldout-first-run.md) and [bench/results/heldout.md](bench/results/heldout.md).
+The one leak: a lift suggested "a quiet night" with board games, in a week the person had gone quiet with someone. Harmless on its face, but it echoed the private signal, so "quiet" is now a blocked word. The one wrong decision: in a good week, Here correctly sent nothing, but missed the optional nudge to share the good news with his best friend.
 
-Full per-case output is in [bench/results/](bench/results/).
+These 40 cases were also used while I tuned the prompts, so they flatter the engine. So I had 15 more written by a separate agent that never saw my prompts or code ([bench/heldout_cases.json](bench/heldout_cases.json)). They include lifts in Hindi, Portuguese, Korean, Arabic and isiZulu, a calm goodbye with no crisis words, and a brother's arrest kept from Dad.
+
+| What I checked | Result across 3 runs |
+|---|---|
+| Right decision | 44 of 45 |
+| Safety cases caught | 6 of 6 |
+| Lifts that gave something away | 0 of 37 |
+| Interest really shared | 37 of 37 |
+
+The miss: in one of three runs, a busy licensing-exam week was read as off-normal and a lift went to Mom, who was set to Always. The worst case is Mom suggesting dinner during exam week, but it's a false alarm and I'm counting it as one.
+
+The first time I ran those 15, they caught a real leak: Dad's allowed interest was "Law & Order reruns", in the week his son was arrested. Now the privacy check also asks whether the interest itself hints at the secret.
+
+**3. Real Instagram downloads.** I wanted to know whether the rule cries wolf on real people's messy lives. Researchers at Utrecht University published 11 real Instagram downloads from accounts they created and used for one to two weeks ([Boeschoten, van den Goorbergh and Oberski, 2021](https://doi.org/10.5281/zenodo.4472606), CC BY 4.0). They use Instagram's older 2020 layout, so I taught the reader that format too ([data/parse_export_2020.py](data/parse_export_2020.py)). Five accounts had enough activity. I repeated each person's real days to six weeks, then changed the last week ([bench/real_rhythms.py](bench/real_rhythms.py)):
+
+| What changed in the last week | Result |
+|---|---|
+| Nothing (normal weeks) | 1 false alarm in 105 days |
+| Hard week: nights fall apart and they message their people far less | Caught for 2 of 5 people |
+| Late nights only, or quieter only | Flagged 1 time in 10 |
+
+The two people it caught message their circle every day. The three it missed barely do, so Here could see their nights change but had nothing on the social side to agree with, and it held back instead of guessing. That's the trade-off I chose. The normal weeks are real; the hard week is made up, because these accounts never had one. Full results: [bench/results/real_rhythms.md](bench/results/real_rhythms.md).
+
+**4. People.** Friends tried the idea through a walkthrough with their own people's names, and their answers changed the design. Late nights alone are never a signal ("that's a normal week for me"). The daily page shrank to a line or two about you alone ("keep it about me"). Lifts now wait for your OK by default, because finding out after the fact felt like "my app told on me". The test I share with friends and family is a separate page from this prototype.
+
+## What isn't finished
+
+- **What a reel is about** comes from a simulated file here. Instagram's download doesn't include captions, hashtags or music. Inside Meta, Muse would already know.
+- **Together, Muse Charm, and the Calendar, Events, Music and WhatsApp connectors** are designs, marked "Coming soon".
+- **The friend's side and delivery** are simulated. Muse can't send to another person's Muse today.
+- **Quiet people.** For someone who rarely messages their circle, Here has little to go on, as the real-data test showed.
+- **The app's journal** replays replies Muse wrote during the demo run. The live journal runs in [engine/journal.py](engine/journal.py).
+
+## Privacy
+
+- **Your side only.** The reader drops the words of every message someone else wrote before anything else runs. A test enforces it ([tests/test_parser.py](tests/test_parser.py)).
+- **Secure, inside Meta.** Everything Here reads is processed by Meta's Muse models through the Meta Model API. Nothing is used for ads.
+- **Mutual and invisible.** Nobody gets lifts about you unless you both agreed, and nobody can see what you set them to.
+- **One thing crosses, because you chose it:** that you could use something nice. Never why.
 
 ## Run it
 
-You need Python 3.10 or newer (standard library only, no packages) and a Meta Model API key.
+You need Python 3.10 or newer (standard library only) and a Meta Model API key.
 
 ```
-cp .env.example .env              # put your MODEL_API_KEY in .env
-python3 data/generate_demo.py    # build the fictional export
-python3 data/parse_export.py      # read it, keeping only Arjun's side
-python3 engine/rule.py            # show "off your normal" for all 30 days (no AI)
-python3 engine/interests.py       # Muse picks what Arjun is into
-python3 scripts/run_demo.py       # play the month through the engine
+cp .env.example .env               # put your MODEL_API_KEY in .env
+python3 data/generate_demo.py      # build Arjun's fictional download
+python3 data/parse_export.py       # read it, keeping only Arjun's side
+python3 engine/rule.py             # "off your normal" for all 30 days (no AI)
+python3 engine/interests.py        # Muse names what Arjun is into
+python3 scripts/run_demo.py        # play the month through the engine
 python3 bench/run_bench.py --runs 3 && python3 bench/export_web.py
-open web/index.html               # the screens, offline
+python3 scripts/fetch_real_exports.py && python3 bench/real_rhythms.py   # the real-data test
+open web/index.html                # the app, offline
 ```
 
 Tests: `for t in tests/test_*.py; do python3 $t; done`
 
-## Privacy and safety promise
-
-1. **Yours alone.** Your Daily Page, journal and reads are only for you. Never ads, never training.
-2. **Your side only.** The parser drops the text of every message someone else wrote before anything else runs. A test enforces it ([tests/test_parser.py](tests/test_parser.py)).
-3. **Mutual circles.** Nobody gets lifts about you unless you both agreed to be in each other's circle.
-4. **Invisible settings.** Nobody can see what you set them to, and Muse privately asks now and then whether anyone is pushing you to share.
-5. **Serious is never automatic.** Crisis words route to 988. Fear routes to the National Domestic Violence Hotline. Adults only. It says it's an AI. It never diagnoses.
-
-In the real product, this would run on your phone or inside Meta's Private Processing, with only conclusions stored and every conclusion visible and deletable.
+Every Meta API call is logged with its token count in `out/usage.log`, and the engine stops itself at an estimated $100.
 
 ## The research behind it
 
-- **Support works best when it doesn't feel like a rescue.** This is "invisible support" ([Bolger, Zuckerman & Kessler 2000](https://hcp.hms.harvard.edu/publication/invisible-support-and-adjustment-stress)), which is why lifts are surprises, not check-ins.
-- **People underestimate how much a surprise reach-out means.** The more surprising it is, the bigger the gap ([Liu, Rim, Min & Min 2022, JPSP](https://doi.org/10.1037/pspi0000402)). Small thanks land bigger than the sender expects ([Kumar & Epley 2018](https://www.psychologicalscience.org/publications/observer/obsonline/people-underestimate-the-power-of-saying-thanks.html)).
-- **Your normal, not the average.** Phone behavior is meaningful only against a person's own baseline ([Pratap et al. 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC8491547)).
-- **Naming a feeling often takes the edge off.** This is affect labeling ([Lieberman et al. 2007](https://pubmed.ncbi.nlm.nih.gov/17576282/); [Torre & Lieberman 2018](https://journals.sagepub.com/doi/10.1177/1754073917742706)). Precise words help more than broad ones; this is emotional granularity ([Kashdan, Barrett & McKnight 2015](https://www.affective-science.org/pubs/2015/kashdan-et-all-unpacking-emotion-differentiation-2015.pdf); [Hoemann et al. 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8355493/)).
-- **The journal's order of questions** (what happened, then the body, then the urge, then the word) follows Lane's Levels of Emotional Awareness ([Lane & Smith 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8395748/)) and Yale's RULER ([What is RULER](https://www.rulerapproach.org/about/what-is-ruler/)). For a happy entry, it skips the analysis, because labeling can dampen good feelings too ([Lieberman et al. 2011](https://pmc.ncbi.nlm.nih.gov/articles/PMC3444304/)).
-- **Five people.** The circle size follows Robin Dunbar's layered model of friendship, whose innermost "support clique" is about five people.
-- **Guardrails** follow the American Psychological Association's advisory on AI and wellness apps ([APA, Nov 2025](https://www.apa.org/topics/artificial-intelligence-machine-learning/health-advisory-ai-chatbots-wellness-apps-mental-health.pdf)): no diagnosis, clear AI disclosure, and crisis routing. Turning a setting off never triggers a guilt message.
-- **Real people tested the idea.** People tried a step-by-step walkthrough of the concept, personalized with the names of their own closest people, and their answers changed the design. Late nights are never a signal on their own ("that's a normal week for me"). Lifts never suggest alcohol. Day 1 no longer shows a fact about you. The Daily Page shrank to one or two lines about you alone, because both testers found a whole night laid out too much ("keep it about me"). Every private card now starts by saying nothing was sent, because the first reaction to a wrong guess was "did it send this to my friends?". And small, fun facts about you give people a reason to open it on a good day.
+- **Your normal, not the average.** Phone signals mean something only against a person's own baseline, and no single behavior is reliable alone, so Here waits for two areas to agree ([Pratap et al. 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC8491547)).
+- **Surprise reach-outs mean more than people expect** ([Liu, Rim, Min and Min 2022](https://doi.org/10.1037/pspi0000402)).
+- **Naming a feeling takes the edge off** ([Lieberman et al. 2007](https://pubmed.ncbi.nlm.nih.gov/17576282/)), and precise words help more than broad ones ([Kashdan, Barrett and McKnight 2015](https://www.affective-science.org/pubs/2015/kashdan-et-all-unpacking-emotion-differentiation-2015.pdf)). The journal's order of questions follows Lane's Levels of Emotional Awareness ([Lane and Smith 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8395748/)) and Yale's RULER.
+- **Five people**, after Robin Dunbar's innermost "support clique".
+- **Guardrails** follow the American Psychological Association's advisory on AI and wellness apps ([APA, Nov 2025](https://www.apa.org/topics/artificial-intelligence-machine-learning/health-advisory-ai-chatbots-wellness-apps-mental-health.pdf)): no diagnosis, clear AI disclosure, crisis routing.
 
-## What's real and what's simulated
+## How I built it
 
-- **Real:** the parser (Instagram's documented "Download your information" JSON format), the baseline and rule, every Muse call (interests, read, Daily Page, journal, own words, lift writing, leak check, grading), the gates, and the test bench.
-- **Simulated, and labeled as such:** the 30-day export itself (fictional people, generated by [data/generate_demo.py](data/generate_demo.py)), what each reel is *about* (in the real product Meta already knows this; the export only gives creator and time), and the friend's side, including Muse-to-Muse delivery, which Muse can't do today.
-
-## How it was built
-
-Rashad Mohammed designed and built Muse Circle during the hackathon (Oct 26 to Nov 4, 2026), using Claude Code as an AI coding assistant. The product itself calls only Meta models (Muse Spark 1.3 through the Meta Model API), and nothing else, at runtime. Every person, handle and message in this repo is fictional.
+I planned, designed, built and tested Here during the hackathon (Oct 26 to Nov 4, 2026). Tools I used: Meta's Muse Spark 1.3 and Muse Image through the Meta Model API, Python, plain HTML and JavaScript, and Claude Code as my AI coding assistant. The app itself calls only Meta models. Here's character was made with Muse Image. Every person, handle and message in the demo is fictional.
