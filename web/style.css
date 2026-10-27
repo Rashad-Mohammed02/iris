@@ -298,3 +298,19 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
   .split { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* Icons and settings rows, in the style of Meta's own settings screens */
+.ic { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.int { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.ok, .secure { gap: 6px; display: inline-flex; align-items: center; }
+.fb button .ic { width: 20px; height: 20px; }
+.tile-ic { width: 42px; height: 42px; border-radius: 12px; background: var(--fill); display: grid; place-items: center; color: var(--ink); }
+.opt > span:first-child { display: grid; place-items: center; color: var(--ink-2); }
+.profile { display: flex; gap: 14px; align-items: center; padding: 6px 0 2px; }
+.profile .pn { font-size: 18px; font-weight: 700; }
+.sh { font-size: 13px; font-weight: 600; color: var(--ink-3); margin: 10px 0 -8px; }
+.srow { display: grid; grid-template-columns: 22px 1fr auto auto; gap: 14px; align-items: center; min-height: 48px; padding: 0; border: 0; background: none; width: 100%; text-align: left; color: var(--ink); font-size: 15px; }
+.srow .st { font-weight: 450; }
+.srow .sv { color: var(--ink-3); font-size: 14px; }
+.srow > .ic:last-child { color: var(--ink-3); }
+.srow.danger { color: var(--bad); }
