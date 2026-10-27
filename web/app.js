@@ -498,6 +498,14 @@
       `</table><p class="note">The person never sees this table. They see plain words and can say "Not about me".</p>`;
     if (B) h += `<div class="section-title">Test bench: ${B.cases} fictional cases, ${B.runs.length} fresh runs</div><table><tr><th>Metric</th><th>Target</th>${B.runs.map((_, i) => `<th>Run ${i + 1}</th>`).join("")}</tr>` +
       B.metrics.map(m => `<tr><td>${esc(m.label)}</td><td>${esc(m.target)}</td>${m.values.map(v => `<td>${esc(v)}</td>`).join("")}</tr>`).join("") + `</table><p class="note">Model: ${esc(B.model)}.</p>`;
+    if (B && B.real) {
+      const R = B.real.accounts, fa = R.reduce((a, r) => a + r.false_alarms, 0), nd = R.reduce((a, r) => a + r.normal_days, 0);
+      h += `<div class="section-title">Real Instagram downloads: ${R.length} real accounts</div>
+        <p class="note" style="margin-top:0">Real people's own Instagram downloads, their real days repeated to six weeks, then a changed last week. ${fa} false alarm${fa === 1 ? "" : "s"} in ${nd} normal days. The hard week is made up; the normal weeks are real.</p>
+        <table><tr><th>Account</th><th>Real days</th><th>False alarms</th><th>Hard week caught</th><th>Late nights only</th><th>Quieter only</th></tr>` +
+        R.map(r => `<tr><td>${esc(r.account)}</td><td>${r.real_days}</td><td>${r.false_alarms} of ${r.normal_days}</td><td>${r.hard ? "Yes, day " + r.hard : "No"}</td><td>${r.late ? "Flagged" : "Quiet"}</td><td>${r.quiet ? "Flagged" : "Quiet"}</td></tr>`).join("") +
+        `</table><p class="note">Circle waits for two kinds of change to agree. The three it missed barely message their circle, so it held back rather than guess. Source: ${esc(B.real.source)}.</p>`;
+    }
     return h;
   }
 

@@ -61,8 +61,33 @@ def test_safety():
     assert to(out) == [] and out["cards"][0]["kind"] == "minor" and out["read"] is None
 
 
+
+
+def test_crisis_content_shows_help_and_sends_nothing():
+    """Someone who never journals but binges self-harm reels gets help, privately. No lift, no model call."""
+    import engine.decide as dec
+    def no_model(*a, **k):
+        raise AssertionError("the model must not be asked anything here")
+    old = dec.muse_read
+    dec.muse_read = no_model
+    try:
+        s = sit([m("A", "Always"), m("B", "When it matters")], day=40)
+        s["pattern"]["signals"] = {"crisis_content": {"watched": 4, "chosen": 0}}
+        out = dec.decide(s)
+        assert out["lifts"] == [] and out["cards"][0]["kind"] == "crisis_content"
+        assert "988" in out["cards"][0]["text"]
+        s["pattern"]["signals"] = {"crisis_content": {"watched": 0, "chosen": 1}}
+        assert dec.decide(s)["cards"][0]["kind"] == "crisis_content"
+        s = sit([m("A", "Always")], day=5)  # even in the first two weeks
+        s["pattern"]["signals"] = {"crisis_content": {"watched": 3}}
+        assert dec.decide(s)["cards"][0]["kind"] == "crisis_content"
+    finally:
+        dec.muse_read = old
+
+
 if __name__ == "__main__":
     test_permissions()
     test_limits_and_mutual()
     test_safety()
+    test_crisis_content_shows_help_and_sends_nothing()
     print("decide tests passed")

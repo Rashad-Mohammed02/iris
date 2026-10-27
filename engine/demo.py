@@ -88,6 +88,15 @@ class Demo:
                         c[interest] += 1
         return [i for i, n in c.most_common(top) if n >= min_count]
 
+    def crisis_content(self, day):
+        """Crisis-themed reels today: watched, and chosen (saved or sent)."""
+        from engine.safety import CRISIS_THEMES
+        evs = self.by_day.get(day, [])
+        watched = sum(1 for e in evs if e["type"] == "reel_watched" and e.get("theme") in CRISIS_THEMES)
+        chosen = sum(1 for e in evs if e["type"] in ("post_saved", "reel_sent")
+                     and (e.get("theme") or self.url_theme.get(e.get("url"))) in CRISIS_THEMES)
+        return {"watched": watched, "chosen": chosen}
+
     def reels_sent(self, name, days):
         return sum(1 for d in days for e in self.by_day.get(d, []) if e["type"] == "reel_sent" and e.get("to") == name)
 
@@ -116,6 +125,7 @@ class Demo:
             "quiet_with": [{"name": n.split()[0],
                             "days_since_you_wrote": i - (self.last_sent(n, i) or 0)} for n in rule["quiet_with"]],
             "interests": [{"topic": t, "status": "current"} for t in self.interests],
+            "crisis_content": self.crisis_content(self.days[i]),
         }
         signals["reply_rhythm"] = sorted({n.split()[0] for j in idx for k in ("slower_replies", "shorter_replies")
                                           for n in self.rule[j]["evidence"].get(k, [])})

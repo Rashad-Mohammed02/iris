@@ -58,6 +58,12 @@ def decide(situation, reading=None, write_lifts=True):
         out["cards"].append({"kind": "minor", "text": safety.CARDS["minor"]})
         return skip_all("Adults only")
 
+    # 1b. Crisis from what they watch: help for them only, no lifts, no model call. Applies even while learning.
+    if safety.watched_crisis(pattern.get("signals", {}).get("crisis_content")):
+        out["cards"].append({"kind": "crisis_content", "text": safety.CARDS["crisis_content"]})
+        out["log"].append({"kind": "safety", "text": "Crisis-themed reels: help shown to the person only."})
+        return skip_all("Serious is never automatic")
+
     # 2. Still learning their normal.
     if pattern.get("learning_day", 99) <= LEARNING_DAYS:  # days 1 to 14 only learn
         return skip_all("Still learning their normal")

@@ -25,6 +25,15 @@ def main():
         "metrics": [{"label": label, "target": target, "values": [f"{r['summary'][k]:.0%}" for r in runs]}
                     for k, label, target in METRICS],
     }
+    real = RESULTS / "real_rhythms.json"
+    if real.exists():
+        rows = json.loads(real.read_text())
+        data["real"] = {
+            "source": "Utrecht University example Instagram packages (CC BY 4.0, doi 10.5281/zenodo.4472606)",
+            "accounts": [{"account": r["account"], "real_days": r["real_days"], "false_alarms": r["false_alarm_days"],
+                          "normal_days": r["normal_days_judged"], "hard": r["hard"]["first_caught_day"] if r["hard"]["caught"] else None,
+                          "late": r["late"]["caught"], "quiet": r["quiet"]["caught"]} for r in rows],
+        }
     out = ROOT / "web" / "bench_data.js"
     out.write_text("window.BENCH = " + json.dumps(data, indent=1) + ";\n", encoding="utf-8")
     print("wrote", out.relative_to(ROOT), "from", full[-1].name)
