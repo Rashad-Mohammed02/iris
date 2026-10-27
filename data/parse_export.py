@@ -23,6 +23,7 @@ from zoneinfo import ZoneInfo
 RECONNECT_S = 48 * 3600  # an answer after two days or more counts as reconnecting
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 DEFAULT_EXPORT = ROOT / "data" / "demo_export"
 OUT = ROOT / "out"
 
@@ -114,6 +115,14 @@ def parse(export, tz="America/New_York"):
     def add(ts, kind, **fields):
         loc = clock.local(ts)
         events.append({"ts": ts, "day": clock.day(ts), "hour": round(loc.hour + loc.minute / 60, 2), "type": kind, **fields})
+
+    # The older flat layout (2020) has its own reader; both give the same events and profile.
+    from data.parse_export_2020 import is_2020_layout, parse_2020
+    if is_2020_layout(export):
+        profile = parse_2020(export, add, tz)
+        events.sort(key=lambda e: e["ts"])
+        profile["days"] = sorted({e["day"] for e in events})
+        return events, profile
 
     # Owner
     prof = load(export, "profile", {})

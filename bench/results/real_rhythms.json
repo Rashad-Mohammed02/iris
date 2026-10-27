@@ -1,0 +1,215 @@
+[
+ {
+  "account": "100billionfaces",
+  "real_days": 9,
+  "real_events": {
+   "message_sent": 47,
+   "post_liked": 146,
+   "message_received": 45,
+   "reel_sent": 5,
+   "reel_watched": 86
+  },
+  "circle": 3,
+  "normal_days_judged": 21,
+  "false_alarm_days": 0,
+  "false_alarm_stretches": 0,
+  "hard": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "T1_active_window",
+    "T2_daytime_binge",
+    "T4_volume"
+   ]
+  },
+  "late": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "T1_active_window",
+    "T2_daytime_binge",
+    "T4_volume"
+   ]
+  },
+  "quiet": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "T2_daytime_binge",
+    "T4_volume"
+   ]
+  }
+ },
+ {
+  "account": "horsesarecool52",
+  "real_days": 13,
+  "real_events": {
+   "post_liked": 211,
+   "message_sent": 190,
+   "message_received": 347,
+   "reel_sent": 24,
+   "reel_watched": 76
+  },
+  "circle": 2,
+  "normal_days_judged": 21,
+  "false_alarm_days": 0,
+  "false_alarm_stretches": 0,
+  "hard": {
+   "off_days": 5,
+   "caught": true,
+   "first_caught_day": 5,
+   "families": [
+    "S2_messaging",
+    "S3_quiet_with_one",
+    "T1_active_window",
+    "T2_daytime_binge",
+    "T4_volume"
+   ]
+  },
+  "late": {
+   "off_days": 3,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "S2_messaging",
+    "T1_active_window",
+    "T2_daytime_binge",
+    "T4_volume"
+   ]
+  },
+  "quiet": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "S2_messaging",
+    "S3_quiet_with_one",
+    "T2_daytime_binge",
+    "T4_volume"
+   ]
+  }
+ },
+ {
+  "account": "katsaremeow",
+  "real_days": 9,
+  "real_events": {
+   "message_received": 33,
+   "post_liked": 26,
+   "reel_watched": 11,
+   "message_sent": 78
+  },
+  "circle": 5,
+  "normal_days_judged": 21,
+  "false_alarm_days": 0,
+  "false_alarm_stretches": 0,
+  "hard": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "T1_active_window",
+    "T4_volume"
+   ]
+  },
+  "late": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "T1_active_window",
+    "T4_volume"
+   ]
+  },
+  "quiet": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": []
+  }
+ },
+ {
+  "account": "kippie_toktok",
+  "real_days": 13,
+  "real_events": {
+   "message_received": 184,
+   "message_sent": 302,
+   "reel_sent": 25,
+   "post_liked": 35,
+   "reel_watched": 104
+  },
+  "circle": 5,
+  "normal_days_judged": 21,
+  "false_alarm_days": 0,
+  "false_alarm_stretches": 0,
+  "hard": {
+   "off_days": 4,
+   "caught": true,
+   "first_caught_day": 6,
+   "families": [
+    "S2_messaging",
+    "T1_active_window",
+    "T4_volume"
+   ]
+  },
+  "late": {
+   "off_days": 4,
+   "caught": true,
+   "first_caught_day": 6,
+   "families": [
+    "S2_messaging",
+    "T1_active_window",
+    "T4_volume"
+   ]
+  },
+  "quiet": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "S2_messaging"
+   ]
+  }
+ },
+ {
+  "account": "snowecho212",
+  "real_days": 12,
+  "real_events": {
+   "post_liked": 129,
+   "message_received": 55,
+   "message_sent": 44,
+   "reel_sent": 4,
+   "reel_watched": 44
+  },
+  "circle": 9,
+  "normal_days_judged": 21,
+  "false_alarm_days": 0,
+  "false_alarm_stretches": 0,
+  "hard": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "T1_active_window",
+    "T4_volume"
+   ]
+  },
+  "late": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": [
+    "T1_active_window",
+    "T4_volume"
+   ]
+  },
+  "quiet": {
+   "off_days": 0,
+   "caught": false,
+   "first_caught_day": null,
+   "families": []
+  }
+ }
+]

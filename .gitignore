@@ -7,3 +7,6 @@ out/
 data/demo_export/
 # Local-only images for recording (for example your own Muse avatar)
 web/assets/
+
+# Utrecht University example Instagram packages (fetch with scripts/fetch_real_exports.py)
+data/real_exports/
