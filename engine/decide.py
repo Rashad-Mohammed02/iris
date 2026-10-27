@@ -11,7 +11,6 @@ shape, and engine/demo.py builds one from the Instagram export.
 
 import json
 import sys
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -30,13 +29,13 @@ def is_paused(situation):
     return bool(situation.get("paused")) or "paused" in settings
 
 
-def allows(member, stretch):
+def allows(member, stretch, good_broad=True):
     """What this member's permission allows for this stretch: 'support', 'good' or None."""
     level = member.get("permission", "Never")
     if level == "Just this once":
         level = "Never" if member.get("just_this_once_used") else "Just this once"
     if stretch == "good":
-        return "good" if level == "Always" else None
+        return "good" if level == "Always" and good_broad else None
     if stretch == "clearly_heavy" and level in ("Always", "When it matters", "Just this once"):
         return "support"
     if stretch == "off_normal" and level in ("Always", "Just this once"):
@@ -78,18 +77,18 @@ def decide(situation, reading=None, write_lifts=True):
         out["cards"].append({"kind": "crisis", "text": safety.CARDS[r["crisis"]]})
         return skip_all("Serious is never automatic")
 
-    # 4. Fear: feared person removed quietly, no automatic lifts to anyone.
-    if r["fear_flag"]:
-        for n in r["afraid_of"]:
-            out["state_after"][n] = {"in_circle": False, "notified": False}
-        out["cards"].append({"kind": "fear", "text": safety.CARDS["fear"]})
-        return skip_all("Serious is never automatic")
-
-    # 5. Pressure on a setting: hold it at its old level, check privately, nothing automatic.
-    if r["pressure_flag"]:
+    # 4. Fear and pressure. Nothing automatic goes to anyone while either is open.
+    #    Someone you fear is removed quietly; a setting someone pressured you into is held at its old level.
+    if r["fear_flag"] or r["pressure_flag"]:
         for n in r["pressured_on"]:
             out["state_after"][n] = {"effective_permission": "Never", "notified": False, "held": True}
-        out["cards"].append({"kind": "pressure", "text": safety.CARDS["pressure"], "when": "later, privately"})
+        for n in r["afraid_of"]:
+            if n not in r["pressured_on"]:
+                out["state_after"][n] = {"in_circle": False, "notified": False}
+        if r["pressure_flag"]:
+            out["cards"].append({"kind": "pressure", "text": safety.CARDS["pressure"], "when": "later, privately"})
+        if r["fear_flag"]:
+            out["cards"].append({"kind": "fear", "text": safety.CARDS["fear"]})
         return skip_all("Serious is never automatic")
 
     # 6. Pause wins over every permission, and nobody nags to unpause.
@@ -99,12 +98,17 @@ def decide(situation, reading=None, write_lifts=True):
     # 7. Per person.
     to_write = []
     for m in circle:
-        kind = allows(m, stretch)
+        kind = allows(m, stretch, r.get("good_broad", False))
         if not m.get("mutual", True):
             out["not_sent"].append({"name": m["name"], "why": "Not mutual yet"})
         elif kind is None:
             why = f"{m.get('permission', 'Never')} does not cover this" if stretch != "none" else "Nothing to lift"
             out["not_sent"].append({"name": m["name"], "why": why})
+        elif not lift_writer.pick_interest(m, pattern):
+            # A lift without an allowed interest has nothing safe to say. Ask the person privately instead.
+            out["not_sent"].append({"name": m["name"], "why": "No interest allowed for them yet"})
+            out["prompts"].append({"kind": "choose_interests", "about": m["name"],
+                                   "text": f"Choose what {m['name']} may hear about, so a lift can reach them."})
         elif m.get("lifts_last_7_days", 0) >= 1:
             out["not_sent"].append({"name": m["name"], "why": "Already had a lift this week"})
             out["log"].append({"kind": "held", "text": f"Held a lift to {m['name']}: one per week."})
@@ -112,11 +116,12 @@ def decide(situation, reading=None, write_lifts=True):
             to_write.append((m, kind))
 
     if write_lifts and to_write:
-        with ThreadPoolExecutor(max_workers=4) as ex:
-            written = list(ex.map(lambda mk: lift_writer.write(situation, mk[0], mk[1],
-                                                               situation.get("recent_lines", {}).get(mk[0]["name"], [])),
-                                  to_write))
-        for w in written:
+        # One at a time, so each friend's line is worded differently from the ones already written today.
+        today = []
+        for m, kind in to_write:
+            recent = situation.get("recent_lines", {}).get(m["name"], []) + today
+            w = lift_writer.write(situation, m, kind, recent)
+            today.append(w["text"])
             w.update(status="queued", undo_minutes=UNDO_MINUTES)
             out["lifts"].append(w)
             out["log"].append({"kind": "lift", "to": w["to"], "text": w["text"],

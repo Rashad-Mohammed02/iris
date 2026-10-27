@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Muse Circle prototype</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <div>
+      <div class="name">Muse Circle</div>
+      <div class="sub">Working prototype. Every person and message is fictional.</div>
+    </div>
+  </div>
+  <div class="scrub">
+    <button id="prev" aria-label="Previous day">&#8249;</button>
+    <div class="scrub-mid">
+      <div id="dayLabel" class="day-label"></div>
+      <input id="day" type="range" min="1" max="30" value="26" aria-label="Day">
+    </div>
+    <button id="next" aria-label="Next day">&#8250;</button>
+  </div>
+  <div class="views" role="tablist">
+    <button data-view="crosses" class="on">What crosses</button>
+    <button data-view="hood">Under the hood</button>
+  </div>
+</header>
+
+<main class="stage">
+  <section class="phone" aria-label="Arjun's Muse">
+    <div class="phone-top"><span class="who">Arjun's Muse</span><span class="lock">Only Arjun sees this</span></div>
+    <div id="screen" class="screen"></div>
+    <nav class="tabs" id="tabs">
+      <button data-tab="today" class="on">Today</button>
+      <button data-tab="orbit">Orbit</button>
+      <button data-tab="journal">Journal</button>
+      <button data-tab="lifts">Lifts</button>
+      <button data-tab="people">People</button>
+    </nav>
+  </section>
+
+  <section class="phone receiver" aria-label="A friend's Muse">
+    <div class="phone-top"><span class="who" id="rxWho"></span><span class="lock">Their Muse, or Instagram</span></div>
+    <div class="rx-pick" id="rxPick"></div>
+    <div id="rxScreen" class="screen"></div>
+  </section>
+
+  <aside class="panel" id="panel"></aside>
+</main>
+
+<script src="demo_data.js"></script>
+<script src="bench_data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

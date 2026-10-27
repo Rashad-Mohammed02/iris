@@ -32,9 +32,10 @@ def test_guard_drops_risky_and_untraced_picks():
 
 
 def test_never_list_spot_checks():
-    for word in ("Cocktails", "home brewing", "gym", "investing", "mental health", "vape"):
+    for word in ("Cocktails", "home brewing", "gym", "investing", "mental health", "vape", "mezcal tasting",
+                 "tequila", "smoking"):
         assert NEVER.search(word), word
-    for word in ("F1", "film photography", "home espresso", "the NBA", "Barcelona"):
+    for word in ("F1", "film photography", "home espresso", "the NBA", "Barcelona", "smoked wings", "ginger cookies"):
         assert not NEVER.search(word), word
 
 

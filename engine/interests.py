@@ -27,9 +27,11 @@ MAX_PICKS = 4
 NEVER = re.compile(
     # whole words only (so "Barcelona" and "Sadie" pass)
     r"\b(beers?|wines?|bars?|pubs?|drinks?|drinking|drugs?|vape|vaping|cigars?|sad|gym|body|diet|"
+    r"smoke|smoking|smoker|smokes|rum|gin|sake|soju|ipas?|booze|liquor|happy hour|"
     r"stocks?|loans?|budget|debt|sex|faith|temple)\b"
     # word starts
-    r"|\b(alcohol|whisk|vodka|cocktail|barhop|brew|weed|cannabis|marijuana|smok|nicotine|gambl|casino|betting|"
+    r"|\b(alcohol|whisk|vodka|cocktail|barhop|brew|weed|cannabis|marijuana|nicotine|gambl|casino|betting|"
+    r"mezcal|tequila|bourbon|scotch|margarita|sangria|mixolog|winer|vineyard|sommelier|"
     r"health|wellness|medical|therap|mental|anxi|depress|sleep|burnout|exhaust|tired|"
     r"fitness|weight|calori|finance|financial|money|invest|crypto|"
     r"religio|church|mosque|politic|election|dating|relationship|couple|partner|romanc)",

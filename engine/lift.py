@@ -83,7 +83,7 @@ def private_facts(situation):
 def write(situation, member, kind, recent=(), effort="low"):
     """Returns {to, kind, interest, text, attempts, checks, fallback}."""
     user = situation["user"]["name"]
-    interest = pick_interest(member, situation["pattern"], recent)
+    interest = pick_interest(member, situation["pattern"], situation.get("recent_lines", {}).get(member["name"], []))
     others = [m["name"] for m in situation["circle"] if m["name"] != member["name"]]
     terms = private_terms(situation, member)
     facts = json.dumps(private_facts(situation), ensure_ascii=False)

@@ -11,8 +11,8 @@ from engine.voice import lint  # noqa: E402
 
 def test_good_lifts_pass():
     for text, interest in [
-        ("Arjun could use a little lift this week. Arjun's deep into F1 lately. Surprise Arjun with race tickets.", "F1"),
-        ("Maya's had a full week. Pasta recipes are Maya's thing right now. Dinner's on you?", "pasta recipes"),
+        ("Arjun could use a little lift this week. Arjun's deep into F1, so surprise Arjun with race tickets.", "F1"),
+        ("Maya's had a full week. Pasta recipes are Maya's thing right now, so dinner's on you?", "pasta recipes"),
         ("Priya is due for something good. A roll of film for the film photography kick would make the week.", "film photography"),
     ]:
         assert lint(text, interest) == [], (text, lint(text, interest))
@@ -25,6 +25,7 @@ def test_bad_lifts_fail():
         "Arjun needs you right now — F1 tickets?",                  # needy, dash
         "Arjun could use a lift! F1 night?",                             # exclamation
         "Arjun could use a lift because of work. F1 night?",             # reason
+        "Arjun could use a lift. Arjun loves F1. Plan a race night.",    # three sentences
     ]
     for text in cases:
         assert lint(text, "F1"), text

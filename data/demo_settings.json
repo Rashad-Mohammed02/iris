@@ -1,0 +1,57 @@
+{
+  "note": "Arjun's choices in the demo: who is in his circle, how each person relates, the permission he set, and which of his interests each person may ever hear about. All fictional.",
+  "age": 28,
+  "circle": [
+    {
+      "name": "Maya Chen",
+      "relation": "girlfriend",
+      "permission": "When it matters",
+      "mutual": true,
+      "allowed_interests": [
+        "film photography",
+        "F1"
+      ]
+    },
+    {
+      "name": "Sam Okafor",
+      "relation": "best friend",
+      "permission": "Always",
+      "mutual": true,
+      "allowed_interests": [
+        "F1",
+        "the NBA"
+      ]
+    },
+    {
+      "name": "Dev Rao",
+      "relation": "brother",
+      "permission": "When it matters",
+      "mutual": true,
+      "allowed_interests": [
+        "the NBA",
+        "F1"
+      ]
+    },
+    {
+      "name": "Priya Rao",
+      "relation": "sister",
+      "permission": "Just this once",
+      "mutual": true,
+      "allowed_interests": [
+        "stand-up comedy",
+        "film photography"
+      ]
+    },
+    {
+      "name": "Omar Haddad",
+      "relation": "close friend",
+      "permission": "Never",
+      "mutual": true,
+      "allowed_interests": [
+        "the NBA",
+        "stand-up comedy"
+      ]
+    }
+  ],
+  "lifts_switch_on_day": 7
+}

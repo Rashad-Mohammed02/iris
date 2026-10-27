@@ -68,8 +68,9 @@ def lint(text, interest=None, other_names=(), private_terms=(), language="en"):
     words = len(text.split())
     if words > MAX_WORDS:
         problems.append(f"too long: {words} words")
-    if text.count(".") + text.count("?") > 3:
-        problems.append("more than two or three short sentences")
+    sentences = [x for x in re.split(r"(?<=[.?])\s+", text.strip()) if x]
+    if len(sentences) > 2:
+        problems.append(f"{len(sentences)} sentences, at most 2")
     if interest and language == "en" and interest.lower() not in text.lower():  # translated interests are checked by Muse
         problems.append(f"interest {interest!r} not named")
     for n in other_names:
