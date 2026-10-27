@@ -1,5 +1,5 @@
-// Here prototype: the whole app on Arjun's phone, a friend's phone (or Muse Charm),
-// and two panels for judges. Reads window.DEMO (scripts/run_demo.py, real engine output),
+// Here prototype: one phone, like the real thing. Arjun's phone and a friend's (or their Muse Charm),
+// with a lock screen, a home screen and the apps. Reads window.DEMO (scripts/run_demo.py, real engine output),
 // window.BENCH (bench/export_web.py) and window.IG (scripts/export_instagram.py). No network calls.
 
 (function () {
@@ -36,7 +36,8 @@
   const HUES = { Maya: 340, Sam: 212, Dev: 28, Priya: 150, Omar: 268, Tasha: 190, Jess: 10, Chris: 300 };
 
   const ui = {
-    day: 24, tab: "today", view: "crosses", app: "circle", rx: "Sam", rxDev: "phone", ob: null, handle: "arjun.rao",
+    day: 1, tab: "today", view: "crosses", app: "circle", rx: "Sam", rxDev: "phone", ob: null, handle: "arjun.rao",
+    phone: "arjun", screen: { arjun: "home", friend: "lock" }, appB: "here", setupDone: false, chapter: 0, drawer: null,
     perms: {}, nick: {}, removed: {}, picked: new Set(circle.map(m => m.first)),
     send: D.settings.send_mode === "automatic" ? "auto" : "ask", pause: "on",
     approved: {}, stopped: {}, notMe: {}, think: {}, right: {}, wrong: {}, loop: {}, told: {}, together: {}, jx: {},
@@ -84,15 +85,18 @@
   }
 
   // ---------------- The story ----------------
+  // Each moment sets the day, whose phone you hold, and what's on its screen. Between moments
+  // everything is live: unlock, open any app, tap anything.
   const CHAPTERS = [
-    { day: 1, label: "Arjun sets up Here", ob: "welcome" },
-    { day: 2, label: "Sam says yes", rx: "Sam" },
-    { day: LIFTS_ON, label: "Lifts switch on" },
-    { day: 24, label: "A rough week on Instagram", app: "ig" },
-    { day: 24, label: "Muse writes a lift", rx: "Sam" },
-    { day: LANDS, label: "Sam shows up", app: "ig", rx: "Sam" },
-    { day: LANDS, label: "How did that feel?" },
-    { day: LANDS, label: "Together", tab: "together" },
+    { day: 1, label: "Arjun finds Here", hint: "Tap Here on the home screen to set it up.", phone: "arjun", screen: "home", fresh: true },
+    { day: 2, label: "Sam gets an invite", hint: "Tap the notification on Sam's phone.", phone: "friend", rx: "Sam", screen: "lock" },
+    { day: LIFTS_ON, label: "Lifts switch on", hint: "Two weeks in, Here knows Arjun's normal.", phone: "arjun", screen: "app", app: "circle", tab: "today" },
+    { day: 24, label: "A rough week on Instagram", hint: "Arjun's watch history and messages this week.", phone: "arjun", screen: "app", app: "ig" },
+    { day: 24, label: "A lift waits for Arjun's OK", hint: "Tap the notification, then Send.", phone: "arjun", screen: "lock" },
+    { day: 24, label: "Sam gets the lift", hint: "This line is all Sam ever sees.", phone: "friend", rx: "Sam", screen: "lock", approve: "Sam" },
+    { day: LANDS, label: "Sam shows up", hint: "To Arjun, it's just Sam being Sam.", phone: "arjun", screen: "app", app: "ig" },
+    { day: LANDS, label: "How did that feel?", hint: "Only Arjun sees this question.", phone: "arjun", screen: "lock" },
+    { day: LANDS, label: "Together", hint: "Coming soon: plans with people who love the same things.", phone: "arjun", screen: "app", app: "circle", tab: "together" },
   ];
 
   // ================= Arjun's phone =================
@@ -340,44 +344,113 @@
     return "";
   }
 
-  function renderA(animate) {
-    const glass = $("#glassA"), view = $("#viewA"), tb = $("#tabbar");
-    $("#appA").innerHTML = ui.ob ? "" : `<button type="button" class="${ui.app === "circle" ? "on" : ""}" data-app="circle">Here</button><button type="button" class="${ui.app === "ig" ? "on" : ""}" data-app="ig">Instagram</button>`;
+  // ================= The phone itself: lock screen, home screen, apps =================
+  const APP_NAME = { circle: "Here", here: "Here", ig: "Instagram", muse: "Muse" };
+  const appIcon = (id, cls) => `<span class="appic ${id === "here" ? "circle" : id} ${cls || ""}">${id === "circle" || id === "here" ? `<img src="${FACE}" alt="">`
+    : `<svg viewBox="0 0 24 24">${id === "ig" ? P.insta : P.spark}</svg>`}</span>`;
+  const friendLift = () => allLifts(ui.day).filter(x => x.to === ui.rx && delivered(x.n, x.to) && ui.day - x.n <= 2).pop();
+  const fresh = () => !ui.setupDone && ui.day === 1;
+
+  // What each phone's lock screen shows today. Arjun's never preview anything private.
+  function notifs() {
+    const d = cur(), out = [];
+    if (ui.phone === "arjun") {
+      if (fresh()) return out;
+      if (ui.pause === "on") d.lifts.filter(l => !ui.stopped[liftKey(d.n, l.to)] && !ui.approved[liftKey(d.n, l.to)]).forEach(l => out.push({ app: "circle", tab: "today",
+        title: ui.send === "ask" ? `A lift for ${nameOf(l.to)} is ready` : `A lift goes to ${nameOf(l.to)} in 10 minutes`,
+        body: ui.send === "ask" ? "Take a look. Nothing goes out until you tap Send." : "Tap to read it, or stop it." }));
+      d.prompts.filter(p => !ui.loop[d.n + p.kind + p.about] && !ui.told[d.n + p.kind + p.about]).forEach(p => out.push({ app: "circle", tab: "today", title: "Just for you", body: p.text }));
+      if (d.reveal) out.push({ app: "circle", tab: "today", title: d.reveal.title, body: "New on your page. Only you can see it." });
+      else if (d.page && ui.notif.page) out.push({ app: "circle", tab: "today", title: "Your page is ready", body: "Only you can see it." });
+      if (ui.day === LANDS) out.push({ app: "ig", title: "Sam", body: "Sent you a message" });
+    } else {
+      const who = ui.rx, l = friendLift();
+      if (ui.rxLeft[who]) return out;
+      if (ui.day <= 2 && (ui.invited || ui.day === 2) && !ui.joined[who]) out.push({ app: "here", title: `${D.owner} asked you into their circle`, body: "Tap to see what that means." });
+      else if (l && !ui.plan[liftKey(l.n, who)]) out.push({ app: "here", title: "Suggested by Muse", body: l.text });
+      else if (ui.day === LANDS && who === "Sam") out.push({ app: "here", title: "Reminder you set", body: `Race day. Watching it with ${D.owner}?` });
+    }
+    return out;
+  }
+
+  function lockScreen() {
+    const ns = notifs(), date = new Date(cur().date + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+    return `<div class="lock fadein"><div class="lk-date">${date}</div><div class="lk-time">8:12</div><div class="notifs">` +
+      ns.map((n, i) => `<button class="notif pop" style="animation-delay:${.15 + i * .1}s" type="button" data-open="${n.app}"${n.tab ? ` data-opentab="${n.tab}"` : ""}>${appIcon(n.app, "sm")}
+        <div><div class="nh"><b>${APP_NAME[n.app]}</b><span>now</span></div><div class="nt">${esc(n.title)}</div><div class="nb">${esc(n.body)}</div></div></button>`).join("") +
+      `</div><div class="lk-hint">${ns.length ? "Tap a notification, or anywhere to unlock" : "Tap anywhere to unlock"}</div></div>`;
+  }
+
+  function homeScreen() {
+    const mine = ui.phone === "arjun", d = cur(), ns = notifs();
+    const apps = mine ? ["circle", "ig", "muse"] : ["here", "muse"];
+    const waiting = d.lifts.find(l => !ui.stopped[liftKey(d.n, l.to)] && !delivered(d.n, l.to));
+    let line, pose = "stand";
+    if (mine) {
+      if (fresh()) { line = "For the people who'd show up for you. Setup takes a minute."; pose = "wave"; }
+      else if (d.n < LIFTS_ON) { line = `Learning your normal. Day ${d.n} of ${LIFTS_ON - 1}.`; pose = "sleep"; }
+      else if (waiting && ui.pause === "on") { line = `A lift for ${nameOf(waiting.to)} needs your OK.`; pose = "letter"; }
+      else { line = "Your page for today is ready."; pose = "heart"; }
+    } else {
+      const l = friendLift();
+      line = l && !ui.plan[liftKey(l.n, ui.rx)] ? `Something small you could do for ${D.owner}.` : "All quiet in your circle.";
+      pose = l ? "letter" : "stand";
+    }
+    return `<div class="home fadein">
+      <button class="hw" type="button" data-open="${apps[0]}"><img class="bob" src="${POSE(pose)}" alt=""><div><div class="hw-k">Here</div><div class="hw-t">${esc(line)}</div></div></button>
+      <div class="apps">${apps.map(id => { const n = ns.filter(x => x.app === id).length;
+        return `<button class="app" type="button" data-open="${id}">${n ? `<span class="badge2">${n}</span>` : ""}${appIcon(id)}<span>${APP_NAME[id]}</span></button>`; }).join("")}</div>
+      ${mine && fresh() && !ui.ob ? `<div class="coach pop">Tap Here to set it up</div>` : ""}</div>`;
+  }
+
+  function museApp() {
+    const mine = ui.phone === "arjun", d = cur();
+    let h = `<div class="head"><div><div class="sub">${esc(d.weekday)}</div><h1>Muse</h1></div>${appIcon("muse", "sm")}</div>`;
+    if (mine) {
+      h += `<div class="widget sky"><div class="eyebrow">Connected app</div><div>Here works with Muse. Lifts you allow can arrive in your friends' Muse, or on their Muse Charm.</div>
+        <div class="row"><button class="pill dark" type="button" data-open="circle">Open Here</button></div></div>
+        <div class="muse-line">${face(22)}<p>Hi ${esc(D.owner)}. What's on your mind?</p></div>
+        <div class="row"><button class="chip" type="button" data-sheet-a="reads">What does Here read?</button><button class="chip" type="button" data-open="circle" data-opentab="you">Pause my lifts</button></div>`;
+      return h;
+    }
+    const l = friendLift(), lk = l && liftKey(l.n, ui.rx), plan = lk && ui.plan[lk];
+    if (l && !ui.rxLeft[ui.rx]) h += `<div class="widget"><div class="eyebrow">From Here</div><p class="quote">${esc(l.text)}</p><div class="sig">${face(22)}<span>Suggested by Muse. ${esc(D.owner)} didn't ask.</span></div>` +
+      (plan === "no" ? `<div class="small">Okay. ${esc(D.owner)} won't know.</div>` : plan ? `<div class="ok">${esc(plan)}</div>`
+        : `<div class="row"><button class="pill blue" type="button" data-sheet-b="plan" data-k="${esc(lk)}">Plan something</button><button class="pill" type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`) + `</div>`;
+    else h += `<div class="muse-line">${face(22)}<p>Hi ${esc(ui.rx)}. What's on your mind?</p></div>`;
+    (ui.rxAsks[ui.rx] || []).forEach(q => { h += `<div class="bub me">${esc(q)}</div><div class="muse-line">${face(22)}<p>${esc(rxAnswer(q))}</p></div>`; });
+    h += `<button class="compose" type="button" data-sheet-b="ask" style="margin-top:auto;cursor:text"><span class="small" style="flex:1;text-align:left">Ask Muse…</span></button>`;
+    return h;
+  }
+
+  // ---------------- Arjun's Here app ----------------
+  function renderHere(animate) {
+    const glass = $("#glass"), view = $("#view"), tb = $("#tabbar");
     if (ui.ob) {
       glass.style.backgroundColor = SETUP_BG[ui.ob] || "var(--screen)";
-      tb.hidden = true;
       view.innerHTML = `<div class="slide ${animate ? "slidein" : ""}">${setup()}</div>`;
       return;
     }
-    glass.style.backgroundColor = "var(--screen)";
-    tb.hidden = ui.app === "ig";
+    tb.hidden = false;
     tb.innerHTML = [["today", "Today"], ["circle", "Circle"], ["together", "Together"], ["journal", "Journal"], ["you", "You"]].map(([id, t]) =>
       `<button class="tab ${ui.tab === id ? "on" : ""}" type="button" data-tab="${id}">${ICON[id]}${t}${id === "together" ? `<span class="badge">NEW</span>` : ""}</button>`).join("");
-    const keep = !animate && view.firstElementChild ? view.firstElementChild.scrollTop : 0;
-    const body = ui.app === "ig" ? tInstagram() : { today: tToday, circle: tCircle, together: tTogether, journal: tJournal, you: tYou }[ui.tab]();
-    view.innerHTML = `<div class="scroll ${animate ? "fadein" : ""}">${body}</div>`;
-    view.firstElementChild.scrollTop = keep;
-    if (ui.tab === "circle" && ui.app === "circle") setTimeout(() => {
+    paint(view, { today: tToday, circle: tCircle, together: tTogether, journal: tJournal, you: tYou }[ui.tab](), animate);
+    if (ui.tab === "circle") setTimeout(() => {
       document.querySelectorAll(".messenger").forEach(m => { const p = document.querySelector(`.planet[data-person="${m.dataset.to}"]`);
         if (p) setTimeout(() => { m.style.left = p.style.left; m.style.top = `calc(${p.style.top} - 22px)`; }, 300 + 500 * +m.dataset.i); });
     }, 30);
   }
+  // Keeps the scroll position when the same screen re-renders after a tap.
+  function paint(view, body, animate) {
+    const keep = !animate && view.firstElementChild ? view.firstElementChild.scrollTop : 0;
+    view.innerHTML = `<div class="scroll ${animate ? "fadein" : ""}">${body}</div>`;
+    view.firstElementChild.scrollTop = keep;
+  }
 
-  // ================= A friend's phone =================
-  function renderB() {
-    const d = cur(), who = ui.rx;
-    $("#rxWho").textContent = nameOf(who) === who ? who + "'s phone" : `${who}'s phone (your ${nameOf(who)})`;
-    $("#devB").innerHTML = `<button type="button" class="${ui.rxDev === "phone" ? "on" : ""}" data-dev="phone">Phone</button><button type="button" class="${ui.rxDev === "charm" ? "on" : ""}" data-dev="charm">Muse Charm</button>`;
-    $("#rxPick").innerHTML = circle.map(m => `<button type="button" class="${who === m.first ? "on" : ""}" data-rx="${esc(m.first)}">${esc(m.first)}</button>`).join("");
-    document.querySelector(".friend").classList.toggle("charm", ui.rxDev === "charm");
-    const l = allLifts(ui.day).filter(x => x.to === who && delivered(x.n, x.to) && ui.day - x.n <= 2).pop();
+  // ---------------- A friend's Here app (everyone has the same app) ----------------
+  function friendHere() {
+    const d = cur(), who = ui.rx, l = friendLift();
     const lk = l && liftKey(l.n, who), plan = lk && ui.plan[lk];
-    if (ui.rxDev === "charm") {
-      $("#viewB").innerHTML = `<div class="charm-screen">${l && !ui.rxLeft[who] ? `<img class="bob" src="${FACE}" alt=""><p>${esc(l.text)}</p>` +
-        (plan ? `<div class="small">${plan === "no" ? "Okay. " + esc(D.owner) + " won't know." : "Planned"}</div>` : `<div class="charm-btns"><button type="button" data-sheet-b="plan" data-k="${esc(lk)}">Plan</button><button type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`)
-        : `<img class="bob" src="${FACE}" alt=""><p style="color:#a1a4a8">All quiet in your circle.</p><div class="small">Hold to talk to Muse</div>`}</div>`;
-      return;
-    }
     let h = `<div class="head"><div><div class="sub">${esc(d.weekday)}</div><h1>Good evening, ${esc(who)}</h1></div>${face(36)}</div>`;
     if (ui.rxLeft[who]) h += `<p class="agent">You left ${esc(D.owner)}'s circle. No more lifts for ${esc(D.owner)}.</p>`;
     else if (ui.day <= 2 && (ui.invited || ui.day === 2)) {
@@ -388,7 +461,7 @@
       else h += `<div class="widget mint"><div class="eyebrow">You're in ${esc(D.owner)}'s circle</div>${ui.added[who] ? `<div>${esc(D.owner)} is in yours too.</div>` :
         `<div>Circles go both ways. Add ${esc(D.owner)} to yours?</div><div class="row"><button class="pill dark" type="button" data-add="${esc(who)}">Add ${esc(D.owner)}</button></div>`}</div>`;
     } else if (l) {
-      h += `<div class="widget" id="rx-lift"><div class="eyebrow">Someone in your circle could use something small</div><p class="quote">${esc(l.text)}</p>
+      h += `<div class="widget"><div class="eyebrow">Someone in your circle could use something small</div><p class="quote">${esc(l.text)}</p>
         <div class="sig">${face(22)}<span>Suggested by Muse. ${esc(D.owner)} didn't ask.</span></div>` +
         (plan === "no" ? `<div class="small">Okay. ${esc(D.owner)} won't know.</div>` : plan ? `<div class="ok">${esc(plan)}</div>`
           : `<div class="row"><button class="pill blue" type="button" data-sheet-b="plan" data-k="${esc(lk)}">Plan something</button><button class="pill" type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`) +
@@ -396,10 +469,29 @@
     } else if (ui.day === LANDS && who === "Sam") {
       h += `<div class="widget sky"><div class="eyebrow">Reminder you set</div><div>Race day. Watching it with ${esc(D.owner)}?</div></div><p class="agent">That's all from Here. The rest is just you and ${esc(D.owner)}.</p>`;
     } else h += `<p class="agent">Your circle's quiet today. Nothing to do. Enjoy it.</p>`;
-    (ui.rxAsks[who] || []).forEach(q => { h += `<div class="bub me">${esc(q)}</div><div class="muse-line">${face(22)}<p>${esc(rxAnswer(q))}</p></div>`; });
-    h += `<button class="compose" type="button" data-sheet-b="ask" style="margin-top:auto;cursor:text"><span class="small" style="flex:1;text-align:left">Ask Muse…</span></button>
-      <div class="small" style="text-align:center">No subscription needed to receive. Lifts can also arrive in Instagram or Muse.</div>`;
-    $("#viewB").innerHTML = `<div class="scroll">${h}</div>`;
+    h += `<div class="small" style="margin-top:auto;text-align:center">Lifts can also arrive in Instagram, in Muse, or on a Muse Charm.</div>`;
+    return h;
+  }
+  function charmScreen() {
+    const l = friendLift(), lk = l && liftKey(l.n, ui.rx), plan = lk && ui.plan[lk];
+    return `<div class="charm-screen">${l && !ui.rxLeft[ui.rx] ? `<img class="bob" src="${FACE}" alt=""><p>${esc(l.text)}</p>` +
+      (plan ? `<div class="small">${plan === "no" ? "Okay. " + esc(D.owner) + " won't know." : "Planned"}</div>`
+        : `<div class="charm-btns"><button type="button" data-plan="${esc(lk)}" data-v="Planned. Reminder set for the weekend.">Plan</button><button type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`)
+      : `<img class="bob" src="${FACE}" alt=""><p style="color:#a1a4a8">All quiet in your circle.</p><div class="small">Hold to talk to Muse</div>`}</div>`;
+  }
+
+  function renderPhone(animate) {
+    const dev = $("#device"), glass = $("#glass"), view = $("#view"), tb = $("#tabbar");
+    const mine = ui.phone === "arjun", charm = !mine && ui.rxDev === "charm", scr = ui.screen[ui.phone];
+    dev.classList.toggle("charm", charm);
+    tb.hidden = true; $("#homebar").hidden = charm;
+    glass.classList.toggle("wall", !charm && scr !== "app");
+    glass.style.backgroundColor = charm || scr !== "app" ? "" : "var(--screen)";
+    if (charm) { view.innerHTML = charmScreen(); return; }
+    if (scr === "lock") { view.innerHTML = lockScreen(); return; }
+    if (scr === "home") { view.innerHTML = homeScreen(); return; }
+    if (mine && ui.app === "circle") return renderHere(animate);
+    paint(view, mine ? (ui.app === "ig" ? tInstagram() : museApp()) : (ui.appB === "muse" ? museApp() : friendHere()), animate);
   }
   const RXASK = ["Why did I get this?", "What does Arjun see?"];
   const rxAnswer = q => q === RXASK[0] ? `Muse doesn't say, and can't. ${D.owner} chose to let you get the odd lift. That's all.` : `Nothing about what you do with it. If you plan something, it's just you being you.`;
@@ -441,8 +533,8 @@
     ask: () => `<h3>Ask Muse</h3>` + RXASK.map(q => `<button class="opt" type="button" data-rxask="${esc(q)}"><span>${ic(P.spark)}</span><span><b>${esc(q)}</b></span></button>`).join(""),
   };
   function renderSheets() {
-    $("#sheetA").innerHTML = ui.sheetA ? `<div class="sheet"><div class="grab"></div>${SHEETS[ui.sheetA](ui.argA)}</div>` : "";
-    $("#sheetB").innerHTML = ui.sheetB && ui.rxDev === "phone" || ui.sheetB === "plan" ? (ui.sheetB ? `<div class="sheet"><div class="grab"></div>${SHEETS[ui.sheetB](ui.argB)}</div>` : "") : "";
+    const k = ui.phone === "arjun" ? "A" : "B", s = ui["sheet" + k];
+    $("#sheet").innerHTML = s && !(k === "B" && ui.rxDev === "charm") ? `<div class="sheet"><div class="grab"></div>${SHEETS[s](ui["arg" + k])}</div>` : "";
   }
   function toast(where, t) { const x = document.createElement("div"); x.className = "toast"; x.textContent = t; $(where).append(x); setTimeout(() => x.remove(), 1800); }
 
@@ -477,7 +569,7 @@
     return `<div class="section-title">Who would have been eligible</div><table><tr><th>Person</th><th>Result</th></tr>` + d.not_sent.map(x => `<tr><td>${esc(x.name)}</td><td>${esc(x.why)}</td></tr>`).join("") + `</table>`;
   }
   const FAM = { S1_reply_rhythm: ["Social", "Reply rhythm", 3], S2_messaging: ["Social", "Messaging", 3], S3_quiet_with_one: ["Social", "Quiet with one person", 2], S4_reel_sending: ["Social", "Reels he sends", 2],
-    T1_active_window: ["Timing", "Active hours", 3], T2_daytime_binge: ["Timing", "Daytime scrolling", 2], T3_sessions: ["Timing", "Sessions (supporting)", 1], T4_volume: ["Timing", "Volume (supporting)", 1],
+    T1_rest: ["Timing", "Rest pattern", 3], T2_daytime_binge: ["Timing", "Daytime scrolling", 2], T3_sessions: ["Timing", "Sessions (supporting)", 1], T4_volume: ["Timing", "Volume (supporting)", 1],
     C1_heavy_content: ["Content", "Heavier reels he chose", 2], C3_interest_drift: ["Content", "His usual loves fading", 2] };
   function hood() {
     const d = cur();
@@ -509,19 +601,33 @@
     return h;
   }
 
-  function chapters() {
-    const active = ui.ob ? 0 : CHAPTERS.reduce((a, c, i) => (!c.ob && c.day === ui.day && (c.app || "circle") === ui.app && (c.tab || "today") === (ui.app === "ig" ? "today" : ui.tab) ? i : a), -1);
-    $("#chapters").innerHTML = `<span class="ch-lead">The story</span>` + CHAPTERS.map((c, i) => `<button class="ch ${i === active ? "on" : ""}" type="button" data-chapter="${i}"><span>Day ${c.day}</span>${esc(c.label)}</button>`).join("");
+  function storyDrawer() {
+    return `<div class="dh"><h2>The story</h2><button class="x" type="button" data-closedrawer="1" aria-label="Close">&times;</button></div>
+      <p class="lede">Arjun's month in nine moments. Between them, everything on the phone is live.</p>
+      <div class="chs">${CHAPTERS.map((c, i) => `<button class="ch ${i === ui.chapter ? "on" : ""}" type="button" data-chapter="${i}"><span>Day ${c.day} · ${c.phone === "arjun" ? D.owner : c.rx}'s phone</span><b>${esc(c.label)}</b></button>`).join("")}</div>
+      <div class="section-title">Or jump to any day</div><input type="range" id="day" min="1" max="${D.days.length}" value="${ui.day}" aria-label="Day">
+      <p class="note">For the first ${LIFTS_ON - 1} days Here only learns. Lifts can go out from day ${LIFTS_ON}. Hackathon prototype, not a Meta product. Every person and message is fictional.</p>`;
+  }
+  function hoodDrawer() {
+    return `<div class="dh"><div class="vtabs">${[["crosses", "What crosses"], ["hood", "Under the hood"]].map(([k, t]) => `<button type="button" class="${ui.view === k ? "on" : ""}" data-view="${k}">${t}</button>`).join("")}</div>
+      <button class="x" type="button" data-closedrawer="1" aria-label="Close">&times;</button></div>` + (ui.view === "crosses" ? crosses() : hood());
   }
 
-  // A small card that travels from Arjun's phone to the friend's, so you can see the lift cross.
-  function fly(from, to, text) {
-    if (calm || !from || !to) return;
-    const a = from.getBoundingClientRect(), b = to.getBoundingClientRect(), f = document.createElement("div");
-    f.className = "flyer"; f.innerHTML = `<img src="${FACE}" alt=""><span>${esc(text.length > 54 ? text.slice(0, 52) + "…" : text)}</span>`;
-    f.style.left = a.left + 12 + "px"; f.style.top = a.top + 12 + "px"; document.body.append(f);
-    requestAnimationFrame(() => requestAnimationFrame(() => { f.style.transform = `translate(${b.left - a.left}px, ${b.top - a.top}px) scale(.96)`; f.style.opacity = "0"; }));
-    setTimeout(() => f.remove(), 1500);
+  function goChapter(i) {
+    const c = CHAPTERS[i];
+    Object.assign(ui, { chapter: i, day: c.day, phone: c.phone, ob: null, sheetA: null, sheetB: null, setupDone: !c.fresh });
+    if (c.fresh) ui.invited = false;
+    if (c.rx) ui.rx = c.rx;
+    if (c.phone === "friend") { ui.rxDev = "phone"; ui.appB = "here"; ui.screen.friend = c.screen; }
+    else { ui.screen.arjun = c.screen; if (c.app) ui.app = c.app; ui.tab = c.tab || "today"; }
+    if (c.approve) ui.approved[liftKey(c.day, c.approve)] = true;
+    lastDay = c.day;
+  }
+  function openApp(id, tab) {
+    if (ui.phone === "friend") { ui.screen.friend = "app"; ui.appB = id === "muse" ? "muse" : "here"; return; }
+    ui.screen.arjun = "app"; ui.app = id === "here" ? "circle" : id;
+    if (tab) ui.tab = tab;
+    if (ui.app === "circle" && fresh() && !ui.ob) ui.ob = "welcome";
   }
 
   // ================= Wiring =================
@@ -530,37 +636,55 @@
   function render(animate) {
     const d = cur();
     if (d.n !== lastDay) { lastDay = d.n; if (d.lifts.length && !d.lifts.some(l => l.to === ui.rx)) ui.rx = d.lifts[0].to; }
-    $("#day").value = ui.day;
-    $("#dayLabel").innerHTML = `Day ${d.n} · ${esc(d.weekday)} <small>${fmtDate(d.date)}</small>`;
-    document.querySelectorAll(".views button").forEach(b => b.classList.toggle("on", b.dataset.view === ui.view));
-    renderA(animate); renderB(); renderSheets(); chapters();
-    $("#panel").innerHTML = ui.view === "crosses" ? crosses() : hood();
+    $("#dayLabel").innerHTML = `Day ${d.n} · ${esc(d.weekday.slice(0, 3))} <small>${fmtDate(d.date)}</small>`;
+    const l = friendLift(), ping = ui.phone === "arjun" && l && !ui.plan[liftKey(l.n, ui.rx)];
+    $("#phones").innerHTML = `<button type="button" class="${ui.phone === "arjun" ? "on" : ""}" data-phone="arjun"><span class="lg">${esc(D.owner)}'s phone</span><span class="sm">${esc(D.owner)}</span></button>` +
+      `<button type="button" class="${ui.phone === "friend" ? "on" : ""}" data-phone="friend"><span class="lg">${esc(ui.rx)}'s phone</span><span class="sm">${esc(ui.rx)}</span>${ping ? `<i class="ping"></i>` : ""}</button>`;
+    $("#subbar").innerHTML = ui.phone !== "friend" ? "" : `<span class="lab">Friend</span>` + circle.map(m => `<button type="button" class="${ui.rx === m.first ? "on" : ""}" data-rx="${esc(m.first)}">${esc(m.first)}</button>`).join("") +
+      `<span class="sep"></span>` + [["phone", "Phone"], ["charm", "Muse Charm"]].map(([k, t]) => `<button type="button" class="${ui.rxDev === k ? "on" : ""}" data-dev="${k}">${t}</button>`).join("");
+    const c = CHAPTERS[ui.chapter];
+    $("#caption").innerHTML = `<button type="button" class="cbtn" data-chapter="${Math.max(0, ui.chapter - 1)}" ${ui.chapter ? "" : "disabled"} aria-label="Previous moment">&#8249;</button>
+      <div><div class="cn">${ui.chapter + 1} of ${CHAPTERS.length} · Day ${c.day}</div><div class="cl">${esc(c.label)}</div><div class="ch2">${esc(c.hint)}</div></div>
+      <button type="button" class="cbtn next" data-chapter="${Math.min(CHAPTERS.length - 1, ui.chapter + 1)}" ${ui.chapter < CHAPTERS.length - 1 ? "" : "disabled"}>Next</button>`;
+    renderPhone(animate); renderSheets();
+    $("#scrim").hidden = !ui.drawer;
+    $("#story").hidden = ui.drawer !== "story"; $("#hood").hidden = ui.drawer !== "hood";
+    if (ui.drawer === "story") $("#story").innerHTML = storyDrawer();
+    if (ui.drawer === "hood") $("#hood").innerHTML = hoodDrawer();
+    document.documentElement.style.setProperty("--barh", document.querySelector(".bar").offsetHeight + "px");
   }
   document.addEventListener("input", e => {
     const t = e.target;
     if (t.dataset.nick) { ui.nick[t.dataset.nick] = t.value; }
     if (t.id === "handle") ui.handle = t.value.trim().replace(/^@/, "") || "arjun.rao";
+    if (t.id === "day") { ui.day = +t.value; ui.setupDone = ui.setupDone || ui.day > 1; render(false); }
   });
   document.addEventListener("change", e => { if (e.target.dataset.nick) render(false); });
   document.addEventListener("submit", e => {
     if (!e.target.dataset.journal) return;
     e.preventDefault(); const v = ($("#jin").value || "").trim(); if (!v) return;
     (ui.jx[ui.day] = ui.jx[ui.day] || []).push(v); render(false);
-    const s = $("#viewA .scroll"); if (s) s.scrollTop = s.scrollHeight;
+    const s = $("#view .scroll"); if (s) s.scrollTop = s.scrollHeight;
   });
   document.addEventListener("click", e => {
-    if (e.target.id === "sheetA") { ui.sheetA = null; render(false); return; }
-    if (e.target.id === "sheetB") { ui.sheetB = null; render(false); return; }
+    const k = ui.phone === "arjun" ? "A" : "B";
+    if (e.target.id === "sheet") { ui["sheet" + k] = null; render(false); return; }
+    if (e.target.id === "scrim") { ui.drawer = null; render(false); return; }
+    if (e.target.closest(".lock") && !e.target.closest("button")) { ui.screen[ui.phone] = "home"; render(true); return; }
     const t = e.target.closest("button"); if (!t || t.disabled) return;
-    const ds = t.dataset; let flyKey = null, anim = false;
-    if (ds.chapter) { const c = CHAPTERS[+ds.chapter];
-      Object.assign(ui, { day: c.day, app: c.app || "circle", tab: c.tab || "today", ob: c.ob || null, sheetA: null, sheetB: null });
-      if (c.rx) ui.rx = c.rx; if (c.ob) ui.invited = false; lastDay = c.day; anim = true; }
+    const ds = t.dataset; let anim = false;
+    if (ds.chapter) { goChapter(+ds.chapter); ui.drawer = null; anim = true; }
+    else if (t.id === "storyBtn") ui.drawer = ui.drawer === "story" ? null : "story";
+    else if (t.id === "hoodBtn") ui.drawer = ui.drawer === "hood" ? null : "hood";
+    else if (ds.closedrawer) ui.drawer = null;
+    else if (t.id === "homebar") { ui.screen[ui.phone] = "home"; ui["sheet" + k] = null; anim = true; }
+    else if (ds.phone) { ui.phone = ds.phone; anim = true; }
+    else if (ds.open) { openApp(ds.open, ds.opentab); anim = true; }
     else if (ds.ob) { const i = SETUP.indexOf(ui.ob);
       if (ds.ob === "next") ui.ob = SETUP[i + 1]; else if (ds.ob === "back") ui.ob = SETUP[Math.max(0, i - 1)];
-      else if (ds.ob === "finish") { ui.ob = null; ui.invited = true; ui.tab = "today"; } anim = true; }
+      else if (ds.ob === "finish") { ui.ob = null; ui.setupDone = true; ui.invited = true; ui.tab = "today"; } anim = true; }
     else if (ds.pick) { const p = ds.pick; ui.picked.has(p) ? ui.picked.delete(p) : (ui.picked.size < 5 && ui.picked.add(p)); }
-    else if (ds.app) { ui.app = ds.app; if (ds.thinking) { ui.tab = "today"; ui.think[ui.day] = true; } anim = true; }
+    else if (ds.app) { ui.app = ds.app; ui.screen.arjun = "app"; if (ds.thinking) { ui.tab = "today"; ui.think[ui.day] = true; } anim = true; }
     else if (ds.goto) { ui.day = +ds.goto; if (ds.tab) ui.tab = ds.tab; anim = true; }
     else if (ds.tab) { ui.tab = ds.tab; ui.app = "circle"; anim = true; }
     else if (ds.view) ui.view = ds.view;
@@ -568,22 +692,22 @@
     else if (ds.notme) ui.notMe[ds.notme] = !ui.notMe[ds.notme];
     else if (ds.right) ui.right[ds.right] = !ui.right[ds.right];
     else if (ds.wrong) ui.wrong[ds.wrong] = "Not about me, noted";
-    else if (ds.approve) { ui.approved[ds.approve] = true; ui.rx = ds.approve.split(":")[1]; flyKey = ds.approve; }
+    else if (ds.approve) { ui.approved[ds.approve] = true; ui.rx = ds.approve.split(":")[1]; render(false); toast("#glass", "Sent to " + nameOf(ui.rx) + ". Check their phone."); return; }
     else if (ds.stop) ui.stopped[ds.stop] = true;
     else if (ds.loop) ui.loop[ds.loop] = ds.v;
     else if (ds.told) ui.told[ds.told] = true;
-    else if (ds.together) { ui.together[ds.together] = ds.v; if (ds.v === "go") toast("#glassA", "Plan sent"); }
+    else if (ds.together) { ui.together[ds.together] = ds.v; if (ds.v === "go") toast("#glass", "Plan sent"); }
     else if (ds.person) { ui.sheetA = "person"; ui.argA = ds.person; }
     else if (ds.sheetA) { ui.sheetA = ds.sheetA; }
-    else if (ds.close) { ui["sheet" + ds.close] = null; if (ds.toast) toast("#glass" + ds.close, ds.toast); }
+    else if (ds.close) { ui["sheet" + ds.close] = null; if (ds.toast) toast("#glass", ds.toast); }
     else if (ds.perm) { ui.perms[ds.perm] = ds.level; }
     else if (ds.send) { ui.send = ds.send; }
     else if (ds.pause) { ui.pause = ds.pause; }
     else if (ds.notif) { ui.notif[ds.notif] = !ui.notif[ds.notif]; }
-    else if (ds.remove) { ui.removed[ds.remove] = true; ui.sheetA = null; toast("#glassA", nameOf(ds.remove) + " removed quietly"); }
-    else if (ds.invite) { ui.sheetA = null; toast("#glassA", "Invite sent to " + ds.invite); }
+    else if (ds.remove) { ui.removed[ds.remove] = true; ui.sheetA = null; toast("#glass", nameOf(ds.remove) + " removed quietly"); }
+    else if (ds.invite) { ui.sheetA = null; toast("#glass", "Invite sent to " + ds.invite); }
     else if (ds.delete) { ui.deleted = true; }
-    else if (ds.copy) { try { navigator.clipboard.writeText(ds.copy); } catch (err) { /* the toast still confirms */ } toast("#glassA", "Copied"); }
+    else if (ds.copy) { try { navigator.clipboard.writeText(ds.copy); } catch (err) { /* the toast still confirms */ } toast("#glass", "Copied"); }
     else if (ds.dev) { ui.rxDev = ds.dev; ui.sheetB = null; }
     else if (ds.rx) { ui.rx = ds.rx; ui.sheetB = null; }
     else if (ds.join) { ui.joined[ds.join] = ds.no ? "no" : true; }
@@ -592,27 +716,26 @@
     else if (ds.planpick) { ui.plan[ds.planpick] = ds.v; ui.sheetB = null; }
     else if (ds.plan) { ui.plan[ds.plan] = ds.v; }
     else if (ds.rxask) { (ui.rxAsks[ui.rx] = ui.rxAsks[ui.rx] || []).push(ds.rxask); ui.sheetB = null; }
-    else if (t.id === "prev") ui.day = Math.max(1, ui.day - 1);
-    else if (t.id === "next") ui.day = Math.min(D.days.length, ui.day + 1);
+    else if (t.id === "prev") { ui.day = Math.max(1, ui.day - 1); ui.setupDone = ui.setupDone || ui.day > 1; }
+    else if (t.id === "next") { ui.day = Math.min(D.days.length, ui.day + 1); ui.setupDone = true; }
     else return;
     render(anim);
-    if (flyKey) { const l = cur().lifts.find(x => liftKey(cur().n, x.to) === flyKey); if (l) fly(document.getElementById("lift-" + flyKey), $("#rx-lift"), l.text); }
   });
-  $("#day").addEventListener("input", e => { ui.day = +e.target.value; render(false); });
   document.addEventListener("keydown", e => {
     if (e.target.matches("input, textarea")) return;
+    if (e.key === "Escape" && ui.drawer) { ui.drawer = null; render(false); }
     if (e.key === "ArrowLeft") { ui.day = Math.max(1, ui.day - 1); render(false); }
-    if (e.key === "ArrowRight") { ui.day = Math.min(D.days.length, ui.day + 1); render(false); }
+    if (e.key === "ArrowRight") { ui.day = Math.min(D.days.length, ui.day + 1); ui.setupDone = true; render(false); }
   });
-  $("#day").max = D.days.length;
+  addEventListener("resize", () => document.documentElement.style.setProperty("--barh", document.querySelector(".bar").offsetHeight + "px"));
   const q = new URLSearchParams(location.search);
-  if (q.get("day")) ui.day = Math.min(D.days.length, Math.max(1, +q.get("day")));
-  if (q.get("tab")) ui.tab = q.get("tab");
-  if (q.get("app") === "ig") ui.app = "ig";
-  if (q.get("view")) ui.view = q.get("view");
-  if (q.get("send") === "auto") ui.send = "auto";
-  if (q.get("charm")) ui.rxDev = "charm";
-  if (q.get("setup")) ui.ob = "welcome";
+  goChapter(Math.min(CHAPTERS.length - 1, Math.max(0, +(q.get("chapter") || 1) - 1)));
+  if (q.get("day")) { ui.day = Math.min(D.days.length, Math.max(1, +q.get("day"))); ui.setupDone = true; ui.screen.arjun = "app"; }
+  if (q.get("tab")) { ui.tab = q.get("tab"); ui.app = "circle"; ui.screen.arjun = "app"; }
+  if (q.get("app") === "ig") { ui.app = "ig"; ui.screen.arjun = "app"; }
+  if (q.get("phone") === "friend") ui.phone = "friend";
+  if (q.get("charm")) { ui.phone = "friend"; ui.rxDev = "charm"; }
+  if (q.get("view")) { ui.view = q.get("view"); ui.drawer = "hood"; }
   if (q.get("theme")) document.documentElement.dataset.theme = q.get("theme");
   render(true);
 })();

@@ -1,4 +1,4 @@
-"""Circle's reader works on real Instagram downloads, not just our own demo files.
+"""Here's reader works on real Instagram downloads, not just our own demo files.
 
 Runs only when data/real_exports exists (python3 scripts/fetch_real_exports.py).
 """

@@ -25,7 +25,7 @@ CARDS = {
             "is free and private: call 1-800-799-7233 or text START to 88788. Nobody was notified of anything.",
     "pressure": "Quick check, just for you: is anyone pushing you to share more than you want to? Your earlier "
                 "settings stay as they were until you confirm here, privately.",
-    "minor": "Circle is for adults only, so it isn't running on your account. Nothing about you was saved.",
+    "minor": "Here is for adults only, so it isn't running on your account. Nothing about you was saved.",
     "crisis_content": "Some of what you've been watching sounds really heavy. You don't have to carry it alone. "
                       "You can call or text 988 anytime, day or night. Nothing was shared with anyone.",
 }

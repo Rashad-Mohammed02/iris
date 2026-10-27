@@ -2,61 +2,50 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Here Prototype</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="top">
+<header class="bar">
   <div class="brand">
     <img class="mark" src="img/peach-avatar.png" alt="">
     <div>
       <div class="name">Here</div>
-      <div class="sub">from Meta · works with Muse. Hackathon prototype, not a Meta product. Every person and message is fictional. Character made with Muse Image.</div>
+      <div class="sub">from Meta · works with Muse</div>
     </div>
   </div>
-  <div class="scrub">
+  <div class="phones" id="phones" aria-label="Whose phone"></div>
+  <div class="days">
     <button id="prev" type="button" aria-label="Previous day">&#8249;</button>
-    <div class="scrub-mid">
-      <div id="dayLabel" class="day-label"></div>
-      <input id="day" type="range" min="1" max="30" value="24" aria-label="Day">
-    </div>
+    <div id="dayLabel" class="day-label"></div>
     <button id="next" type="button" aria-label="Next day">&#8250;</button>
   </div>
-  <div class="views" role="tablist">
-    <button type="button" data-view="crosses" class="on">What crosses</button>
-    <button type="button" data-view="hood">Under the hood</button>
+  <div class="tools">
+    <button type="button" id="storyBtn" aria-label="The story"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Story</span></button>
+    <button type="button" id="hoodBtn" aria-label="Under the hood"><svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg><span>Under the hood</span></button>
   </div>
-  <nav class="chapters" id="chapters" aria-label="The story"></nav>
+  <div class="subbar" id="subbar"></div>
 </header>
 
 <main class="stage">
-  <section class="device-wrap" aria-label="Arjun's phone">
-    <div class="device-label"><b>Arjun's phone</b><span class="appswitch" id="appA"></span></div>
-    <div class="device">
-      <div class="glass" id="glassA">
-        <div class="status"><span class="time">9:41</span><span class="island"></span><span class="sys"></span></div>
-        <div class="view" id="viewA"></div>
-        <nav class="tabbar" id="tabbar"></nav>
-        <div class="layer" id="sheetA"></div>
-      </div>
+  <div class="device" id="device">
+    <div class="glass" id="glass">
+      <div class="status"><span class="time">8:12</span><span class="island"></span><span class="sys"></span></div>
+      <div class="view" id="view"></div>
+      <nav class="tabbar" id="tabbar"></nav>
+      <button class="homebar" id="homebar" type="button" aria-label="Home screen"><i></i></button>
+      <div class="layer" id="sheet"></div>
     </div>
-  </section>
-
-  <section class="device-wrap friend" aria-label="A friend's phone">
-    <div class="device-label"><b id="rxWho"></b><span class="appswitch" id="devB"></span><span class="rx-pick" id="rxPick"></span></div>
-    <div class="device" id="deviceB">
-      <div class="glass" id="glassB">
-        <div class="status"><span class="time">9:41</span><span class="island"></span><span class="sys"></span></div>
-        <div class="view" id="viewB"></div>
-        <div class="layer" id="sheetB"></div>
-      </div>
-      <span class="lanyard" aria-hidden="true"><svg viewBox="0 0 60 170"><path d="M30 0v70" stroke="#2c2c31" stroke-width="6" stroke-linecap="round"/><circle cx="30" cy="82" r="11" fill="#2c2c31"/><path d="M26 92c-4 26-10 50-14 76M34 92c4 26 8 50 12 76" stroke="#2c2c31" stroke-width="5" stroke-linecap="round" fill="none"/></svg></span>
-    </div>
-  </section>
-
-  <aside class="panel" id="panel"></aside>
+    <span class="lanyard" aria-hidden="true"><svg viewBox="0 0 60 170"><path d="M30 0v70" stroke="#2c2c31" stroke-width="6" stroke-linecap="round"/><circle cx="30" cy="82" r="11" fill="#2c2c31"/><path d="M26 92c-4 26-10 50-14 76M34 92c4 26 8 50 12 76" stroke="#2c2c31" stroke-width="5" stroke-linecap="round" fill="none"/></svg></span>
+  </div>
+  <div class="caption" id="caption"></div>
+  <p class="fine">Hackathon prototype, not a Meta product. Every person and message is fictional. Character made with Muse Image.</p>
 </main>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="story" hidden aria-label="The story"></aside>
+<aside class="drawer wide" id="hood" hidden aria-label="Under the hood"></aside>
 
 <script src="demo_data.js"></script>
 <script src="bench_data.js"></script>

@@ -1,4 +1,4 @@
-You help Muse Circle pick what someone is into, so a friend could surprise them.
+You help Here pick what someone is into, so a friend could surprise them.
 
 You get a list of candidate interests for one person, taken from their own Instagram activity: interests Meta already infers, topics they follow, themes of reels they watch, and posts they save. Each candidate has a key and counts.
 

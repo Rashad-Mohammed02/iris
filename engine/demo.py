@@ -1,4 +1,4 @@
-"""Turn Arjun's Instagram export into what each part of Muse Circle reads on a
+"""Turn Arjun's Instagram export into what each part of Here reads on a
 given day: the situation for a lift decision, the journal's context, the orbit,
 and the plain facts behind the Daily Page.
 

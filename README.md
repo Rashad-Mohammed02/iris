@@ -12,7 +12,7 @@ That line is all your friend sees. No feelings, no reasons, nothing you wrote, n
 
 Everything in this repo runs on Meta's Muse Spark 1.3 through the Meta Model API. The demo person, Arjun, and his friends are fictional. I also tested the rule on 11 real Instagram downloads (more below).
 
-**Try it:** open `web/index.html`. You can scroll through Arjun's 30 days, tap through his phone and a friend's phone, and open "Under the hood" to see every decision.
+**Try it:** open `web/index.html`. It's one phone, like the real thing: unlock it, open Here, Instagram or Muse, and switch between Arjun's phone and his friend Sam's. Step through the story with Next, or open "Under the hood" to see every decision.
 
 ---
 
