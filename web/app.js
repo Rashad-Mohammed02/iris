@@ -79,10 +79,18 @@
     return out.filter(l => delivered(l.n, l.to));
   }
 
+  // Muse's own little character carries every lift: cream, fuzzy, rosy-cheeked, always smiling.
+  // Drawn here from public descriptions, not taken from Meta's artwork.
+  document.body.insertAdjacentHTML("beforeend", `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <filter id="fuzz" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter>
+    <radialGradient id="fur" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#fbf5ea"/><stop offset=".7" stop-color="#f1e5d1"/><stop offset="1" stop-color="#e2d1b6"/></radialGradient></defs></svg>`);
   function face(size, extra) {
-    return `<svg class="face ${extra || ""}" viewBox="0 0 30 30" width="${size}" height="${size}" aria-hidden="true">
-      <circle class="f" cx="15" cy="15" r="14"/><circle class="e" cx="10.5" cy="13" r="1.8"/><circle class="e" cx="19.5" cy="13" r="1.8"/>
-      <path d="M10.5 18.5 Q15 21.5 19.5 18.5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>`;
+    return `<svg class="face ${extra || ""}" viewBox="0 0 60 60" style="width:${size}px;height:${size}px" aria-hidden="true">
+      <g filter="url(#fuzz)" fill="url(#fur)"><path d="M27.5 14.5c-.6-4.2 1.6-7.4 5.2-8.2-1.3 2.4-1.2 4.8.4 7.6"/><ellipse cx="30" cy="34" rx="23" ry="21.5"/></g>
+      <ellipse class="cheek" cx="18.5" cy="39" rx="4.6" ry="3"/><ellipse class="cheek" cx="41.5" cy="39" rx="4.6" ry="3"/>
+      <g class="eyes"><ellipse cx="23.5" cy="31.5" rx="2.5" ry="3.1"/><ellipse cx="36.5" cy="31.5" rx="2.5" ry="3.1"/></g>
+      <path class="mouth" d="M26.5 38.5q3.5 3.6 7 0"/></svg>`;
   }
 
   const greet = () => "Good evening";  // lifts land around 9 PM in the demo
@@ -393,7 +401,7 @@
     const next = (label, dis) => `<button class="btn primary ob-next" data-ob="next" ${dis ? "disabled" : ""}>${label || "Next"}</button>`;
     let h = `<div class="ob">${dots}`;
     if (step === "welcome") {
-      h += `<div class="ob-hero">${face(72, "bob")}<div class="ob-title">Circle</div><div class="muted">A space in Muse</div></div>
+      h += `<div class="ob-hero">${face(96, "bob")}<div class="ob-title">Circle</div><div class="muted">A space in Muse</div></div>
         <p class="agent">When you're quietly running low, the few people closest to you find out, without you having to ask. And without them learning anything private.</p>
         <p class="agent">They just get one small, doable idea, like watching the race with you.</p>${next("Get started")}`;
     } else if (step === "age") {
@@ -459,10 +467,10 @@
       // The same lift, on a pocket device: one line, one tap, nothing else.
       const k = l && liftKey(l.n, who), plan = k && ui.plan[k];
       $("#rxScreen").innerHTML = l && !ui.left[who]
-        ? `<div class="charm-screen" id="rx-lift">${face(46, "bob")}<p class="charm-text">${esc(l.text)}</p>` +
+        ? `<div class="charm-screen" id="rx-lift">${face(64, "bob")}<p class="charm-text">${esc(l.text)}</p>` +
           (plan === "no" ? `<div class="charm-small">Okay. ${esc(D.owner)} won't know.</div>` : plan ? `<div class="charm-small">${plan === "race" ? "Reminder set for race day." : "Done. It's all you from here."}</div>`
             : `<div class="charm-btns"><button data-sheet-b="plan" data-k="${esc(k)}">Plan</button><button data-plan="${esc(k)}" data-v="no">Not now</button></div>`) + `</div>`
-        : `<div class="charm-screen">${face(46, "bob")}<p class="charm-text muted">All quiet in your circle.</p><div class="charm-small">Hold to talk to Muse</div></div>`;
+        : `<div class="charm-screen">${face(64, "bob")}<p class="charm-text muted">All quiet in your circle.</p><div class="charm-small">Hold to talk to Muse</div></div>`;
       return;
     }
     let h = `<p class="hello">${greet()}, ${esc(who)}.</p>`;

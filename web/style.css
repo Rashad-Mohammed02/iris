@@ -182,9 +182,11 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
 .avatar { width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 650; font-size: 14px; background: var(--fill-1); flex: none; }
 
 /* Muse's face: only on orbit and on lifts */
-.face { width: 30px; height: 30px; flex: none; }
-.face circle.f { fill: var(--accent); }
-.face .e { fill: #fff; }
+.face { width: 30px; height: 30px; flex: none; overflow: visible; filter: drop-shadow(0 1px 1.5px #00000033); }
+.face .cheek { fill: #f2a19b; opacity: .75; }
+.face .eyes { fill: #1b1b1c; animation: blink 5.5s infinite; transform-box: fill-box; transform-origin: center; }
+.face .mouth { fill: none; stroke: #1b1b1c; stroke-width: 1.7; stroke-linecap: round; }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
 
 /* Orbit widget */
 .orbit-card { padding: 0; overflow: hidden; min-width: 0; }
