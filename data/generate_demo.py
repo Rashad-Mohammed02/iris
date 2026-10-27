@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Here demo data: synthetic 30-day Instagram history for "Arjun".
+Iris demo data: synthetic 30-day Instagram history for "Arjun".
 
 EVERYTHING THIS SCRIPT PRODUCES IS FICTIONAL. Arjun, his circle, every
 handle, every creator account, every caption and every message are invented
@@ -1003,7 +1003,7 @@ def print_table(truth):
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="Generate the fictional Here demo Instagram export.")
+    ap = argparse.ArgumentParser(description="Generate the fictional Iris demo Instagram export.")
     ap.add_argument("--out", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "demo_export"))
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()

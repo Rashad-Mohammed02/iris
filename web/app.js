@@ -1,4 +1,4 @@
-// Here prototype: one phone, like the real thing. Arjun's phone and a friend's (or their Muse Charm),
+// Iris prototype: one phone, like the real thing. Arjun's phone and a friend's (or their Muse Charm),
 // with a lock screen, a home screen and the apps. Reads window.DEMO (scripts/run_demo.py, real engine output),
 // window.BENCH (bench/export_web.py) and window.IG (scripts/export_instagram.py). No network calls.
 
@@ -88,9 +88,9 @@
   // Each moment sets the day, whose phone you hold, and what's on its screen. Between moments
   // everything is live: unlock, open any app, tap anything.
   const CHAPTERS = [
-    { day: 1, label: "Arjun finds Here", hint: "Tap Here on the home screen to set it up.", phone: "arjun", screen: "home", fresh: true },
+    { day: 1, label: "Arjun finds Iris", hint: "Tap Iris on the home screen to set it up.", phone: "arjun", screen: "home", fresh: true },
     { day: 2, label: "Sam gets an invite", hint: "Tap the notification on Sam's phone.", phone: "friend", rx: "Sam", screen: "lock" },
-    { day: LIFTS_ON, label: "Lifts switch on", hint: "Two weeks in, Here knows Arjun's normal.", phone: "arjun", screen: "app", app: "circle", tab: "today" },
+    { day: LIFTS_ON, label: "Lifts switch on", hint: "Two weeks in, Iris knows Arjun's normal.", phone: "arjun", screen: "app", app: "circle", tab: "today" },
     { day: 24, label: "A rough week on Instagram", hint: "Arjun's watch history and messages this week.", phone: "arjun", screen: "app", app: "ig" },
     { day: 24, label: "A lift waits for Arjun's OK", hint: "Tap the notification, then Send.", phone: "arjun", screen: "lock" },
     { day: 24, label: "Sam gets the lift", hint: "This line is all Sam ever sees.", phone: "friend", rx: "Sam", screen: "lock", approve: "Sam" },
@@ -268,18 +268,18 @@
       ${row("page", "Your page", "Evenings", tog(ui.notif.page, "page"))}
       ${row("people", "Together ideas", "", tog(ui.notif.together, "together"))}
       <div class="sh">Privacy and safety</div>
-      ${row("lock", "What Here reads", "", undefined, `data-sheet-a="reads"`)}
+      ${row("lock", "What Iris reads", "", undefined, `data-sheet-a="reads"`)}
       ${row("shield", "Is anyone pushing you to share?", "", undefined, `data-sheet-a="pressure"`)}
       ${row("trash", ui.deleted ? "Everything deleted" : "Delete everything", "", undefined, `data-sheet-a="delete"`, true)}
       <button class="link" type="button" data-chapter="0" style="margin-top:6px">Show setup again</button>
-      <div class="small" style="text-align:center;padding-bottom:6px">Here runs on Meta's Muse Spark through the Meta Model API.</div>`;
+      <div class="small" style="text-align:center;padding-bottom:6px">Iris runs on Meta's Muse Spark through the Meta Model API.</div>`;
   }
 
   function tInstagram() {
     const g = ig();
     if (!g) return `<p class="agent">No Instagram data for this day.</p>`;
     const hue = s => [...s].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
-    let h = `<div class="head"><div><div class="sub">Day ${g.n}</div><div class="ig-word">Instagram</div></div><button class="round" type="button" data-app="circle" aria-label="Back to Here">${face(30)}</button></div>
+    let h = `<div class="head"><div><div class="sub">Day ${g.n}</div><div class="ig-word">Instagram</div></div><button class="round" type="button" data-app="circle" aria-label="Back to Iris">${face(30)}</button></div>
       <div class="stats"><div><b>${g.reels_watched}</b><span>reels watched today</span></div><div><b>${esc(g.last_active || "-")}</b><span>last active</span></div></div>
       <div class="h2">Watch history</div><div class="reels">${g.latest_reels.map(r => `<div class="reel" style="--h:${hue(r.creator)}"><span class="play">▶</span><span class="rc">@${esc(r.creator)}</span><span class="rtime">${esc(r.time)}</span></div>`).join("")}</div>`;
     if (g.saved.length) h += `<div class="h2">Saved</div>` + g.saved.map(s => `<div class="thread"><span class="av" style="background:hsl(${hue(s.creator)} 50% 50%);border-radius:10px">▶</span><div><b>@${esc(s.creator)}</b><div class="small">${esc(s.time)}</div></div></div>`).join("");
@@ -288,8 +288,8 @@
       return `<div class="thread ${star ? "star" : ""}"><span class="av" style="background:hsl(${HUES[t.first] || 200} 55% 52%)">${esc(t.group ? "#" : t.first[0])}</span><div><b>${esc(t.group ? t.name : nameOf(t.first))}</b>
         <div class="small">${esc(t.last)} · ${esc(t.time)} · ${t.sent + t.received} messages</div>${star ? `<div class="star-note">Sam reached out about the race. To ${esc(D.owner)}, it's just Sam being Sam.</div>` : ""}</div>${t.last === "New message" ? `<span class="dot"></span>` : ""}</div>`;
     }).join("");
-    h += `<div class="widget mint"><div class="eyebrow">What Here reads here</div><div>What kind of reels and when, and who ${esc(D.owner)} talks to and when. Never the words in anyone's messages. Read securely by Muse, inside Meta.</div>
-      <button class="pill dark" type="button" data-app="circle" data-thinking="1">See what Here made of this</button></div>`;
+    h += `<div class="widget mint"><div class="eyebrow">What Iris reads here</div><div>What kind of reels and when, and who ${esc(D.owner)} talks to and when. Never the words in anyone's messages. Read securely by Muse, inside Meta.</div>
+      <button class="pill dark" type="button" data-app="circle" data-thinking="1">See what Iris made of this</button></div>`;
     return h;
   }
 
@@ -300,15 +300,15 @@
     const s = ui.ob, back = SETUP.indexOf(s) > 0 ? `<button class="round" type="button" data-ob="back" aria-label="Back" style="background:#ffffffb3">${ICON.back}</button>` : "";
     const next = (label, cls, dis) => `<div class="go"><button class="btn ${cls || "primary"}" type="button" data-ob="next" ${dis ? "disabled" : ""}>${label}</button></div>`;
     if (s === "welcome") return `<img class="pose bob pop" src="${POSE("wave")}" alt="" style="margin-top:auto"><div class="kicker" style="text-align:center">from Meta · works with Muse</div>
-      <h1 class="h1" style="text-align:center;font-size:44px">Here</h1><p class="lead" style="text-align:center">For the people who'd show up for you, if they only knew.</p>${next("Continue with Instagram", "ig")}`;
+      <h1 class="h1" style="text-align:center;font-size:44px">Iris</h1><p class="lead" style="text-align:center">For the people who'd show up for you, if they only knew.</p>${next("Continue with Instagram", "ig")}`;
     if (s === "login") return `${back}<div style="margin-top:auto;display:grid;justify-items:center;gap:8px;text-align:center"><div class="ig-word" style="font-size:34px">Instagram</div>
-      <p class="agent" style="color:var(--ink-2);max-width:270px">Here signs in with your Instagram. No new account, no new password.</p></div>
+      <p class="agent" style="color:var(--ink-2);max-width:270px">Iris signs in with your Instagram. No new account, no new password.</p></div>
       <input class="field" id="handle" value="${esc(ui.handle)}" placeholder="Username" autocomplete="off" autocapitalize="off">${next("Log in", "ig")}`;
     if (s === "connect") return `${back}<div class="head"><div><div class="sub">One permission</div><h1 style="font-size:24px">Connect Instagram</h1></div></div>
-      <p class="agent">Here compares your Instagram with your own normal. Nobody else's.</p>
+      <p class="agent">Iris compares your Instagram with your own normal. Nobody else's.</p>
       <div class="widget"><div class="secure">${ic(P.lock, 15)}Read securely by Muse, inside Meta. Never shown to anyone.</div>
-      <div><b>Here reads</b><div class="small" style="font-size:14px;color:var(--ink-2)">The reels you watch and send, and what's in them. When you scroll and for how long. Who you message, when, and how quickly you reply.</div></div>
-      <div><b>Here never reads</b><div class="small" style="font-size:14px;color:var(--ink-2)">The words in your messages, your photos, or where you are.</div></div></div>
+      <div><b>Iris reads</b><div class="small" style="font-size:14px;color:var(--ink-2)">The reels you watch and send, and what's in them. When you scroll and for how long. Who you message, when, and how quickly you reply.</div></div>
+      <div><b>Iris never reads</b><div class="small" style="font-size:14px;color:var(--ink-2)">The words in your messages, your photos, or where you are.</div></div></div>
       <div class="go"><button class="btn blue" type="button" data-ob="next">Always allow</button><button class="btn" type="button" data-ob="next">Allow once</button></div>`;
     if (s === "pick") {
       const all = circle.map(m => ({ f: m.first, h: m.name.toLowerCase().replace(/\s+/g, ".") })).concat(EXTRA.map(e => ({ f: e.first, h: e.h })));
@@ -320,7 +320,7 @@
     }
     if (s === "nick") return `${back}<div class="kicker">Make it yours</div><h1 class="h1">Nicknames?</h1><p class="lead">Call them what you call them. Only you see these.</p>
       <div style="display:grid;gap:10px">` + [...ui.picked].map(f => `<div class="nickrow">${av(f)}<div style="min-width:0;display:grid;gap:2px"><input class="nick" data-nick="${esc(f)}" placeholder="${esc(f)}" value="${esc(ui.nick[f] || "")}" maxlength="18">
-        <div class="small">${shared(f, D.days[22]).length ? "You two share " + shared(f, D.days[22]).join(" and ") : "Here learns what you share as you go"}</div></div></div>`).join("") + `</div>${next("Looks good")}`;
+        <div class="small">${shared(f, D.days[22]).length ? "You two share " + shared(f, D.days[22]).join(" and ") : "Iris learns what you share as you go"}</div></div></div>`).join("") + `</div>${next("Looks good")}`;
     if (s === "perms") return `${back}<div class="head"><h1 style="font-size:24px">Who gets to know</h1></div>
       <p class="agent">When you're off your normal, who may get a small idea of something to do for you? Nobody sees what you chose.</p><div style="display:grid;gap:14px">` +
       [...ui.picked].filter(f => ui.perms[f] !== undefined || true).map(f => { const p = ui.perms[f] || "When it matters";
@@ -330,7 +330,7 @@
       [["ask", "Ask me first", "Each lift waits until you tap Send"], ["auto", "Send on its own", "You get 10 minutes to stop it"]].map(([k, t, sub]) =>
         `<button class="opt ${ui.send === k ? "on" : ""}" type="button" data-send="${k}"><span>${ui.send === k ? ic(P.check, 18) : ""}</span><span><b>${t}</b><span>${sub}</span></span></button>`).join("") + next("Next", "blue");
     if (s === "notify") return `<img class="pose sm bob" src="${POSE("phone")}" alt="" style="margin-top:auto"><p class="agent" style="text-align:center">I'll only tap you when a lift needs your OK, or a friend could use one.</p>
-      <div class="dim"><div class="alert"><b>"Here" Would Like to Send You Notifications</b><p>Lifts that need your OK, and lifts for the people you care about.</p>
+      <div class="dim"><div class="alert"><b>"Iris" Would Like to Send You Notifications</b><p>Lifts that need your OK, and lifts for the people you care about.</p>
       <div class="two"><button type="button" data-ob="next">Don't Allow</button><button type="button" data-ob="next">Allow</button></div></div></div>`;
     if (s === "done") {
       const names = [...ui.picked];
@@ -339,13 +339,13 @@
         orbit += `<div class="planet pop" style="left:${50 + 40 * Math.cos(a)}%;top:${50 + 40 * Math.sin(a)}%;animation-delay:${i * .12}s">${av(f, "sm")}${esc(nameOf(f))}</div>`; });
       return `<div class="confetti">${Array.from({ length: 36 }, (_, k) => `<i style="left:${(k * 37) % 100}%;background:${["#0064d4", "#f2a19b", "#f9c46b", "#7fcf9f", "#b79cf2"][k % 5]};animation-delay:${(k % 7) * .08}s"></i>`).join("")}</div>
         <h1 class="h1" style="text-align:center">Invites sent</h1>${orbit}<p class="lead" style="text-align:center">For the first two weeks I'll just learn your normal. Then I'm here.</p>
-        <div class="go"><button class="btn primary" type="button" data-ob="finish">Open Here</button></div>`;
+        <div class="go"><button class="btn primary" type="button" data-ob="finish">Open Iris</button></div>`;
     }
     return "";
   }
 
   // ================= The phone itself: lock screen, home screen, apps =================
-  const APP_NAME = { circle: "Here", here: "Here", ig: "Instagram", muse: "Muse" };
+  const APP_NAME = { circle: "Iris", here: "Iris", ig: "Instagram", muse: "Muse" };
   const appIcon = (id, cls) => `<span class="appic ${id === "here" ? "circle" : id} ${cls || ""}">${id === "circle" || id === "here" ? `<img src="${FACE}" alt="">`
     : `<svg viewBox="0 0 24 24">${id === "ig" ? P.insta : P.spark}</svg>`}</span>`;
   const friendLift = () => allLifts(ui.day).filter(x => x.to === ui.rx && delivered(x.n, x.to) && ui.day - x.n <= 2).pop();
@@ -397,24 +397,24 @@
       pose = l ? "letter" : "stand";
     }
     return `<div class="home fadein">
-      <button class="hw" type="button" data-open="${apps[0]}"><img class="bob" src="${POSE(pose)}" alt=""><div><div class="hw-k">Here</div><div class="hw-t">${esc(line)}</div></div></button>
+      <button class="hw" type="button" data-open="${apps[0]}"><img class="bob" src="${POSE(pose)}" alt=""><div><div class="hw-k">Iris</div><div class="hw-t">${esc(line)}</div></div></button>
       <div class="apps">${apps.map(id => { const n = ns.filter(x => x.app === id).length;
         return `<button class="app" type="button" data-open="${id}">${n ? `<span class="badge2">${n}</span>` : ""}${appIcon(id)}<span>${APP_NAME[id]}</span></button>`; }).join("")}</div>
-      ${mine && fresh() && !ui.ob ? `<div class="coach pop">Tap Here to set it up</div>` : ""}</div>`;
+      ${mine && fresh() && !ui.ob ? `<div class="coach pop">Tap Iris to set it up</div>` : ""}</div>`;
   }
 
   function museApp() {
     const mine = ui.phone === "arjun", d = cur();
     let h = `<div class="head"><div><div class="sub">${esc(d.weekday)}</div><h1>Muse</h1></div>${appIcon("muse", "sm")}</div>`;
     if (mine) {
-      h += `<div class="widget sky"><div class="eyebrow">Connected app</div><div>Here works with Muse. Lifts you allow can arrive in your friends' Muse, or on their Muse Charm.</div>
-        <div class="row"><button class="pill dark" type="button" data-open="circle">Open Here</button></div></div>
+      h += `<div class="widget sky"><div class="eyebrow">Connected app</div><div>Iris works with Muse. Lifts you allow can arrive in your friends' Muse, or on their Muse Charm.</div>
+        <div class="row"><button class="pill dark" type="button" data-open="circle">Open Iris</button></div></div>
         <div class="muse-line">${face(22)}<p>Hi ${esc(D.owner)}. What's on your mind?</p></div>
-        <div class="row"><button class="chip" type="button" data-sheet-a="reads">What does Here read?</button><button class="chip" type="button" data-open="circle" data-opentab="you">Pause my lifts</button></div>`;
+        <div class="row"><button class="chip" type="button" data-sheet-a="reads">What does Iris read?</button><button class="chip" type="button" data-open="circle" data-opentab="you">Pause my lifts</button></div>`;
       return h;
     }
     const l = friendLift(), lk = l && liftKey(l.n, ui.rx), plan = lk && ui.plan[lk];
-    if (l && !ui.rxLeft[ui.rx]) h += `<div class="widget"><div class="eyebrow">From Here</div><p class="quote">${esc(l.text)}</p><div class="sig">${face(22)}<span>Suggested by Muse. ${esc(D.owner)} didn't ask.</span></div>` +
+    if (l && !ui.rxLeft[ui.rx]) h += `<div class="widget"><div class="eyebrow">From Iris</div><p class="quote">${esc(l.text)}</p><div class="sig">${face(22)}<span>Suggested by Muse. ${esc(D.owner)} didn't ask.</span></div>` +
       (plan === "no" ? `<div class="small">Okay. ${esc(D.owner)} won't know.</div>` : plan ? `<div class="ok">${esc(plan)}</div>`
         : `<div class="row"><button class="pill blue" type="button" data-sheet-b="plan" data-k="${esc(lk)}">Plan something</button><button class="pill" type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`) + `</div>`;
     else h += `<div class="muse-line">${face(22)}<p>Hi ${esc(ui.rx)}. What's on your mind?</p></div>`;
@@ -423,7 +423,7 @@
     return h;
   }
 
-  // ---------------- Arjun's Here app ----------------
+  // ---------------- Arjun's Iris app ----------------
   function renderHere(animate) {
     const glass = $("#glass"), view = $("#view"), tb = $("#tabbar");
     if (ui.ob) {
@@ -447,7 +447,7 @@
     view.firstElementChild.scrollTop = keep;
   }
 
-  // ---------------- A friend's Here app (everyone has the same app) ----------------
+  // ---------------- A friend's Iris app (everyone has the same app) ----------------
   function friendHere() {
     const d = cur(), who = ui.rx, l = friendLift();
     const lk = l && liftKey(l.n, who), plan = lk && ui.plan[lk];
@@ -455,7 +455,7 @@
     if (ui.rxLeft[who]) h += `<p class="agent">You left ${esc(D.owner)}'s circle. No more lifts for ${esc(D.owner)}.</p>`;
     else if (ui.day <= 2 && (ui.invited || ui.day === 2)) {
       if (!ui.joined[who]) h += `<div class="widget"><div class="row">${av("A")}<div><div class="who">${esc(D.owner)} asked you into their circle</div><div class="small">Up to five people</div></div></div>
-        <div>Now and then, Here may suggest one small thing to do for ${esc(D.owner)}. You'll never see why, and ${esc(D.owner)} never sees what you do with it.</div>
+        <div>Now and then, Iris may suggest one small thing to do for ${esc(D.owner)}. You'll never see why, and ${esc(D.owner)} never sees what you do with it.</div>
         <div class="row"><button class="pill blue" type="button" data-join="${esc(who)}">Join</button><button class="pill" type="button" data-join="${esc(who)}" data-no="1">Not now</button></div></div>`;
       else if (ui.joined[who] === "no") h += `<p class="agent">Okay. The invite stays open if you change your mind.</p>`;
       else h += `<div class="widget mint"><div class="eyebrow">You're in ${esc(D.owner)}'s circle</div>${ui.added[who] ? `<div>${esc(D.owner)} is in yours too.</div>` :
@@ -467,7 +467,7 @@
           : `<div class="row"><button class="pill blue" type="button" data-sheet-b="plan" data-k="${esc(lk)}">Plan something</button><button class="pill" type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`) +
         `</div><div class="small">That's everything ${esc(who)} sees: no feelings, no reasons, nothing ${esc(D.owner)} wrote.</div>`;
     } else if (ui.day === LANDS && who === "Sam") {
-      h += `<div class="widget sky"><div class="eyebrow">Reminder you set</div><div>Race day. Watching it with ${esc(D.owner)}?</div></div><p class="agent">That's all from Here. The rest is just you and ${esc(D.owner)}.</p>`;
+      h += `<div class="widget sky"><div class="eyebrow">Reminder you set</div><div>Race day. Watching it with ${esc(D.owner)}?</div></div><p class="agent">That's all from Iris. The rest is just you and ${esc(D.owner)}.</p>`;
     } else h += `<p class="agent">Your circle's quiet today. Nothing to do. Enjoy it.</p>`;
     h += `<div class="small" style="margin-top:auto;text-align:center">Lifts can also arrive in Instagram, in Muse, or on a Muse Charm.</div>`;
     return h;
@@ -515,15 +515,15 @@
       return `<h3>Lift history</h3>` + (ls.length ? ls.reverse().map(l => `<div class="widget flat"><div class="small">Day ${l.n} · to ${esc(nameOf(l.to))} · ${delivered(l.n, l.to) ? "sent" : ui.stopped[liftKey(l.n, l.to)] ? "not sent" : "waiting for you"}</div><div>${esc(l.text)}</div></div>`).join("")
         : `<div class="small">No lifts yet. At most one per person per week.</div>`) + `<div class="small">Only you see this list. Nobody sees why a lift went out.</div><button class="btn primary" type="button" data-close="A">Close</button>`; },
     charm: () => `<h3>Muse Charm</h3><span class="soon">Coming soon</span><p class="agent">Lifts for your circle can show up on your Charm, the pocket device for Muse. One line, one tap. Try it on the friend's side with the Muse Charm switch.</p><button class="btn primary" type="button" data-close="A">Got it</button>`,
-    reads: () => `<h3>What Here reads</h3><div class="secure">Read securely by Muse, inside Meta. Nobody else sees it.</div>
+    reads: () => `<h3>What Iris reads</h3><div class="secure">Read securely by Muse, inside Meta. Nobody else sees it.</div>
       <div><b>Reads</b><p class="agent" style="color:var(--ink-2);font-size:14.5px">The reels you watch and send, and what's in them. When you scroll and for how long. Who you message, when, and how quickly you reply. What you write in your journal here.</p></div>
       <div><b>Never reads</b><p class="agent" style="color:var(--ink-2);font-size:14.5px">The words in anyone's messages, your photos, or where you are.</p></div>
       <div><b>Never shares</b><p class="agent" style="color:var(--ink-2);font-size:14.5px">Anything at all, except one short lift you allowed, to one person you chose.</p></div><button class="btn primary" type="button" data-close="A">Got it</button>`,
-    pressure: () => `<h3>Just for you</h3><p class="agent">Is anyone pushing you to share more than you want to, or to keep Here on?</p><div class="small">If you say yes, I'll quietly stop all lifts to that person. They won't be told.</div>
+    pressure: () => `<h3>Just for you</h3><p class="agent">Is anyone pushing you to share more than you want to, or to keep Iris on?</p><div class="small">If you say yes, I'll quietly stop all lifts to that person. They won't be told.</div>
       <div class="row"><button class="pill" type="button" data-close="A" data-toast="Thanks">No, all good</button><button class="pill blue" type="button" data-close="A" data-toast="Got it. Handled quietly.">Yes, someone is</button></div>
       <div class="small">If you ever feel unsafe, in the US you can call or text 988, or the domestic violence hotline at 1-800-799-7233.</div>`,
-    delete: () => ui.deleted ? `<h3>All deleted</h3><div class="small">Everything Here knew about you is gone.</div><button class="btn primary" type="button" data-close="A">Close</button>` :
-      `<h3>Delete everything?</h3><p class="agent">This erases what Here learned about your normal, your journal and your lift history. Your circle isn't told.</p>
+    delete: () => ui.deleted ? `<h3>All deleted</h3><div class="small">Everything Iris knew about you is gone.</div><button class="btn primary" type="button" data-close="A">Close</button>` :
+      `<h3>Delete everything?</h3><p class="agent">This erases what Iris learned about your normal, your journal and your lift history. Your circle isn't told.</p>
       <button class="btn" type="button" data-delete="1" style="background:#fde8e8;color:var(--bad)">Delete everything</button><button class="link" type="button" data-close="A">Cancel</button>`,
     plan: k => { const l = allLifts(ui.day).find(x => liftKey(x.n, x.to) === k) || {}, i = l.interest || "";
       return `<h3>Something small for ${esc(D.owner)}</h3>
@@ -543,7 +543,7 @@
     const d = cur();
     const pending = d.lifts.map(x => Object.assign({ n: d.n }, x));
     const l = pending.find(x => x.to === ui.rx) || pending[0] || allLifts(ui.day).filter(x => ui.day - x.n <= 2).pop();
-    if (!l) return `<h2>What crosses today: nothing</h2><p class="lede">${d.n < LIFTS_ON ? `Here is still learning ${esc(D.owner)}'s normal. Lifts switch on at day ${LIFTS_ON}.` : `Nothing about ${esc(D.owner)} goes to anyone today.`}</p>` + whyNot(d);
+    if (!l) return `<h2>What crosses today: nothing</h2><p class="lede">${d.n < LIFTS_ON ? `Iris is still learning ${esc(D.owner)}'s normal. Lifts switch on at day ${LIFTS_ON}.` : `Nothing about ${esc(D.owner)} goes to anyone today.`}</p>` + whyNot(d);
     const src = D.days[l.n - 1];
     const stays = [];
     if (src.page) stays.push(`The private page: "${src.page}"`);
@@ -558,7 +558,7 @@
       [c.leak === false, "Muse privacy check: nothing private given away, not even a hint"],
       [c.interest_echoes === false, "The interest itself doesn't hint at the reason"],
       [c.harmless_if_wrong !== false, "Harmless if wrong: fine even on a perfectly good week"]];
-    return `<h2>What crosses to ${esc(l.to)}</h2><p class="lede">Day ${l.n}${delivered(l.n, l.to) ? "" : `, waiting for ${esc(D.owner)} to tap Send`}. The writer never saw anything on the left. It only knew "${esc(D.owner)}", "${esc(l.to)}" and "${esc(l.interest)}", which Here found in the reels ${esc(D.owner)} sends ${esc(l.to)}.</p>
+    return `<h2>What crosses to ${esc(l.to)}</h2><p class="lede">Day ${l.n}${delivered(l.n, l.to) ? "" : `, waiting for ${esc(D.owner)} to tap Send`}. The writer never saw anything on the left. It only knew "${esc(D.owner)}", "${esc(l.to)}" and "${esc(l.interest)}", which Iris found in the reels ${esc(D.owner)} sends ${esc(l.to)}.</p>
       <div class="split"><div class="col stays"><h4>Stays private</h4><ul>${stays.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>
       <div class="col crosses"><h4>Crosses to ${esc(l.to)}</h4><ul><li>"${esc(l.text)}"</li><li>One thing they already share: ${esc(l.interest)}</li><li>That ${esc(D.owner)} could use something nice. Never why.</li></ul></div></div>
       <div class="checks">${checks.map(([ok, t]) => `<div class="checkrow"><span class="dot ${ok ? "" : "bad"}"></span><span>${esc(t)}</span></div>`).join("")}</div>
@@ -596,7 +596,7 @@
         <p class="note" style="margin-top:0">Real people's own Instagram downloads, their real days repeated to six weeks, then a changed last week. ${fa} false alarm${fa === 1 ? "" : "s"} in ${nd} normal days. The hard week is made up; the normal weeks are real.</p>
         <table><tr><th>Account</th><th>Real days</th><th>False alarms</th><th>Hard week caught</th><th>Late nights only</th><th>Quieter only</th></tr>` +
         R.map(r => `<tr><td>${esc(r.account)}</td><td>${r.real_days}</td><td>${r.false_alarms} of ${r.normal_days}</td><td>${r.hard ? "Yes, day " + r.hard : "No"}</td><td>${r.late ? "Flagged" : "Quiet"}</td><td>${r.quiet ? "Flagged" : "Quiet"}</td></tr>`).join("") +
-        `</table><p class="note">Here waits for two kinds of change to agree. The three it missed barely message their circle, so it held back rather than guess. Source: ${esc(B.real.source)}.</p>`;
+        `</table><p class="note">Iris waits for two kinds of change to agree. The three it missed barely message their circle, so it held back rather than guess. Source: ${esc(B.real.source)}.</p>`;
     }
     return h;
   }
@@ -606,7 +606,7 @@
       <p class="lede">Arjun's month in nine moments. Between them, everything on the phone is live.</p>
       <div class="chs">${CHAPTERS.map((c, i) => `<button class="ch ${i === ui.chapter ? "on" : ""}" type="button" data-chapter="${i}"><span>Day ${c.day} · ${c.phone === "arjun" ? D.owner : c.rx}'s phone</span><b>${esc(c.label)}</b></button>`).join("")}</div>
       <div class="section-title">Or jump to any day</div><input type="range" id="day" min="1" max="${D.days.length}" value="${ui.day}" aria-label="Day">
-      <p class="note">For the first ${LIFTS_ON - 1} days Here only learns. Lifts can go out from day ${LIFTS_ON}. Hackathon prototype, not a Meta product. Every person and message is fictional.</p>`;
+      <p class="note">For the first ${LIFTS_ON - 1} days Iris only learns. Lifts can go out from day ${LIFTS_ON}. Hackathon prototype, not a Meta product. Every person and message is fictional.</p>`;
   }
   function hoodDrawer() {
     return `<div class="dh"><div class="vtabs">${[["crosses", "What crosses"], ["hood", "Under the hood"]].map(([k, t]) => `<button type="button" class="${ui.view === k ? "on" : ""}" data-view="${k}">${t}</button>`).join("")}</div>

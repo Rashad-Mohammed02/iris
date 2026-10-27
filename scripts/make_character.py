@@ -1,4 +1,4 @@
-"""Draw Here's own character with Muse Image: a sibling in the same soft, plush family
+"""Draw Iris's own character with Muse Image: a sibling in the same soft, plush family
 as Muse's mascot, but its own creature. Writes candidates to the folder given.
 
     python scripts/make_character.py OUT_DIR [--ref path/to/reference.png]

@@ -1,6 +1,6 @@
 """Client for the Meta Model API (Muse models).
 
-This is the only module in Here that calls an AI model, and the only
+This is the only module in Iris that calls an AI model, and the only
 service it calls is Meta's. Standard library only.
 """
 
