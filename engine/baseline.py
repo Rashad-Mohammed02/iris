@@ -16,8 +16,10 @@ OUT = ROOT / "out"
 
 WEEKEND = {4, 5}          # Fri and Sat nights run later for most people; compare like with like
 DAY_BLOCK = (9, 17)       # "daytime" for the daytime binge family
-DEEP_NIGHT = (25, 29)     # 1 AM to 5 AM, on the night-hour clock below
-WAKE_GAP_H = 1.5          # activity after a gap this long in the deep night is "wake and scroll"
+REST_WINDOW = (18, 38)    # where the night's rest is looked for: 6 PM to 2 PM next day, on the night-hour clock
+WAKE_BURST_GAP_H = 0.5    # activity this far apart counts as separate times awake
+LATEST_REST_START = 31    # night rest starts by 7 AM (31 on the night-hour clock)
+DAY_STARTS = 29           # 5 AM: activity after this is the next morning
 SESSION_GAP_H = 10 / 60   # a new session starts after 10 quiet minutes
 NEW_CONVO_GAP_H = 3       # a message after 3 quiet hours in a thread starts a conversation
 LEARNING_DAYS = 14        # nothing is judged before two weeks of normal (research Part 3)
@@ -84,11 +86,12 @@ def daily_signals(events, profile):
             last_in_thread[e.get("to") or e.get("thread")] = e["ts"]
 
     rows = []
-    for day in sorted(days):
+    ordered = sorted(days)
+    for n, day in enumerate(ordered):
         d = days[day]
         wd = date.fromisoformat(day).weekday()
         times = sorted(d["times"])
-        wakes = sum(1 for a, b in zip(times, times[1:]) if DEEP_NIGHT[0] <= b < DEEP_NIGHT[1] and b - a >= WAKE_GAP_H)
+        rest = night_rest(times, sorted(days[ordered[n + 1]]["times"]) if n + 1 < len(ordered) else None)
         sessions = (1 + sum(1 for a, b in zip(times, times[1:]) if b - a >= SESSION_GAP_H)) if times else 0
         chosen = 3 * d["saved"] + 3 * d["reels_sent"] + d["reels"]
         heavy_chosen = 3 * d["heavy_saved"] + 3 * d["heavy_sent"] + d["heavy_reels"]
@@ -102,7 +105,9 @@ def daily_signals(events, profile):
             "chosen_heavy": round(heavy_chosen / chosen, 3) if chosen else 0.0,
             "last_active": times[-1] if times else None,
             "first_active": times[0] if times else None,
-            "wake_scrolls": wakes,
+            # The night's rest: the longest stretch with no activity at all, a common phone-based stand-in for sleep.
+            "rest_hours": rest and rest["hours"], "rest_start": rest and rest["start"], "rest_end": rest and rest["end"],
+            "night_points": rest and rest["points"],
             "day_reels": d["day_reels"],
             "sessions": sessions,
             "themes": dict(d["themes"]),
@@ -124,6 +129,35 @@ def daily_signals(events, profile):
             }
         rows.append(row)
     return rows
+
+
+def night_rest(today, tomorrow):
+    """The longest gap in his own activity between 6 PM and 2 PM the next day.
+
+    Times are on the night-hour clock (01:30 is 25.5). Returns hours, when it
+    started and ended, and every activity point in the window (to spot waking up
+    in the middle of it). None when the next day's data isn't there yet.
+    """
+    if tomorrow is None:
+        return None
+    pts = [h for h in today if h >= REST_WINDOW[0]] + [h + 24 for h in tomorrow if h + 24 < REST_WINDOW[1]]
+    pts = sorted(pts)
+    if not any(x < LATEST_REST_START for x in pts) or not any(x >= DAY_STARTS for x in pts):
+        return None  # no evening or no morning activity: can't tell when he slept, so don't guess
+    # Only gaps with activity on both sides count, and night rest starts by 7 AM.
+    gaps = [(b - a, a) for a, b in zip(pts, pts[1:]) if a < LATEST_REST_START]
+    if not gaps:
+        return None
+    gap, start = max(gaps)
+    return {"hours": round(gap, 2), "start": round(start, 2), "end": round(start + gap, 2), "points": [round(x, 2) for x in pts]}
+
+
+def wakes_in(points, start, end):
+    """How many separate times he was active inside his usual rest window."""
+    inside = sorted(x for x in (points or []) if start < x < end)
+    if not inside:
+        return 0
+    return 1 + sum(1 for a, b in zip(inside, inside[1:]) if b - a >= WAKE_BURST_GAP_H)
 
 
 def _mad(xs, m):
@@ -161,7 +195,9 @@ def baseline_for(rows, i, window=28, min_days=LEARNING_DAYS, exclude=()):
         "days": len(prior),
         "last_active": stats([r["last_active"] for r in kind]),
         "first_active": stats([r["first_active"] for r in kind]),
-        "wake_scrolls": stats([r["wake_scrolls"] for r in prior]),
+        "rest_hours": stats([r["rest_hours"] for r in kind]),
+        "rest_start": stats([r["rest_start"] for r in kind]),
+        "rest_end": stats([r["rest_end"] for r in kind]),
         "day_reels": stats([r["day_reels"] for r in kind]),
         "sessions": stats([r["sessions"] for r in kind]),
         "reels": stats([r["reels"] for r in kind]),
@@ -176,6 +212,12 @@ def baseline_for(rows, i, window=28, min_days=LEARNING_DAYS, exclude=()):
         "starts": stats([r["starts"] for r in kind]),
         "people": {},
     }
+    if b["rest_start"] and b["rest_end"]:
+        # His usual rest window, trimmed by half an hour each side, and how often he's usually up inside it
+        b["rest_window"] = (b["rest_start"]["median"] + 0.5, b["rest_end"]["median"] - 0.5)
+        b["wakes"] = stats([wakes_in(r["night_points"], *b["rest_window"]) for r in prior if r["night_points"] is not None])
+    else:
+        b["rest_window"], b["wakes"] = None, None
     for p in rows[i]["people"]:
         sent_days = [r["people"][p]["sent"] for r in prior]
         b["people"][p] = {

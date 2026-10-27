@@ -27,7 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from engine.baseline import baseline_for, daily_signals, load_events, load_profile  # noqa: E402
+from engine.baseline import baseline_for, daily_signals, load_events, load_profile, wakes_in  # noqa: E402
 
 OUT = ROOT / "out"
 
@@ -37,7 +37,7 @@ FAMILIES = {
     "S2_messaging": ("social", 3, False),
     "S3_quiet_with_one": ("social", 2, False),
     "S4_reel_sending": ("social", 2, False),
-    "T1_active_window": ("timing", 3, False),
+    "T1_rest": ("timing", 3, False),
     "T2_daytime_binge": ("timing", 2, False),
     "T3_sessions": ("timing", 1, True),
     "T4_volume": ("timing", 1, True),
@@ -46,15 +46,16 @@ FAMILIES = {
 }
 # Which family each plain signal belongs to
 SIGNAL_FAMILY = {
-    "later_than_usual": "T1_active_window", "earlier_start": "T1_active_window", "wake_and_scroll": "T1_active_window",
+    "later_to_sleep": "T1_rest", "shorter_rest": "T1_rest", "longer_rest": "T1_rest", "woke_in_night": "T1_rest",
     "daytime_binge": "T2_daytime_binge", "more_sessions": "T3_sessions", "more_reels": "T4_volume",
     "slower_replies": "S1_reply_rhythm", "fewer_messages": "S2_messaging", "more_messages": "S2_messaging",
     "shorter_replies": "S2_messaging", "fewer_starts": "S2_messaging", "gone_quiet": "S3_quiet_with_one",
     "sending_heavy_reels": "S4_reel_sending", "heavier_reels": "C1_heavy_content", "interest_fading": "C3_interest_drift",
 }
 
-LATE_MIN_HOURS = 1.0       # at least an hour later than your usual for this kind of night
-EARLY_MIN_HOURS = 1.5      # starting the day much earlier than usual (waking at 4:30)
+LATER_MIN_HOURS = 1.5      # his rest starts at least 90 minutes later than usual for this kind of night
+SHORTER_MIN_HOURS = 1.5    # at least 90 minutes less rest than usual
+LONGER_MIN_HOURS = 3.0     # much more rest than usual counts too (research links oversleeping with low mood)
 DAYTIME_FACTOR = 1.6       # daytime reels well above your usual for this kind of day
 HEAVY_MIN = 0.15           # heavy share at least 15 points above your usual
 SLOW_FACTOR = 4.0          # replies at least 4x slower than usual
@@ -78,16 +79,20 @@ def off_signals(row, base, prev=None):
         off.append(name)
         evidence[name] = ev
 
-    # ---- Timing ----
-    b = base["last_active"]
-    if row["last_active"] is not None and b and row["last_active"] > b["median"] + _spread(b, LATE_MIN_HOURS):
-        flag("later_than_usual", {"last_active": row["last_active"], "usual": round(b["median"], 2)})
-    b = base["first_active"]
-    if row["first_active"] is not None and b and row["first_active"] < b["median"] - _spread(b, EARLY_MIN_HOURS):
-        flag("earlier_start", {"first_active": row["first_active"], "usual": round(b["median"], 2)})
-    b = base["wake_scrolls"]
-    if row["wake_scrolls"] and b and b["median"] == 0 and row["wake_scrolls"] > b["p90"]:
-        flag("wake_and_scroll", {"times": row["wake_scrolls"]})
+    # ---- Timing: the night's rest (the longest stretch with no activity) ----
+    b = base["rest_start"]
+    if row["rest_start"] is not None and b and row["rest_start"] > b["median"] + _spread(b, LATER_MIN_HOURS):
+        flag("later_to_sleep", {"rest_start": row["rest_start"], "usual": round(b["median"], 2)})
+    b = base["rest_hours"]
+    if row["rest_hours"] is not None and b:
+        if row["rest_hours"] < b["median"] - _spread(b, SHORTER_MIN_HOURS):
+            flag("shorter_rest", {"hours": row["rest_hours"], "usual": round(b["median"], 2)})
+        elif row["rest_hours"] > b["median"] + _spread(b, LONGER_MIN_HOURS):
+            flag("longer_rest", {"hours": row["rest_hours"], "usual": round(b["median"], 2)})
+    if row["night_points"] is not None and base["rest_window"] and base["wakes"]:
+        w = wakes_in(row["night_points"], *base["rest_window"])
+        if w >= 1 and w > base["wakes"]["p90"]:
+            flag("woke_in_night", {"times": w, "usual_window": [round(x, 2) for x in base["rest_window"]]})
     b = base["day_reels"]
     if b and b["median"] and row["day_reels"] > max(DAYTIME_FACTOR * b["median"], b["median"] + 3 * b["mad"]):
         flag("daytime_binge", {"day_reels": row["day_reels"], "usual": b["median"]})

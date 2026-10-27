@@ -18,7 +18,7 @@
    "caught": false,
    "first_caught_day": null,
    "families": [
-    "T1_active_window",
+    "T1_rest",
     "T2_daytime_binge",
     "T4_volume"
    ]
@@ -28,7 +28,7 @@
    "caught": false,
    "first_caught_day": null,
    "families": [
-    "T1_active_window",
+    "T1_rest",
     "T2_daytime_binge",
     "T4_volume"
    ]
@@ -55,38 +55,39 @@
   },
   "circle": 2,
   "normal_days_judged": 21,
-  "false_alarm_days": 0,
+  "false_alarm_days": 1,
   "false_alarm_stretches": 0,
   "hard": {
-   "off_days": 5,
+   "off_days": 4,
    "caught": true,
    "first_caught_day": 5,
    "families": [
     "S2_messaging",
     "S3_quiet_with_one",
-    "T1_active_window",
+    "T1_rest",
     "T2_daytime_binge",
     "T4_volume"
    ]
   },
   "late": {
-   "off_days": 3,
+   "off_days": 2,
    "caught": false,
    "first_caught_day": null,
    "families": [
     "S2_messaging",
-    "T1_active_window",
+    "T1_rest",
     "T2_daytime_binge",
     "T4_volume"
    ]
   },
   "quiet": {
-   "off_days": 0,
+   "off_days": 1,
    "caught": false,
    "first_caught_day": null,
    "families": [
     "S2_messaging",
     "S3_quiet_with_one",
+    "T1_rest",
     "T2_daytime_binge",
     "T4_volume"
    ]
@@ -110,7 +111,7 @@
    "caught": false,
    "first_caught_day": null,
    "families": [
-    "T1_active_window",
+    "T1_rest",
     "T4_volume"
    ]
   },
@@ -119,7 +120,7 @@
    "caught": false,
    "first_caught_day": null,
    "families": [
-    "T1_active_window",
+    "T1_rest",
     "T4_volume"
    ]
   },
@@ -127,7 +128,9 @@
    "off_days": 0,
    "caught": false,
    "first_caught_day": null,
-   "families": []
+   "families": [
+    "T1_rest"
+   ]
   }
  },
  {
@@ -145,22 +148,22 @@
   "false_alarm_days": 0,
   "false_alarm_stretches": 0,
   "hard": {
-   "off_days": 4,
+   "off_days": 3,
    "caught": true,
    "first_caught_day": 6,
    "families": [
     "S2_messaging",
-    "T1_active_window",
+    "T1_rest",
     "T4_volume"
    ]
   },
   "late": {
-   "off_days": 4,
+   "off_days": 3,
    "caught": true,
    "first_caught_day": 6,
    "families": [
     "S2_messaging",
-    "T1_active_window",
+    "T1_rest",
     "T4_volume"
    ]
   },
@@ -192,7 +195,7 @@
    "caught": false,
    "first_caught_day": null,
    "families": [
-    "T1_active_window",
+    "T1_rest",
     "T4_volume"
    ]
   },
@@ -201,7 +204,7 @@
    "caught": false,
    "first_caught_day": null,
    "families": [
-    "T1_active_window",
+    "T1_rest",
     "T4_volume"
    ]
   },

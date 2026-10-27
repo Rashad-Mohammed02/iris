@@ -98,11 +98,13 @@ class Demo:
         recent = self.days[max(0, i - WINDOW + 1):i + 1]
         idx = range(max(0, i - WINDOW + 1), i + 1)
         signals = {
-            "late_scroll_nights": {
-                "recent": sum("later_than_usual" in self.rule[j]["off_signals"] for j in idx),
+            "rest": {
+                "short_or_late_nights": sum(any(s in self.rule[j]["off_signals"] for s in ("later_to_sleep", "shorter_rest"))
+                                            for j in idx),
+                "woke_in_night": sum("woke_in_night" in self.rule[j]["off_signals"] for j in idx),
                 "of_days": len(recent),
-                "usual_end": clock(base["last_active"]["median"]) if base and base["last_active"] else None,
-                "latest_recent": clock(max(self.rows[j]["last_active"] or 0 for j in idx)),
+                "usual_rest_hours": round(base["rest_hours"]["median"], 1) if base and base["rest_hours"] else None,
+                "recent_rest_hours": [self.rows[j]["rest_hours"] for j in idx],
             },
             "reel_themes": {"recent": self.themes(recent, heavy=True), "baseline": self.themes(self.days[:21], heavy=False)},
             "heavy_reel_share": {"recent": round(median(self.rows[j]["heavy_share"] for j in idx), 2),
@@ -180,7 +182,7 @@ class Demo:
         d = self.days[i]
         talked = sorted(((p["sent"], n.split()[0]) for n, p in row["people"].items() if p["sent"]), reverse=True)
         groups = Counter(e["to"] for e in self.by_day.get(d, []) if e["type"] == "message_sent" and e.get("group"))
-        late = "later_than_usual" in self.rule[i]["off_signals"]
+        late = "later_to_sleep" in self.rule[i]["off_signals"]
         top_group = groups.most_common(1)[0][0] if groups else None
         members = next((t["others"] for t in self.profile["threads"] if t["title"] == top_group), [])
         return {
@@ -188,7 +190,7 @@ class Demo:
             # The time only counts when it's later than his own usual for this kind of night.
             "up_later_than_usual": late,
             "last_active": clock(row["last_active"]) if late else None,
-            "usual_last_active": clock(base["last_active"]["median"]) if late else None,
+            "usual_last_active": clock(base["rest_start"]["median"]) if late and base and base["rest_start"] else None,
             "reels_watched": row["reels"],
             "usual_reels": round(base["reels"]["median"]) if base and base["reels"] else None,
             "reel_themes_today": self.themes([d], top=3),
@@ -205,8 +207,8 @@ class Demo:
         facts = self.day_facts(i)
         week = []
         r = self.rule[i]
-        if "later_than_usual" in r["off_signals"]:
-            week.append("Up later than usual this week.")
+        if "later_to_sleep" in r["off_signals"] or "shorter_rest" in r["off_signals"]:
+            week.append("Getting to sleep later than usual this week.")
         for q in self.rule[i]["quiet_with"]:
             ls = self.last_sent(q, i)
             if ls is not None and i - ls >= 2:

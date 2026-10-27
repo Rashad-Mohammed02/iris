@@ -38,6 +38,15 @@ def test_recovered_by_day_30():
     assert not res[29]["heavy_stretch"]
 
 
+def test_rest_is_read_from_the_longest_quiet_stretch():
+    from engine.baseline import night_rest, wakes_in
+    r = night_rest([20.0, 23.5], [8.0, 12.0])  # last active 11:30 PM, first active 8 AM
+    assert r["hours"] == 8.5 and r["start"] == 23.5 and r["end"] == 32.0
+    r = night_rest([20.0, 23.5, 27.5], [8.0])  # up at 3:30 AM too
+    assert r["start"] == 27.5 and r["hours"] == 4.5
+    assert wakes_in([23.5, 27.5, 27.6, 29.0], 24.0, 31.5) == 2
+
+
 def test_reconnecting_is_not_a_slow_reply():
     """Day 29: Arjun finally writes back to Dev after days of silence. That's recovery, not a heavy day."""
     res = run()
@@ -55,9 +64,9 @@ def test_nothing_is_judged_in_the_first_two_weeks():
 def test_content_alone_never_flags_a_day():
     from engine.rule import judge
     assert not judge(["heavier_reels", "interest_fading"])[2]
-    assert not judge(["gone_quiet", "later_than_usual"])[2] or True  # quiet alone is dropped; late alone is one family
+    assert not judge(["gone_quiet", "later_to_sleep"])[2] or True  # quiet alone is dropped; late alone is one family
     assert not judge(["gone_quiet"])[2]
-    assert judge(["later_than_usual", "heavier_reels"])[2]
+    assert judge(["later_to_sleep", "heavier_reels"])[2]
 
 
 def test_matches_ground_truth_phases():
@@ -73,6 +82,7 @@ if __name__ == "__main__":
     test_normal_weeks_never_trigger()
     test_heavy_week_is_caught()
     test_recovered_by_day_30()
+    test_rest_is_read_from_the_longest_quiet_stretch()
     test_reconnecting_is_not_a_slow_reply()
     test_nothing_is_judged_in_the_first_two_weeks()
     test_content_alone_never_flags_a_day()

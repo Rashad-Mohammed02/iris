@@ -22,9 +22,10 @@ from engine.read import read  # noqa: E402
 OUT = ROOT / "web" / "demo_data.js"
 
 SIGNAL_WORDS = {
-    "later_than_usual": "up later than your usual",
-    "earlier_start": "starting your day much earlier",
-    "wake_and_scroll": "waking up to scroll",
+    "later_to_sleep": "getting to sleep later than usual",
+    "shorter_rest": "shorter nights than usual",
+    "longer_rest": "sleeping much longer than usual",
+    "woke_in_night": "up in the middle of your usual rest",
     "daytime_binge": "a lot more scrolling during the day",
     "more_sessions": "picking up your phone more often",
     "more_reels": "more reels than usual",
