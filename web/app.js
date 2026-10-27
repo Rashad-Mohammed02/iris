@@ -476,10 +476,10 @@
       // The same lift, on a pocket device: one line, one tap, nothing else.
       const k = l && liftKey(l.n, who), plan = k && ui.plan[k];
       $("#rxScreen").innerHTML = l && !ui.left[who]
-        ? `<div class="charm-screen" id="rx-lift">${face(64, "bob")}<p class="charm-text">${esc(l.text)}</p>` +
+        ? `<div class="charm-screen" id="rx-lift">${face(58, "bob")}<p class="charm-text">${esc(l.text)}</p>` +
           (plan === "no" ? `<div class="charm-small">Okay. ${esc(D.owner)} won't know.</div>` : plan ? `<div class="charm-small">${plan === "race" ? "Reminder set for race day." : "Done. It's all you from here."}</div>`
             : `<div class="charm-btns"><button data-sheet-b="plan" data-k="${esc(k)}">Plan</button><button data-plan="${esc(k)}" data-v="no">Not now</button></div>`) + `</div>`
-        : `<div class="charm-screen">${face(64, "bob")}<p class="charm-text muted">All quiet in your circle.</p><div class="charm-small">Hold to talk to Muse</div></div>`;
+        : `<div class="charm-screen">${face(58, "bob")}<p class="charm-text muted">All quiet in your circle.</p><div class="charm-small">Hold to talk to Muse</div></div>`;
       return;
     }
     let h = `<p class="hello">${greet()}, ${esc(who)}.</p>`;

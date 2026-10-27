@@ -368,18 +368,33 @@ button.round { border: 0; }
 .face.bob { animation: bob 3.6s ease-in-out infinite; }
 @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 
-/* ---------- Muse Charm (concept) on the friend's side ---------- */
-.device-wrap.right.charm .device { height: 380px; width: 300px; border-radius: 80px; padding: 18px; margin: 150px auto 0; }
-.device-wrap.right.charm .glass { border-radius: 62px; }
+/* ---------- Muse Charm on the friend's side ---------- */
+/* A palm-sized rounded square: smoky dark body, black screen, camera dot on top, a cord with a knot below. */
+.lanyard { display: none; }
+.device-wrap.right.charm .device {
+  width: 280px; height: 280px; border-radius: 36%; padding: 20px; margin: 120px auto 0;
+  background: radial-gradient(circle at 28% 18%, #6a6a72 0, #2a2a30 38%, #141417 70%, #0b0b0d 100%);
+  box-shadow: 0 30px 60px -18px #00000080, 0 10px 20px -8px #00000059, inset 0 1px 0 #ffffff33, inset 0 0 0 1.5px #ffffff14;
+}
+.device-wrap.right.charm .device::before { display: none; }
+.device-wrap.right.charm .device::after { /* camera dot */
+  content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 6px; height: 6px; border-radius: 50%;
+  background: #050506; box-shadow: 0 0 0 1.5px #3a3a40;
+}
+.device-wrap.right.charm .lanyard { display: block; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); width: 60px; height: 170px; margin-top: -6px; z-index: -1; }
+.device-wrap.right.charm .lanyard svg { width: 100%; height: 100%; }
+.device-wrap.right.charm .glass { background: #000; border-radius: 30%; }
 .device-wrap.right.charm .status, .device-wrap.right.charm .appbar, .device-wrap.right.charm .composer,
-.device-wrap.right.charm .home-ind, .device-wrap.right.charm .device::before { display: none; }
-.device-wrap.right.charm .screen { padding: 22px 24px; justify-content: center; }
-.charm-screen { display: grid; justify-items: center; gap: 10px; text-align: center; }
-.charm-text { margin: 0; font-size: 15.5px; line-height: 1.4; font-weight: 500; }
-.charm-small { font-size: 12.5px; color: var(--ink-3); }
-.charm-btns { display: flex; gap: 8px; }
-.charm-btns button { border: 0; border-radius: 999px; padding: 7px 16px; font-size: 13.5px; background: var(--fill-1); }
-.charm-btns button:first-child { background: var(--accent); color: #fff; }
+.device-wrap.right.charm .home-ind { display: none; }
+.device-wrap.right.charm .screen { padding: 14px 16px; justify-content: center; color: #f3f4f5; }
+.charm-screen { display: grid; justify-items: center; gap: 7px; text-align: center; }
+.charm-screen .face { filter: none; }
+.charm-text { margin: 0; font-size: 13px; line-height: 1.35; font-weight: 500; color: #f3f4f5; }
+.charm-text.muted { color: #a1a4a8; }
+.charm-small { font-size: 11.5px; color: #a1a4a8; }
+.charm-btns { display: flex; gap: 6px; }
+.charm-btns button { border: 0; border-radius: 999px; padding: 5px 13px; font-size: 12.5px; background: #2a2b2e; color: #f3f4f5; }
+.charm-btns button:first-child { background: #0a7cff; color: #fff; }
 
 /* Safari: flat phones (see app.js), and prefixed blur */
 .safari .stage { perspective: none; }
