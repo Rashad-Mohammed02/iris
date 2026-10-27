@@ -85,7 +85,14 @@
     <filter id="fuzz" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" result="n"/>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter>
     <radialGradient id="fur" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#fbf5ea"/><stop offset=".7" stop-color="#f1e5d1"/><stop offset="1" stop-color="#e2d1b6"/></radialGradient></defs></svg>`);
+  // For a local recording, drop your own avatar image at web/assets/avatar.png and it replaces the drawing.
+  // The file is gitignored, so it never goes into the public repo or the published page.
+  let AVATAR = null;
+  const probe = new Image();
+  probe.onload = () => { AVATAR = probe.src; render(); };
+  probe.src = "assets/avatar.png";
   function face(size, extra) {
+    if (AVATAR) return `<img class="face ${extra || ""}" src="${AVATAR}" alt="" style="width:${size}px;height:${size}px;object-fit:contain">`;
     return `<svg class="face ${extra || ""}" viewBox="0 0 60 60" style="width:${size}px;height:${size}px" aria-hidden="true">
       <g filter="url(#fuzz)" fill="url(#fur)"><path d="M27.5 14.5c-.6-4.2 1.6-7.4 5.2-8.2-1.3 2.4-1.2 4.8.4 7.6"/><ellipse cx="30" cy="34" rx="23" ry="21.5"/></g>
       <ellipse class="cheek" cx="18.5" cy="39" rx="4.6" ry="3"/><ellipse class="cheek" cx="41.5" cy="39" rx="4.6" ry="3"/>

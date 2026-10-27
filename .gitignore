@@ -5,3 +5,5 @@ __pycache__/
 out/
 .DS_Store
 data/demo_export/
+# Local-only images for recording (for example your own Muse avatar)
+web/assets/
