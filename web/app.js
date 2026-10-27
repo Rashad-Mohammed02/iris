@@ -3,6 +3,8 @@
 // (scripts/export_instagram.py). No network calls.
 
 (function () {
+  // Safari mis-aims clicks and scrolling inside 3D-tilted elements, so the phones stay flat there.
+  if (/^((?!chrome|chromium|android|crios|edg).)*safari/i.test(navigator.userAgent)) document.documentElement.classList.add("safari");
   const D = window.DEMO;
   const B = window.BENCH || null;
   const IG = window.IG || { days: [] };

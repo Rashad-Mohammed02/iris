@@ -380,3 +380,8 @@ button.round { border: 0; }
 .charm-btns { display: flex; gap: 8px; }
 .charm-btns button { border: 0; border-radius: 999px; padding: 7px 16px; font-size: 13.5px; background: var(--fill-1); }
 .charm-btns button:first-child { background: var(--accent); color: #fff; }
+
+/* Safari: flat phones (see app.js), and prefixed blur */
+.safari .stage { perspective: none; }
+.safari .device-wrap.left, .safari .device-wrap.right { transform: none; transform-style: flat; }
+.sheet, .alert, .top { -webkit-backdrop-filter: blur(20px); }
