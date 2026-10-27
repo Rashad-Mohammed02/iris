@@ -9,10 +9,10 @@
 <body>
 <header class="top">
   <div class="brand">
-    <span class="mark" aria-hidden="true"></span>
+    <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
     <div>
       <div class="name">Muse Circle</div>
-      <div class="sub">Working prototype. Every person and message is fictional.</div>
+      <div class="sub">Hackathon prototype, not a Meta product. Every person and message is fictional.</div>
     </div>
   </div>
   <div class="scrub">
@@ -30,22 +30,46 @@
 </header>
 
 <main class="stage">
-  <section class="phone" aria-label="Arjun's Muse">
-    <div class="phone-top"><span class="who">Arjun's Muse</span><span class="lock">Only Arjun sees this</span></div>
-    <div id="screen" class="screen"></div>
-    <nav class="tabs" id="tabs">
-      <button data-tab="today" class="on">Today</button>
-      <button data-tab="orbit">Orbit</button>
-      <button data-tab="journal">Journal</button>
-      <button data-tab="lifts">Lifts</button>
-      <button data-tab="people">People</button>
-    </nav>
+  <section class="device-wrap left" aria-label="Arjun's Muse">
+    <div class="device-label"><b>Arjun's Muse</b><span>Only Arjun sees this</span></div>
+    <div class="device">
+      <div class="glass">
+        <div class="status"><span class="time">9:41</span><span class="island"></span><span class="sys"></span></div>
+        <div class="appbar">
+          <span class="round menu" aria-hidden="true"></span>
+          <div class="title">Circle</div>
+          <span class="pair" aria-hidden="true"></span>
+        </div>
+        <nav class="seg tabs" id="tabs">
+          <button data-tab="today" class="on">Today</button>
+          <button data-tab="orbit">Orbit</button>
+          <button data-tab="journal">Journal</button>
+          <button data-tab="lifts">Lifts</button>
+          <button data-tab="people">People</button>
+        </nav>
+        <div id="screen" class="screen"></div>
+        <div class="composer" id="composerA"></div>
+        <div class="sheet-layer" id="sheet"></div>
+        <div class="home-ind"></div>
+      </div>
+    </div>
   </section>
 
-  <section class="phone receiver" aria-label="A friend's Muse">
-    <div class="phone-top"><span class="who" id="rxWho"></span><span class="lock">Their Muse, or Instagram</span></div>
-    <div class="rx-pick" id="rxPick"></div>
-    <div id="rxScreen" class="screen"></div>
+  <section class="device-wrap right" aria-label="A friend's Muse">
+    <div class="device-label"><b id="rxWho"></b><span class="rx-pick" id="rxPick"></span></div>
+    <div class="device">
+      <div class="glass">
+        <div class="status"><span class="time">9:41</span><span class="island"></span><span class="sys"></span></div>
+        <div class="appbar">
+          <span class="round menu" aria-hidden="true"></span>
+          <div class="title">Today</div>
+          <span class="pair" aria-hidden="true"></span>
+        </div>
+        <div id="rxScreen" class="screen"></div>
+        <div class="composer" id="composerB"></div>
+        <div class="home-ind"></div>
+      </div>
+    </div>
   </section>
 
   <aside class="panel" id="panel"></aside>
