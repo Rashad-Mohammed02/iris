@@ -27,18 +27,19 @@
     <button data-view="crosses" class="on">What crosses</button>
     <button data-view="hood">Under the hood</button>
   </div>
+  <nav class="chapters" id="chapters" aria-label="The story"></nav>
 </header>
 
 <main class="stage">
   <section class="device-wrap left" aria-label="Arjun's Muse">
-    <div class="device-label"><b>Arjun's Muse</b><span>Only Arjun sees this</span></div>
+    <div class="device-label"><b>Arjun's phone</b><span class="appswitch" id="appA"></span></div>
     <div class="device">
       <div class="glass">
         <div class="status"><span class="time">9:41</span><span class="island"></span><span class="sys"></span></div>
         <div class="appbar">
-          <span class="round menu" aria-hidden="true"></span>
-          <div class="title">Circle</div>
-          <span class="pair" aria-hidden="true"></span>
+          <button class="round menu" data-sheet="menu" aria-label="Menu"></button>
+          <div class="title" id="titleA">Circle</div>
+          <span class="pair" id="pairA"></span>
         </div>
         <nav class="seg tabs" id="tabs">
           <button data-tab="today" class="on">Today</button>
@@ -56,17 +57,18 @@
   </section>
 
   <section class="device-wrap right" aria-label="A friend's Muse">
-    <div class="device-label"><b id="rxWho"></b><span class="rx-pick" id="rxPick"></span></div>
+    <div class="device-label"><b id="rxWho"></b><span class="appswitch" id="devB"></span><span class="rx-pick" id="rxPick"></span></div>
     <div class="device">
       <div class="glass">
         <div class="status"><span class="time">9:41</span><span class="island"></span><span class="sys"></span></div>
         <div class="appbar">
-          <span class="round menu" aria-hidden="true"></span>
+          <button class="round menu" data-sheet-b="menu" aria-label="Menu"></button>
           <div class="title">Today</div>
-          <span class="pair" aria-hidden="true"></span>
+          <span></span>
         </div>
         <div id="rxScreen" class="screen"></div>
         <div class="composer" id="composerB"></div>
+        <div class="sheet-layer" id="sheetB"></div>
         <div class="home-ind"></div>
       </div>
     </div>
@@ -77,6 +79,7 @@
 
 <script src="demo_data.js"></script>
 <script src="bench_data.js"></script>
+<script src="instagram_data.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
