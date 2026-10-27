@@ -23,10 +23,19 @@ OUT = ROOT / "web" / "demo_data.js"
 
 SIGNAL_WORDS = {
     "later_than_usual": "up later than your usual",
+    "earlier_start": "starting your day much earlier",
+    "wake_and_scroll": "waking up to scroll",
+    "daytime_binge": "a lot more scrolling during the day",
+    "more_sessions": "picking up your phone more often",
+    "more_reels": "more reels than usual",
     "heavier_reels": "heavier reels than usual",
-    "sending_heavy_reels": "sending heavy reels",
+    "interest_fading": "less of what you usually love",
+    "sending_heavy_reels": "sending heavier reels",
     "slower_replies": "slower replies",
     "shorter_replies": "shorter replies",
+    "fewer_messages": "fewer messages to your people",
+    "more_messages": "a lot more messages than usual",
+    "fewer_starts": "starting fewer conversations",
     "gone_quiet": "gone quiet with someone",
 }
 
@@ -99,7 +108,7 @@ def main():
             for m in sit["circle"]:
                 if m["name"] == "Sam":  # in the story, Sam is the one who acts on his lift
                     m["note"] = "Answered your lift: sent you something F1 (simulated receiver side)."
-        decision = decide(sit) if i + 1 >= 7 else decide(sit, reading={"stretch": "none"})
+        decision = decide(sit) if i + 1 > 14 else decide(sit, reading={"stretch": "none"})
         decision["prompts"] = [p for p in decision["prompts"] if (p["kind"], p["about"]) not in shown]
         shown.update((p["kind"], p["about"]) for p in decision["prompts"])
         for l in decision["lifts"]:

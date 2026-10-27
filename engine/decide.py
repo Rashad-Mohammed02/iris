@@ -20,7 +20,7 @@ from engine import lift as lift_writer  # noqa: E402
 from engine import safety  # noqa: E402
 from engine.read import read as muse_read  # noqa: E402
 
-LEARNING_DAYS = 7
+LEARNING_DAYS = 14  # matches engine/baseline.py: nothing is judged in the first two weeks
 UNDO_MINUTES = 10
 SEND_MODES = ("ask_first", "automatic")  # the person's choice; asking first is the default
 

@@ -19,7 +19,7 @@ from engine import muse  # noqa: E402
 from engine.interests import NEVER  # noqa: E402
 from engine.voice import lint  # noqa: E402
 
-WRITE_PROMPT = ROOT / "prompts" / "lift_v1.txt"
+WRITE_PROMPT = ROOT / "prompts" / "lift_v2.txt"
 CHECK_PROMPT = ROOT / "prompts" / "check_v1.txt"
 
 WRITE_SCHEMA = {
@@ -43,7 +43,7 @@ CHECK_SCHEMA = {
 
 # Used only if every written option fails the checks twice. Safe by construction.
 FALLBACK = {
-    "support": "{name} could use a little lift this week. {name}'s into {interest}. Plan something small around it.",
+    "support": "{name}'s had a full week. Maybe plan something around {interest} together this week?",
     "good": "Things are good with {name} right now. A little {interest} plan would make it even better.",
 }
 

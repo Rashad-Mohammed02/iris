@@ -20,6 +20,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+RECONNECT_S = 48 * 3600  # an answer after two days or more counts as reconnecting
+
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_EXPORT = ROOT / "data" / "demo_export"
 OUT = ROOT / "out"
@@ -196,9 +198,11 @@ def parse(export, tz="America/New_York"):
                     is_share = bool(share.get("link"))
                     text = "" if is_share else fix_text(m.get("content") or "")
                     delay = round(ts - last_other_ts) if last_other_ts else None
+                    # A reply after days of silence is someone reconnecting, not a slow reply.
+                    reconnect = delay is not None and delay > RECONNECT_S
                     add(ts, "reel_sent" if is_share else "message_sent",
                         to=title, group=is_group,
-                        length=len(text), reply_delay_s=delay,
+                        length=len(text), reply_delay_s=None if reconnect else delay, reconnect=reconnect,
                         creator=share.get("original_content_owner", "") if is_share else None,
                         url=share.get("link", "") if is_share else None)
                     last_other_ts = None

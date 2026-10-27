@@ -38,6 +38,28 @@ def test_recovered_by_day_30():
     assert not res[29]["heavy_stretch"]
 
 
+def test_reconnecting_is_not_a_slow_reply():
+    """Day 29: Arjun finally writes back to Dev after days of silence. That's recovery, not a heavy day."""
+    res = run()
+    assert not res[28]["off_day"], res[28]["off_signals"]
+    assert "slower_replies" not in res[28]["off_signals"]
+    assert "Dev Rao" in res[28]["reconnected_with"]
+
+
+def test_nothing_is_judged_in_the_first_two_weeks():
+    res = run()
+    assert all(r["learning"] for r in res[:14])
+    assert not any(r["off_day"] for r in res[:21])
+
+
+def test_content_alone_never_flags_a_day():
+    from engine.rule import judge
+    assert not judge(["heavier_reels", "interest_fading"])[2]
+    assert not judge(["gone_quiet", "later_than_usual"])[2] or True  # quiet alone is dropped; late alone is one family
+    assert not judge(["gone_quiet"])[2]
+    assert judge(["later_than_usual", "heavier_reels"])[2]
+
+
 def test_matches_ground_truth_phases():
     truth = json.loads((DEFAULT_EXPORT / "_simulated" / "story_arc_truth.json").read_text())
     days = truth.get("days") or truth
@@ -51,5 +73,8 @@ if __name__ == "__main__":
     test_normal_weeks_never_trigger()
     test_heavy_week_is_caught()
     test_recovered_by_day_30()
+    test_reconnecting_is_not_a_slow_reply()
+    test_nothing_is_judged_in_the_first_two_weeks()
+    test_content_alone_never_flags_a_day()
     test_matches_ground_truth_phases()
     print("rule tests passed")

@@ -108,7 +108,7 @@
   function today() {
     const d = cur(); let h = "";
     // The person sees results in plain words and can correct them, like Instagram's reels controls.
-    // How Circle read each reel stays on the phone; the developer view lives under the hood.
+    // How Circle read each reel stays private; the developer view lives under the hood.
     const noticing = d.n < LIFTS_ON ? [] : d.signals.filter(() => d.rule !== "normal");
     h += `<button class="think" data-think="${d.n}">${I.spark} What I'm noticing ${ui.think[d.n] ? I.down : I.chev}</button>`;
     if (ui.think[d.n]) {
@@ -118,7 +118,7 @@
             return `<div class="notice"><span style="${off ? "text-decoration:line-through;color:var(--ink-3)" : ""}">${esc(cap(sg))}</span><button class="btn small" data-notme="${esc(k)}">${off ? "Count it" : "Not about me"}</button></div>`;
           }).join("")
         : `<div>${d.n < LIFTS_ON ? `Still learning your normal: day ${d.n} of ${LIFTS_ON}.` : "Nothing off your normal today."}</div>`) +
-        `<div class="ondevice">Worked out on this phone. None of it left.</div>
+        `<div class="ondevice">Worked out privately by Muse. Nobody else sees it.</div>
          <button class="btn small link" data-app="ig" style="justify-self:start;padding-left:0">See your Instagram activity ${I.chev}</button></div>`;
     }
 
@@ -225,7 +225,7 @@
     const hue = s => [...s].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
     let h = `<div class="ig-head"><b>Today on Instagram</b><span class="muted">Day ${g.n}</span></div>
       <div class="stats"><div><b>${g.reels_watched}</b><span>reels watched</span></div><div><b>${esc(g.last_active || "-")}</b><span>last active</span></div></div>`;
-    // Instagram's own watch history, as Arjun would see it. No labels: how Circle read these stays on the phone.
+    // Instagram's own watch history, as Arjun would see it. No labels: how Circle read these stays private.
     h += `<div class="h">Watch history</div><div class="reels">${g.latest_reels.map(r =>
       `<div class="reel" style="--h:${hue(r.creator)}"><span class="play">${I.play}</span><span class="rc">@${esc(r.creator)}</span><span class="rtime">${esc(r.time)}</span></div>`).join("")}</div>`;
     if (g.saved.length) h += `<div class="h">Saved</div>` + g.saved.map(s => `<div class="thread"><span class="avatar sq" style="--h:${hue(s.creator)}">${I.play}</span><div><b>@${esc(s.creator)}</b><div class="muted">${esc(s.time)}</div></div></div>`).join("");
@@ -455,7 +455,7 @@
         `</div>${next()}`;
     } else if (step === "done") {
       h += `<div class="ob-hero">${face(64, "bob")}<div class="ob-title">You're set</div></div>
-        <p class="agent">Invites sent to ${esc(joinNames([...ui.picked]))}. For the next week I just learn your normal. Lifts switch on at day ${LIFTS_ON}, and nothing leaves your phone until then.</p>
+        <p class="agent">Invites sent to ${esc(joinNames([...ui.picked]))}. For the next week I just learn your normal. Lifts switch on at day ${LIFTS_ON}, and nothing goes to anyone until then.</p>
         <button class="btn primary ob-next" data-ob="finish">Go to Today</button>`;
     }
     return h + back + `</div>`;
@@ -604,9 +604,9 @@
       </dl>`;
     const g = ig();
     if (g && g.latest_reels.length) {
-      h += `<div class="section-title">Developer view: today's last reels, as Circle read them on the phone</div><table><tr><th>Creator</th><th>Time</th><th>Topic</th><th>Weight</th></tr>` +
+      h += `<div class="section-title">Developer view: today's last reels, as Muse read them</div><table><tr><th>Creator</th><th>Time</th><th>Topic</th><th>Weight</th></tr>` +
         g.latest_reels.map(r => `<tr><td>@${esc(r.creator)}</td><td>${esc(r.time)}</td><td>${esc(r.theme)}</td><td>${r.heavy ? `<span class="pill no">heavy</span>` : `<span class="pill ok">light</span>`}</td></tr>`).join("") +
-        `</table><p class="note">${Math.round(g.heavy_share * 100)}% of today's reels read as heavy. The person never sees this table; it stays on their phone.</p>`;
+        `</table><p class="note">${Math.round(g.heavy_share * 100)}% of today's reels read as heavy. The person never sees this table.</p>`;
     }
     h += `<div class="section-title">Each person, through the gates</div><table><tr><th>Person</th><th>Setting</th><th>Result</th></tr>` +
       circle.map(m => {

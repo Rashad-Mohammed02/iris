@@ -46,7 +46,15 @@ class Demo:
         self.theme_label = {k: v["label"] for k, v in hints["themes"].items()}
         self.heavy = {k for k, v in hints["themes"].items() if v.get("heavy")}
         ip = OUT / "interests.json"
-        self.interests = [i["name"] for i in json.loads(ip.read_text())] if ip.exists() else []
+        found = json.loads(ip.read_text()) if ip.exists() else []
+        self.interests = [i["name"] for i in found]
+        # reel theme -> interest name, from where each interest was found ("reel:f1" -> "F1")
+        self.theme_interest = {src[5:]: i["name"] for i in found for src in i.get("from", []) if src.startswith("reel:")}
+        url_theme = {}
+        for e in self.events:
+            if e["type"] == "reel_watched" and e.get("url"):
+                url_theme[e["url"]] = e.get("theme")
+        self.url_theme = url_theme
         self.days = [r["day"] for r in self.rows]
         self.by_day = {}
         for e in self.events:
@@ -68,6 +76,17 @@ class Demo:
             if p and (p["sent"] or p["received"]):
                 return j
         return None
+
+    def shared_interests(self, name, upto, top=2, min_count=3):
+        """What he and this friend share, from the reels he sends them. Only his own side, never theirs."""
+        c = Counter()
+        for d in self.days[:upto + 1]:
+            for e in self.by_day.get(d, []):
+                if e["type"] == "reel_sent" and e.get("to") == name:
+                    interest = self.theme_interest.get(self.url_theme.get(e.get("url")))
+                    if interest:
+                        c[interest] += 1
+        return [i for i, n in c.most_common(top) if n >= min_count]
 
     def reels_sent(self, name, days):
         return sum(1 for d in days for e in self.by_day.get(d, []) if e["type"] == "reel_sent" and e.get("to") == name)
@@ -107,7 +126,7 @@ class Demo:
                 "lifts_last_7_days": sum(1 for l in sent_week if l["to"] == m["name"].split()[0] and i - l["day"] < 7),
                 "just_this_once_used": any(l["to"] == m["name"].split()[0] for l in sent_week)
                                        and m["permission"] == "Just this once",
-                "allowed_interests": m.get("allowed_interests", list(self.interests)),
+                "allowed_interests": self.shared_interests(m["name"], i),
             })
         stretch = "clearly_heavy" if rule["heavy_stretch"] else ("off_normal" if rule["lighter_stretch"] else "none")
         return {
