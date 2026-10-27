@@ -1,3 +1,5 @@
+> Not the plan. Rashad will direct the video; this draft was written without being asked. Keep only as raw material if he wants it.
+
 # Demo video script (3 minutes), draft 1
 
 Voiceover by Rashad. About 430 words, which is about 3 minutes at a calm pace. Screen cues are in brackets. Numbers in {curly brackets} get filled in from the final test bench run.

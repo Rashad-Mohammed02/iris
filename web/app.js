@@ -9,6 +9,7 @@
   const ui = {
     day: 26, tab: "today", view: "crosses", rx: "Sam",
     wrong: {}, stopped: {}, perms: {}, interests: {}, pause: "on", told: {}, loop: {},
+    send: D.settings.send_mode === "automatic" ? "auto" : "ask", approved: {},
   };
   circle.forEach(m => { ui.perms[m.first] = m.permission; ui.interests[m.first] = new Set(m.allowed_interests || D.interests); });
 
@@ -19,10 +20,14 @@
   const liftKey = (n, to) => n + ":" + to;
   const liftTime = n => ["8:52 PM", "9:14 PM", "7:40 PM", "9:03 PM"][n % 4];
 
+  // A lift reaches the friend only if it wasn't stopped, lifts aren't paused, and,
+  // when the person chose "Ask me first", they tapped Send.
+  const delivered = (n, to) => !ui.stopped[liftKey(n, to)] && ui.pause === "on" && (ui.send === "auto" || ui.approved[liftKey(n, to)]);
+
   function allLifts(upto) {
     const out = [];
     D.days.slice(0, upto).forEach(d => d.lifts.forEach(l => out.push(Object.assign({ n: d.n, weekday: d.weekday, why: d.why }, l))));
-    return out.filter(l => !ui.stopped[liftKey(l.n, l.to)]);
+    return out.filter(l => delivered(l.n, l.to));
   }
 
   function face(size, extra) {
@@ -71,9 +76,17 @@
     d.lifts.forEach(l => {
       const k = liftKey(d.n, l.to);
       if (ui.stopped[k]) {
-        h += `<div class="card"><p>Stopped. Nothing went to ${esc(l.to)}, and ${esc(l.to)} won't know.</p></div>`;
+        h += `<div class="card"><p>${ui.send === "ask" ? "Not sent" : "Stopped"}. Nothing went to ${esc(l.to)}, and ${esc(l.to)} won't know.</p></div>`;
       } else if (ui.pause !== "on") {
         h += `<div class="card"><p class="muted">Lifts are paused. Nothing will go out.</p></div>`;
+      } else if (ui.send === "ask" && ui.approved[k]) {
+        h += `<div class="card liftcard"><div class="eyebrow">Sent to ${esc(l.to)}</div><p style="margin-top:6px">"${esc(l.text)}"</p>
+          <div class="row"><button class="btn small" data-see="${esc(l.to)}">See what crosses</button></div></div>`;
+      } else if (ui.send === "ask") {
+        h += `<div class="card liftcard"><div class="eyebrow">A lift for ${esc(l.to)} is ready</div>
+          <p style="margin-top:6px">"${esc(l.text)}"</p>
+          <div class="row"><button class="btn small primary" data-approve="${esc(k)}">Send it</button><button class="btn small" data-stop="${esc(k)}">Not this one</button><button class="btn small" data-see="${esc(l.to)}">See what crosses</button></div>
+          <div class="note">Nothing goes to ${esc(l.to)} until you tap Send. If you skip it, ${esc(l.to)} never knows.</div></div>`;
       } else {
         h += `<div class="card liftcard"><div class="eyebrow">Sending a lift to ${esc(l.to)} in 10 minutes</div>
           <p style="margin-top:6px">"${esc(l.text)}"</p>
@@ -115,7 +128,7 @@
       const [x, y] = pos[o.name];
       svg += `<circle class="planet" cx="${x}" cy="${y}" r="20"/><text class="pname" x="${x}" y="${y + 4}">${esc(o.name)}</text>`;
     });
-    const live = d.lifts.filter(l => !ui.stopped[liftKey(d.n, l.to)] && ui.pause === "on");
+    const live = d.lifts.filter(l => delivered(d.n, l.to));
     live.forEach((l, i) => {
       svg += `<g class="messenger" data-to="${esc(l.to)}" data-i="${i}" style="transform: translate(${cx + 16}px, ${cy - 40}px)">
         <foreignObject width="22" height="22">${face(22)}</foreignObject></g>`;
@@ -168,17 +181,19 @@
     let h = `<div class="date">Sent for you<small>Every lift, to whom, and why. Only you see this.</small></div>`;
     h += `<div class="seg" style="grid-template-columns:repeat(3,1fr)">${[["on", "Lifts on"], ["day", "Pause a day"], ["week", "Pause a week"]].map(([k, t]) =>
       `<button data-pause="${k}" class="${ui.pause === k ? "on" : ""}">${t}</button>`).join("")}</div>`;
+    h += `<div class="seg" style="grid-template-columns:repeat(2,1fr)">${[["ask", "Ask me first"], ["auto", "Send on its own"]].map(([k, t]) =>
+      `<button data-send="${k}" class="${ui.send === k ? "on" : ""}">${t}</button>`).join("")}</div>`;
     const items = [];
     D.days.slice(0, ui.day).forEach(d => {
       d.lifts.forEach(l => { if (!ui.stopped[liftKey(d.n, l.to)]) items.push({ n: d.n, html:
-        `<div class="log-item"><div class="log-meta"><span>${esc(d.weekday)} · Day ${d.n} · ${liftTime(d.n)}</span><b>To ${esc(l.to)}</b></div>
+        `<div class="log-item"><div class="log-meta"><span>${esc(d.weekday)} · Day ${d.n} · ${liftTime(d.n)}</span><b>${delivered(d.n, l.to) ? "To" : "Waiting for your OK:"} ${esc(l.to)}</b></div>
          <div class="log-text">"${esc(l.text)}"</div><div class="log-why">Why: ${esc(d.why || "A good stretch.")}</div></div>` }); });
       const held = d.log.filter(x => x.kind === "held").map(x => x.text.replace(/^Held a lift to (.*): one per week\.$/, "$1"));
       if (held.length) items.push({ n: d.n, html:
         `<div class="log-item held">Day ${d.n} · Held lifts to ${esc(joinNames(held))}: one per person per week.</div>` });
     });
     h += `<div class="card" style="padding:4px 14px">${items.length ? items.reverse().map(i => i.html).join("") : `<p class="empty">No lifts yet. Muse is learning your normal.</p>`}</div>`;
-    h += `<div class="note">At most one lift per person per week. Every lift waits 10 minutes so you can stop it.</div>`;
+    h += `<div class="note">At most one lift per person per week. ${ui.send === "ask" ? "Each lift waits for you to tap Send." : "Every lift waits 10 minutes so you can stop it."}</div>`;
     return h;
   }
 
@@ -252,7 +267,7 @@
           <li>"${esc(l.text)}"</li><li>One interest he allowed for ${esc(l.to)}: ${esc(l.interest)}</li><li>That it came from Muse, not from ${esc(D.owner)}</li></ul></div>
       </div>
       <div class="checks">${checks.map(([ok, t]) => `<div class="check"><span class="dot ${ok ? "" : "bad"}"></span><span>${esc(t)}</span></div>`).join("")}</div>
-      <p class="note">Written on try ${l.tries || 1}${l.fallback ? ", using the safe fallback line" : ""}. Every lift passes both checks before it can be queued.</p>`;
+      <p class="note">Written on try ${l.tries || 1}${l.fallback ? ", using the safe fallback line" : ""}. Every lift passes both checks before ${esc(D.owner)} even sees it.</p>`;
   }
 
   function whyNot(d) {
@@ -273,7 +288,7 @@
     h += `<div class="section-title">Each person, through the gates</div><table><tr><th>Person</th><th>Setting</th><th>Result</th></tr>` +
       circle.map(m => {
         const l = d.lifts.find(x => x.to === m.first), ns = d.not_sent.find(x => x.name === m.first);
-        return `<tr><td>${esc(m.first)}</td><td>${esc(m.permission)}</td><td>${l ? `<span class="pill ok">Lift queued</span>` : `<span class="pill no">${esc(ns ? ns.why : "Nothing to lift")}</span>`}</td></tr>`;
+        return `<tr><td>${esc(m.first)}</td><td>${esc(m.permission)}</td><td>${l ? `<span class="pill ok">${ui.send === "ask" && !ui.approved[liftKey(d.n, m.first)] ? "Lift ready, waiting for OK" : "Lift queued"}</span>` : `<span class="pill no">${esc(ns ? ns.why : "Nothing to lift")}</span>`}</td></tr>`;
       }).join("") + `</table>`;
     if (B) {
       h += `<div class="section-title">Test bench: ${B.cases} fictional cases, ${B.runs.length} fresh runs</div><table><tr><th>Metric</th><th>Target</th>${B.runs.map((_, i) => `<th>Run ${i + 1}</th>`).join("")}</tr>` +
@@ -313,6 +328,8 @@
     else if (ds.wrong) ui.wrong[ds.wrong] = ds.quick ? "yes" : "open";
     else if (ds.wrongReason) ui.wrong[ds.k] = ds.wrongReason;
     else if (ds.stop) ui.stopped[ds.stop] = true;
+    else if (ds.approve) ui.approved[ds.approve] = true;
+    else if (ds.send) ui.send = ds.send;
     else if (ds.see) { ui.rx = ds.see; ui.view = "crosses"; }
     else if (ds.rx) ui.rx = ds.rx;
     else if (ds.goto) ui.day = +ds.goto;
@@ -336,6 +353,7 @@
   if (q.get("day")) ui.day = Math.min(D.days.length, Math.max(1, +q.get("day")));
   if (q.get("tab") && TABS[q.get("tab")]) ui.tab = q.get("tab");
   if (q.get("view")) ui.view = q.get("view");
+  if (q.get("send") === "auto") ui.send = "auto";
   if (q.get("theme")) document.documentElement.dataset.theme = q.get("theme");
   render();
 })();

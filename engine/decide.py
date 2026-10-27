@@ -22,6 +22,7 @@ from engine.read import read as muse_read  # noqa: E402
 
 LEARNING_DAYS = 7
 UNDO_MINUTES = 10
+SEND_MODES = ("ask_first", "automatic")  # the person's choice; asking first is the default
 
 
 def is_paused(situation):
@@ -126,7 +127,10 @@ def decide(situation, reading=None, write_lifts=True):
                 out["not_sent"].append({"name": m["name"], "why": "No interest was safe to mention this week"})
                 continue
             today.append(w["text"])
-            w.update(status="queued", undo_minutes=UNDO_MINUTES)
+            if situation.get("send_mode", "ask_first") == "automatic":
+                w.update(status="queued", undo_minutes=UNDO_MINUTES)
+            else:
+                w.update(status="waiting_for_ok")  # nothing leaves until the person taps Send
             out["lifts"].append(w)
             out["log"].append({"kind": "lift", "to": w["to"], "text": w["text"],
                                "why": r.get("log_reason", "") if w["kind"] == "support" else "A good stretch."})

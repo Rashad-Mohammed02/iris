@@ -118,6 +118,7 @@ class Demo:
                         "signals": signals, "journal": state.get("journal", {}).get(i, []),
                         "settings": {"pause": "all lifts paused"} if state.get("paused") else {}},
             "rule_stretch": stretch,
+            "send_mode": self.settings.get("send_mode", "ask_first"),
             "corrections": state.get("corrections", []),
             "recent_lines": {},
         }
