@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+out/
+.DS_Store
+data/demo_export/
