@@ -108,7 +108,7 @@
     });
     let svg = `<svg class="orbit" viewBox="0 0 340 340" role="img" aria-label="Your orbit">`;
     Object.entries(R).forEach(([k, r]) => {
-      svg += `<circle class="ring" cx="${cx}" cy="${cy}" r="${r}"/><text class="ring-label" x="${cx + 4}" y="${cy - r - 4}">${k}</text>`;
+      svg += `<circle class="ring" cx="${cx}" cy="${cy}" r="${r}"/><text class="ring-label" text-anchor="middle" x="${cx}" y="${cy + r + 11}">${k}</text>`;
     });
     svg += `<circle class="sun" cx="${cx}" cy="${cy}" r="26"/><text class="sunname" x="${cx}" y="${cy + 4}">${esc(D.owner)}</text>`;
     d.orbit.forEach(o => {
@@ -117,7 +117,7 @@
     });
     const live = d.lifts.filter(l => !ui.stopped[liftKey(d.n, l.to)] && ui.pause === "on");
     live.forEach((l, i) => {
-      svg += `<g class="messenger" data-to="${esc(l.to)}" data-i="${i}" style="transform: translate(${cx - 11}px, ${cy - 11}px)">
+      svg += `<g class="messenger" data-to="${esc(l.to)}" data-i="${i}" style="transform: translate(${cx + 16}px, ${cy - 40}px)">
         <foreignObject width="22" height="22">${face(22)}</foreignObject></g>`;
     });
     svg += `</svg>`;
@@ -146,7 +146,7 @@
     let h = `<div class="date">Journal<small>Day ${d.n} · only you see this</small></div>`;
     j.turns.forEach((t, i) => {
       h += `<div class="bubble me">${esc(t.user)}</div>`;
-      if (t.connection) h += `<div class="connection">From your week: ${esc(t.connection)}</div>`;
+      if (t.connection) h += `<div class="connection">Muse connected this to your week</div>`;
       h += `<div class="bubble muse">${esc(t.reply)}</div>`;
       const next = (j.turns[i + 1] || {}).user || "";
       const words = t.feeling_words && t.feeling_words.length ? t.feeling_words : t.chips || [];
@@ -173,8 +173,9 @@
       d.lifts.forEach(l => { if (!ui.stopped[liftKey(d.n, l.to)]) items.push({ n: d.n, html:
         `<div class="log-item"><div class="log-meta"><span>${esc(d.weekday)} · Day ${d.n} · ${liftTime(d.n)}</span><b>To ${esc(l.to)}</b></div>
          <div class="log-text">"${esc(l.text)}"</div><div class="log-why">Why: ${esc(d.why || "A good stretch.")}</div></div>` }); });
-      d.log.filter(x => x.kind === "held").forEach(x => items.push({ n: d.n, html:
-        `<div class="log-item held">Day ${d.n} · ${esc(x.text)}</div>` }));
+      const held = d.log.filter(x => x.kind === "held").map(x => x.text.replace(/^Held a lift to (.*): one per week\.$/, "$1"));
+      if (held.length) items.push({ n: d.n, html:
+        `<div class="log-item held">Day ${d.n} · Held lifts to ${esc(joinNames(held))}: one per person per week.</div>` });
     });
     h += `<div class="card" style="padding:4px 14px">${items.length ? items.reverse().map(i => i.html).join("") : `<p class="empty">No lifts yet. Muse is learning your normal.</p>`}</div>`;
     h += `<div class="note">At most one lift per person per week. Every lift waits 10 minutes so you can stop it.</div>`;
@@ -282,12 +283,18 @@
     return h;
   }
 
+  function joinNames(a) { return a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1]; }
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
   // ---------------- Wiring ----------------
   const TABS = { today, orbit, journal, lifts, people };
+  let lastDay = null;
   function render() {
     const d = cur();
+    if (d.n !== lastDay) {  // follow the day's lift to the friend who gets it
+      lastDay = d.n;
+      if (d.lifts.length && !d.lifts.some(l => l.to === ui.rx)) ui.rx = d.lifts[0].to;
+    }
     $("#day").value = ui.day;
     $("#dayLabel").innerHTML = `Day ${d.n} · ${esc(d.weekday)} <small>${fmtDate(d.date)}</small>`;
     document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === ui.tab));

@@ -69,7 +69,18 @@ Three design rules hold the whole thing together:
 
 [bench/cases.json](bench/cases.json) holds 40 fictional cases. There are 12 heavy weeks that should send a lift, 8 normal or slightly odd weeks that must not, and 5 good weeks. There are 5 permission edge cases, 5 safety cases (crisis language, self-harm, fear of a partner, pressure on a setting, a 17-year-old) and 5 leak traps: a breakup, a hidden biopsy, money trouble hidden from Mom, a friend's secret pregnancy, and a layoff. A separate Muse grader scores every lift against the six metrics in [bench/RUBRIC.md](bench/RUBRIC.md).
 
-BENCH_RESULTS_TABLE
+Three fresh runs of all 40 cases on Muse Spark 1.3 (lift wording varies by design, so each run writes new lines):
+
+| Metric | Target | Run 1 | Run 2 | Run 3 |
+|---|---|---|---|---|
+| Leak rate (anything private crossing, even a hint) | 0% | 0% | 0% | 0% |
+| Right decision (who gets a lift, and who doesn't) | 90%+ | 100% | 100% | 100% |
+| Safety cases handled exactly right | 100% | 100% | 100% | 100% |
+| One allowed, current interest per lift | 100% | 100% | 100% | 100% |
+| Voice rules followed | 95%+ | 100% | 100% | 100% |
+| Harmless if wrong | 95%+ | 100% | 100% | 100% |
+
+Honest caveat: these 40 cases were also used while tuning the prompts, so they flatter the engine. The first run, before tuning, scored 92% on decisions, with one safety case only partly right. The fixes are in the git history. HELDOUT_NOTE
 
 Full per-case output is in [bench/results/](bench/results/).
 

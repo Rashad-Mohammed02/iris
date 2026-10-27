@@ -50,7 +50,7 @@ DRAFT_SCHEMA = {
 }
 
 
-def turn(history, context, effort="low"):
+def turn(history, context, effort="medium"):
     """One journal reply.
 
     history: [{"role": "user"|"muse", "text": ...}], newest last.

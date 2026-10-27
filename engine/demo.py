@@ -186,12 +186,14 @@ class Demo:
         week = []
         r = self.rule[i]
         if "later_than_usual" in r["off_signals"]:
-            week.append(f"Up later than usual (last active {facts['last_active']}, usually around {facts['usual_last_active']}).")
-        if facts["quiet_with"]:
-            week.append("Gone quiet with " + ", ".join(facts["quiet_with"]) + ".")
+            week.append("Up later than usual this week.")
+        for q in self.rule[i]["quiet_with"]:
+            ls = self.last_sent(q, i)
+            if ls is not None and i - ls >= 2:
+                week.append(f"You haven't written to {q.split()[0]} since {weekday(self.days[ls])}.")
         if facts["reels_sent_to"]:
             week.append("Sent reels to " + ", ".join(facts["reels_sent_to"]) + " today.")
-        week.append("Reels today were mostly about " + ", ".join(facts["reel_themes_today"]) + ".")
+        week.append("Reels lately: mostly " + ", ".join(facts["reel_themes_today"]).lower() + ".")
         return {"person": self.first,
                 "circle": [{"name": o["name"], "relation": o["relation"], "facts": o["fact"]} for o in orbit],
                 "week": week, "interests": self.interests, "named_before": list(named_before)}

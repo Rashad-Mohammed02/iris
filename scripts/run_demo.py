@@ -36,8 +36,10 @@ JOURNAL_SCRIPT = {
          "and i still haven't texted D back. idk why",
          "chest feels tight. kind of heavy",
          "honestly just want to disappear into my phone and not deal",
-         "stretched thin. and kind of left out i guess"],
-    27: ["sam just sent me vegas tickets. VEGAS. i didn't even tell him anything"],
+         "stretched thin. and kind of left out i guess",
+         "not maya. dev. i owe him a text"],
+    27: ["sam just sent me vegas tickets. VEGAS. i didn't even tell him anything",
+         "honestly made my whole week"],
 }
 LIFT_LANDS_DAY = 27  # index of day 28, when Sam acts on his lift (story_arc_truth.json)
 
@@ -58,7 +60,19 @@ def run_journal(demo, i):
     return {"turns": turns, "about": about, "own_words": words, "named": named}
 
 
+def journal_only():
+    """Rerun just the journal days and patch them into the existing web/demo_data.js."""
+    demo = Demo()
+    data = json.loads(OUT.read_text()[len("window.DEMO = "):].rstrip().rstrip(";"))
+    for i in JOURNAL_SCRIPT:
+        data["days"][i]["journal"] = run_journal(demo, i)
+    OUT.write_text("window.DEMO = " + json.dumps(data, ensure_ascii=False, indent=1) + ";\n", encoding="utf-8")
+    print("patched journal days", [i + 1 for i in JOURNAL_SCRIPT])
+
+
 def main():
+    if "--journal" in sys.argv:
+        return journal_only()
     demo = Demo()
     n = len(demo.days)
     print(f"{demo.first}: {n} days")
