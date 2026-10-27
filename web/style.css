@@ -322,7 +322,7 @@ button.round { border: 0; }
 .stats div { background: var(--fill-1); border-radius: 14px; padding: 10px; display: grid; }
 .stats b { font-size: 17px; }
 .stats span { font-size: 11.5px; color: var(--ink-3); }
-.reels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; border-radius: 14px; overflow: hidden; margin-top: -4px; }
+.reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; border-radius: 14px; overflow: hidden; margin-top: -4px; }
 .reel { position: relative; aspect-ratio: 9 / 14; padding: 6px; display: flex; flex-direction: column; justify-content: flex-end; color: #fff;
   background: linear-gradient(160deg, hsl(var(--h) 70% 62%), hsl(calc(var(--h) + 40) 65% 42%)); }
 .reel.heavy { background: linear-gradient(160deg, hsl(var(--h) 18% 38%), hsl(var(--h) 22% 16%)); }
@@ -400,3 +400,7 @@ button.round { border: 0; }
 .safari .stage { perspective: none; }
 .safari .device-wrap.left, .safari .device-wrap.right { transform: none; transform-style: flat; }
 .sheet, .alert, .top { -webkit-backdrop-filter: blur(20px); }
+
+/* "What I'm noticing": plain results the person can correct */
+.notice { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.thought .ondevice { color: var(--ok); font-weight: 600; font-size: 12.5px; }

@@ -14,7 +14,7 @@
     day: 26, tab: "today", view: "crosses", rx: "Sam", app: "muse",
     wrong: {}, right: {}, stopped: {}, perms: {}, interests: {}, pause: "on", told: {}, loop: {},
     send: D.settings.send_mode === "automatic" ? "auto" : "ask", approved: {},
-    think: {}, sheet: null, sheetWho: null, sheetB: null,
+    think: {}, notMe: {}, sheet: null, sheetWho: null, sheetB: null,
     picked: new Set(circle.map(m => m.first)), invited: false, joined: {}, added: {}, left: {},
     plan: {}, asks: {}, rxAsks: {}, flash: null, editing: false, kept: false,
     ob: null, igConn: null, notif: null, rxDev: "phone",
@@ -87,14 +87,10 @@
     <filter id="fuzz" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" result="n"/>
     <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/></filter>
     <radialGradient id="fur" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#fbf5ea"/><stop offset=".7" stop-color="#f1e5d1"/><stop offset="1" stop-color="#e2d1b6"/></radialGradient></defs></svg>`);
-  // For a local recording, drop your own avatar image at web/assets/avatar.png and it replaces the drawing.
-  // The file is gitignored, so it never goes into the public repo or the published page.
-  let AVATAR = null;
-  const probe = new Image();
-  probe.onload = () => { AVATAR = probe.src; render(); };
-  probe.src = "assets/avatar.png";
+  // Circle's own character, made with Muse Image. The drawing below is only a fallback.
+  const AVATAR = "img/peach-avatar.png";
   function face(size, extra) {
-    if (AVATAR) return `<img class="face ${extra || ""}" src="${AVATAR}" alt="" style="width:${size}px;height:${size}px;object-fit:contain">`;
+    if (AVATAR) return `<img class="face ${extra || ""}" src="${AVATAR}" alt="" style="width:${size}px;height:${size}px;object-fit:cover;border-radius:50%" onerror="this.style.visibility='hidden'">`;
     return `<svg class="face ${extra || ""}" viewBox="0 0 60 60" style="width:${size}px;height:${size}px" aria-hidden="true">
       <g filter="url(#fuzz)" fill="url(#fur)"><path d="M27.5 14.5c-.6-4.2 1.6-7.4 5.2-8.2-1.3 2.4-1.2 4.8.4 7.6"/><ellipse cx="30" cy="34" rx="23" ry="21.5"/></g>
       <ellipse class="cheek" cx="18.5" cy="39" rx="4.6" ry="3"/><ellipse class="cheek" cx="41.5" cy="39" rx="4.6" ry="3"/>
@@ -111,14 +107,20 @@
   // ---------------- Arjun's Muse ----------------
   function today() {
     const d = cur(); let h = "";
-    const thoughts = [];
-    if (d.n < LIFTS_ON) thoughts.push(`Still learning your normal: day ${d.n} of ${LIFTS_ON}. Lifts switch on at day ${LIFTS_ON}.`);
-    else if (d.signals.length && d.rule !== "normal") thoughts.push(`Compared with your own normal: ${d.signals.join(", ")}.`);
-    else thoughts.push("Nothing off your normal today.");
-    if (d.why && d.lifts.length) thoughts.push(`Why a lift: ${d.why}`);
-    thoughts.push("Nothing here was sent to anyone.");
-    h += `<button class="think" data-think="${d.n}">${I.spark} Show thinking ${ui.think[d.n] ? I.down : I.chev}</button>`;
-    if (ui.think[d.n]) h += `<div class="thought">${thoughts.map(t => `<div>${esc(t)}</div>`).join("")}<button class="btn small link" data-app="ig" style="justify-self:start;padding-left:0">See the Instagram behind this ${I.chev}</button></div>`;
+    // The person sees results in plain words and can correct them, like Instagram's reels controls.
+    // How Circle read each reel stays on the phone; the developer view lives under the hood.
+    const noticing = d.n < LIFTS_ON ? [] : d.signals.filter(() => d.rule !== "normal");
+    h += `<button class="think" data-think="${d.n}">${I.spark} What I'm noticing ${ui.think[d.n] ? I.down : I.chev}</button>`;
+    if (ui.think[d.n]) {
+      h += `<div class="thought">` + (noticing.length
+        ? `<div>Compared with your own normal. Tap anything that isn't about you and I'll stop counting it.</div>` + noticing.map(sg => {
+            const k = d.n + ":" + sg, off = ui.notMe[k];
+            return `<div class="notice"><span style="${off ? "text-decoration:line-through;color:var(--ink-3)" : ""}">${esc(cap(sg))}</span><button class="btn small" data-notme="${esc(k)}">${off ? "Count it" : "Not about me"}</button></div>`;
+          }).join("")
+        : `<div>${d.n < LIFTS_ON ? `Still learning your normal: day ${d.n} of ${LIFTS_ON}.` : "Nothing off your normal today."}</div>`) +
+        `<div class="ondevice">Worked out on this phone. None of it left.</div>
+         <button class="btn small link" data-app="ig" style="justify-self:start;padding-left:0">See your Instagram activity ${I.chev}</button></div>`;
+    }
 
     h += `<p class="hello">${greet()}, ${esc(D.owner)}.${d.page ? "" : d.n < LIFTS_ON ? " Muse is still getting to know your normal." : ""}</p>`;
 
@@ -173,7 +175,7 @@
 
     if (d.n > LIFTS_ON && d.signals.length && d.rule !== "normal") {
       const w = ui.wrong["off" + d.n];
-      h += `<div class="widget tone-sun"><div class="eyebrow">Just for you · a little off your normal</div><p style="margin-top:4px">${esc(cap(d.signals.join(", ")))}.</p>`;
+      h += `<div class="widget tone-sun"><div class="eyebrow">Just for you · a little off your normal</div><p style="margin-top:4px">Your week's been a bit different from your usual.</p>`;
       h += w ? `<div class="thanks">Thanks. Muse won't count that next time.</div>`
              : `<div class="row"><button class="btn small" data-wrong="off${d.n}" data-quick="1">That's wrong</button></div>`;
       h += `<div class="note">Nothing was sent to anyone. Only you see this, compared with your own normal.</div></div>`;
@@ -222,10 +224,11 @@
     if (!g) return `<p class="agent muted">No Instagram data for this day.</p>`;
     const hue = s => [...s].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
     let h = `<div class="ig-head"><b>Today on Instagram</b><span class="muted">Day ${g.n}</span></div>
-      <div class="stats"><div><b>${g.reels_watched}</b><span>reels watched</span></div><div><b>${esc(g.last_active || "-")}</b><span>last active</span></div><div><b>${Math.round(g.heavy_share * 100)}%</b><span>heavy reels</span></div></div>`;
-    h += `<div class="h">Latest reels</div><div class="reels">${g.latest_reels.map(r =>
-      `<div class="reel ${r.heavy ? "heavy" : ""}" style="--h:${hue(r.theme)}"><span class="play">${I.play}</span><span class="rt">${esc(r.theme)}</span><span class="rc">@${esc(r.creator)}</span><span class="rtime">${esc(r.time)}</span></div>`).join("")}</div>`;
-    if (g.saved.length) h += `<div class="h">Saved</div>` + g.saved.map(s => `<div class="thread"><span class="avatar sq" style="--h:${hue(s.theme)}">${I.play}</span><div><b>@${esc(s.creator)}</b><div class="muted">${esc(s.theme)} · ${esc(s.time)}</div></div></div>`).join("");
+      <div class="stats"><div><b>${g.reels_watched}</b><span>reels watched</span></div><div><b>${esc(g.last_active || "-")}</b><span>last active</span></div></div>`;
+    // Instagram's own watch history, as Arjun would see it. No labels: how Circle read these stays on the phone.
+    h += `<div class="h">Watch history</div><div class="reels">${g.latest_reels.map(r =>
+      `<div class="reel" style="--h:${hue(r.creator)}"><span class="play">${I.play}</span><span class="rc">@${esc(r.creator)}</span><span class="rtime">${esc(r.time)}</span></div>`).join("")}</div>`;
+    if (g.saved.length) h += `<div class="h">Saved</div>` + g.saved.map(s => `<div class="thread"><span class="avatar sq" style="--h:${hue(s.creator)}">${I.play}</span><div><b>@${esc(s.creator)}</b><div class="muted">${esc(s.time)}</div></div></div>`).join("");
     // On the day Sam acts on his lift, his thread is the story: it's just Sam, being Sam.
     h += `<div class="h">Messages</div>` + g.threads.map(t => {
       const star = g.n === LANDS && t.first === "Sam";
@@ -597,7 +600,14 @@
         <dt>2. Muse read</dt><dd>${d.families_off && d.families_off.length ? esc(d.families_off.join(", ").replace(/_/g, " ")) : "No signal families off"}</dd>
         <dt>3. Decision</dt><dd>${esc(d.stretch.replace("_", " "))}</dd>
         <dt>4. Lifts</dt><dd>${d.lifts.length ? esc(d.lifts.map(l => l.to).join(", ")) : "None"}</dd>
+        ${d.why && d.lifts.length ? `<dt>Why</dt><dd>${esc(d.why)}</dd>` : ""}
       </dl>`;
+    const g = ig();
+    if (g && g.latest_reels.length) {
+      h += `<div class="section-title">Developer view: today's last reels, as Circle read them on the phone</div><table><tr><th>Creator</th><th>Time</th><th>Topic</th><th>Weight</th></tr>` +
+        g.latest_reels.map(r => `<tr><td>@${esc(r.creator)}</td><td>${esc(r.time)}</td><td>${esc(r.theme)}</td><td>${r.heavy ? `<span class="pill no">heavy</span>` : `<span class="pill ok">light</span>`}</td></tr>`).join("") +
+        `</table><p class="note">${Math.round(g.heavy_share * 100)}% of today's reels read as heavy. The person never sees this table; it stays on their phone.</p>`;
+    }
     h += `<div class="section-title">Each person, through the gates</div><table><tr><th>Person</th><th>Setting</th><th>Result</th></tr>` +
       circle.map(m => {
         const l = d.lifts.find(x => x.to === m.first), ns = d.not_sent.find(x => x.name === m.first);
@@ -687,6 +697,7 @@
     else if (ds.tab) { ui.tab = ds.tab; ui.app = "muse"; closeA(); scrollTop = true; }
     else if (ds.view) ui.view = ds.view;
     else if (ds.think) ui.think[ds.think] = !ui.think[ds.think];
+    else if (ds.notme) ui.notMe[ds.notme] = !ui.notMe[ds.notme];
     else if (ds.right) ui.right[ds.right] = !ui.right[ds.right];
     else if (ds.wrong) ui.wrong[ds.wrong] = ds.quick ? "yes" : "open";
     else if (ds.wrongReason) ui.wrong[ds.k] = ds.wrongReason;
