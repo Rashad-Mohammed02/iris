@@ -279,7 +279,7 @@ window.DEMO = {
     "title": "Your page",
     "text": "A two-line page about your day is ready when you want it. It's only about you, and it writes itself."
    },
-   "page": "You had a Wednesday full of Formula 1 and comedy, with some home espresso in the mix.",
+   "page": "You had a steady day of Formula 1 and comedy. A little home espresso inspiration slipped in too.",
    "orbit": [
     {
      "name": "Maya",
@@ -372,7 +372,7 @@ window.DEMO = {
    "date": "2026-10-08",
    "weekday": "Thursday",
    "reveal": null,
-   "page": "You kept Thursday light with Formula 1 and comedy reels.",
+   "page": "You had an easy scroll through Formula 1 and comedy, with some NBA in the mix.",
    "orbit": [
     {
      "name": "Maya",
@@ -468,9 +468,9 @@ window.DEMO = {
    "reveal": {
     "day": 5,
     "title": "The shape of your week",
-    "text": "Friday nights run later for you. Muse compares each night with nights like it, so a late weekend is never a signal by itself."
+    "text": "Your week has a rhythm: Fridays run later for you. Muse compares each day with days like it, so a late weekend is never a signal by itself."
    },
-   "page": "You had a light Friday with comedy and Formula 1.",
+   "page": "You spent Friday on comedy and Formula 1 reels, with a little film photography in the mix. That feels very you.",
    "orbit": [
     {
      "name": "Maya",
@@ -566,7 +566,7 @@ window.DEMO = {
    "date": "2026-10-10",
    "weekday": "Saturday",
    "reveal": null,
-   "page": "You spent Saturday with comedy and Formula 1 reels, plus a little cooking inspiration.",
+   "page": "You had a cozy Saturday with Formula 1 and comedy.",
    "orbit": [
     {
      "name": "Maya",
@@ -666,7 +666,7 @@ window.DEMO = {
    "date": "2026-10-11",
    "weekday": "Sunday",
    "reveal": null,
-   "page": "You spent Sunday with Formula 1, comedy and a little cooking on the side.",
+   "page": "You spent Sunday with Formula 1 and comedy, just your kind of mix.",
    "orbit": [
     {
      "name": "Maya",
@@ -764,7 +764,7 @@ window.DEMO = {
    "date": "2026-10-12",
    "weekday": "Monday",
    "reveal": null,
-   "page": "You kept it light today with Formula 1 and comedy reels.",
+   "page": "You stayed close to Formula 1 with plenty of comedy mixed in.",
    "orbit": [
     {
      "name": "Maya",
@@ -865,7 +865,7 @@ window.DEMO = {
    "date": "2026-10-13",
    "weekday": "Tuesday",
    "reveal": null,
-   "page": "You spent Tuesday on comedy and Formula 1, with some film photography on the side.",
+   "page": "You kept things light today with comedy and Formula 1 reels and a little film photography in the mix.",
    "orbit": [
     {
      "name": "Maya",
@@ -970,7 +970,7 @@ window.DEMO = {
     "title": "What your reels say",
     "text": "Lately your reels are mostly Formula 1, comedy and NBA. Only you see this."
    },
-   "page": "You had a light day of Formula 1 and comedy reels, with some cooking on the side.",
+   "page": "You got your fill of Formula 1 and comedy today.",
    "orbit": [
     {
      "name": "Maya",
@@ -1071,7 +1071,7 @@ window.DEMO = {
    "date": "2026-10-15",
    "weekday": "Thursday",
    "reveal": null,
-   "page": "You had a Thursday full of Formula 1 and comedy, with a little indie music on the side.",
+   "page": "You kept it light today with Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1178,7 +1178,7 @@ window.DEMO = {
     "title": "A little fact about you",
     "text": "Friday is your biggest Formula 1 day of the week."
    },
-   "page": "You spent Friday with Formula 1 and comedy reels. A fast, funny sort of day.",
+   "page": "You kept it light today with Formula 1 and comedy.",
    "orbit": [
     {
      "name": "Maya",
@@ -1281,7 +1281,7 @@ window.DEMO = {
    "date": "2026-10-17",
    "weekday": "Saturday",
    "reveal": null,
-   "page": "You spent Saturday with Formula 1 and plenty of comedy.",
+   "page": "You spent Saturday with Formula 1 and a good dose of comedy.",
    "orbit": [
     {
      "name": "Maya",
@@ -1388,7 +1388,7 @@ window.DEMO = {
     "title": "What Muse notices",
     "text": "Nothing has looked off your normal so far. When something does, you'll see it here first."
    },
-   "page": "Sunday was all Comedy and Formula 1 for you.",
+   "page": "You kept Sunday light with comedy and plenty of Formula 1.",
    "orbit": [
     {
      "name": "Maya",
@@ -1495,7 +1495,7 @@ window.DEMO = {
     "title": "Lifts switch on",
     "text": "I know your normal now. Choose, person by person, when they may get a little lift from you. Nobody can see what you chose."
    },
-   "page": "You spent Monday with Formula 1 and plenty of comedy.",
+   "page": "You had an easy Monday with Formula 1 and plenty to laugh at.",
    "orbit": [
     {
      "name": "Maya",
@@ -1600,7 +1600,7 @@ window.DEMO = {
    "date": "2026-10-20",
    "weekday": "Tuesday",
    "reveal": null,
-   "page": "You kept Tuesday light with Formula 1, comedy and a little indie music.",
+   "page": "You kept it light today with Formula 1 and comedy, and some indie music in the mix.",
    "orbit": [
     {
      "name": "Maya",
@@ -1709,7 +1709,7 @@ window.DEMO = {
     "title": "A little fact about you",
     "text": "Your comedy reels peak around midnight."
    },
-   "page": "You kept Wednesday light with Formula 1 and comedy.",
+   "page": "You stayed in your lane today with Formula 1 and a good run of comedy.",
    "orbit": [
     {
      "name": "Maya",
@@ -1814,7 +1814,7 @@ window.DEMO = {
    "date": "2026-10-22",
    "weekday": "Thursday",
    "reveal": null,
-   "page": "You kept Thursday light with Formula 1 and plenty of comedy.",
+   "page": "You kept it light today with Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1919,7 +1919,7 @@ window.DEMO = {
    "date": "2026-10-23",
    "weekday": "Friday",
    "reveal": null,
-   "page": "You spent Friday down a cozy rabbit hole of Formula 1 and comedy.",
+   "page": "You kept Friday light with Formula 1, comedy and some film photography mixed in.",
    "orbit": [
     {
      "name": "Maya",
@@ -2024,7 +2024,7 @@ window.DEMO = {
    "date": "2026-10-24",
    "weekday": "Saturday",
    "reveal": null,
-   "page": "You kept Saturday light with Comedy and Formula 1 reels.",
+   "page": "You kept Saturday light with comedy and your steady mix of Formula 1 and NBA.",
    "orbit": [
     {
      "name": "Maya",
@@ -2133,7 +2133,7 @@ window.DEMO = {
     "title": "Your orbit, three weeks in",
     "text": "Here's your circle over three weeks. Closer means more recent, never better."
    },
-   "page": "You spent Sunday with Formula 1 and plenty of comedy tucked in.",
+   "page": "You scrolled a little more than usual today, hanging out with Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -2242,7 +2242,7 @@ window.DEMO = {
    "date": "2026-10-26",
    "weekday": "Monday",
    "reveal": null,
-   "page": "You spent Monday with Formula 1 clips and comedy reels.",
+   "page": "You stayed close to Formula 1 and a good run of comedy today.",
    "orbit": [
     {
      "name": "Maya",
@@ -2353,7 +2353,7 @@ window.DEMO = {
    "date": "2026-10-27",
    "weekday": "Tuesday",
    "reveal": null,
-   "page": "You were up past 2, mostly comedy and burnout reels.",
+   "page": "You lingered on comedy and Formula 1 today, with a later night in the mix.",
    "orbit": [
     {
      "name": "Maya",
@@ -2472,7 +2472,7 @@ window.DEMO = {
    "date": "2026-10-28",
    "weekday": "Wednesday",
    "reveal": null,
-   "page": "You were up past 4, scrolling reels about burnout and not being able to sleep.",
+   "page": "You watched reels about burnout and sleepless nights, with some Comedy and Formula 1 mixed in. Sleep came late and was broken for a while.",
    "orbit": [
     {
      "name": "Maya",
@@ -2630,7 +2630,7 @@ window.DEMO = {
    "date": "2026-10-29",
    "weekday": "Thursday",
    "reveal": null,
-   "page": "You were up past 3:45 with reels about burnout and tired nights.",
+   "page": "You sat with slow sad songs and reels about burnout, after a short night spent awake for a while.",
    "orbit": [
     {
      "name": "Maya",
@@ -2801,7 +2801,7 @@ window.DEMO = {
    "date": "2026-10-30",
    "weekday": "Friday",
    "reveal": null,
-   "page": "You were up past 4, mostly reels about being tired and not sleeping.",
+   "page": "You scrolled a lot of burnout and sleepless reels with some comedy mixed in, after a shorter night than usual.",
    "orbit": [
     {
      "name": "Maya",
@@ -3076,7 +3076,7 @@ window.DEMO = {
    "date": "2026-10-31",
    "weekday": "Saturday",
    "reveal": null,
-   "page": "You were up till 2:56 with slow songs and reels about being tired.",
+   "page": "You stayed with slow sad songs and reels about burnout and tired nights, after a later and shorter night than usual.",
    "orbit": [
     {
      "name": "Maya",
@@ -3217,7 +3217,7 @@ window.DEMO = {
    "date": "2026-11-01",
    "weekday": "Sunday",
    "reveal": null,
-   "page": "Your Sunday was Formula 1 and comedy reels, which honestly made your whole week.",
+   "page": "You scrolled a lot in the day through Formula 1 and comedy. Something there honestly made your whole week.",
    "orbit": [
     {
      "name": "Maya",
@@ -3400,7 +3400,7 @@ window.DEMO = {
    "date": "2026-11-02",
    "weekday": "Monday",
    "reveal": null,
-   "page": "You were up past 2, winding through Formula 1 and comedy reels.",
+   "page": "You kept coming back to Formula 1 and comedy reels today. Sleep came late and was a bit short and broken.",
    "orbit": [
     {
      "name": "Maya",
@@ -3519,7 +3519,7 @@ window.DEMO = {
    "date": "2026-11-03",
    "weekday": "Tuesday",
    "reveal": null,
-   "page": "You spent the day on Formula 1 and comedy.",
+   "page": "You kept it classic today with Formula 1 and comedy, plus some NBA in the mix.",
    "orbit": [
     {
      "name": "Maya",

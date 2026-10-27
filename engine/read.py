@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT))
 
 from engine import muse, safety  # noqa: E402
 
-PROMPT = ROOT / "prompts" / "read_v1.txt"
+PROMPT = ROOT / "prompts" / "read_v2.txt"
 STRETCHES = ["none", "off_normal", "clearly_heavy", "good"]
 FAMILIES = ["late_scroll", "reel_themes_heavy", "reels_sent_heavy", "reply_rhythm", "withdrawal", "interest_drop"]
 

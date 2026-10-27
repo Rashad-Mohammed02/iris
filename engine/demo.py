@@ -31,6 +31,10 @@ def clock(h):
     return f"{(hh % 12) or 12}:{mm:02d} {'AM' if hh < 12 else 'PM'}"
 
 
+REST_WORDS = {"later_to_sleep": "got to sleep later than usual", "shorter_rest": "a shorter night than usual",
+              "longer_rest": "slept much longer than usual", "woke_in_night": "up for a while in the middle of the night"}
+
+
 def weekday(day):
     return date.fromisoformat(day).strftime("%A")
 
@@ -192,7 +196,8 @@ class Demo:
         d = self.days[i]
         talked = sorted(((p["sent"], n.split()[0]) for n, p in row["people"].items() if p["sent"]), reverse=True)
         groups = Counter(e["to"] for e in self.by_day.get(d, []) if e["type"] == "message_sent" and e.get("group"))
-        late = "later_to_sleep" in self.rule[i]["off_signals"]
+        off = self.rule[i]["off_signals"]
+        late = "later_to_sleep" in off
         top_group = groups.most_common(1)[0][0] if groups else None
         members = next((t["others"] for t in self.profile["threads"] if t["title"] == top_group), [])
         return {
@@ -209,6 +214,9 @@ class Demo:
             "busiest_group_chat": {"name": top_group, "members": [m.split()[0] for m in members]} if top_group else None,
             "quiet_with": [q.split()[0] for q in self.rule[i]["quiet_with"]],
             "interests_today": [t for t in self.themes([d], heavy=False, top=2)],
+            # Plain words for the page, each already measured against his own normal. No clock times.
+            "rest": [REST_WORDS[s] for s in REST_WORDS if s in off],
+            "scrolled_more_in_the_day": "daytime_binge" in off,
         }
 
     # ---- the journal's context -----------------------------------------

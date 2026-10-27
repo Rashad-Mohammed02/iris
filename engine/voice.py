@@ -32,6 +32,9 @@ BANNED = {
         "crucial", "journey", "delve", "vibrant", "testament", "showcase", "navigate", "amidst", "truly", "deeply",
         "profound", "not just", "not only", "lands big", "elevate", "unwind",
     ],
+    # A good-day lift must never hint that things were bad before ("doing well now", "back to himself").
+    "recovery": ["again", "back to", "better", "now that", "these days", "anymore", "ahora", "otra vez", "de nuevo",
+                 "de vuelta", "mejor", "va bien", "ya no"],
     # Names only: Muse never guesses anyone's pronouns.
     "pronoun": ["he", "she", "him", "her", "his", "hers", "he's", "she's", "himself", "herself"],
     # A small Spanish list; the Muse leak check covers other languages and paraphrases.

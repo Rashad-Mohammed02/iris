@@ -11,12 +11,13 @@ sys.path.insert(0, str(ROOT))
 
 from engine import muse  # noqa: E402
 
-PROMPT = ROOT / "prompts" / "daily_page_v1.txt"
+PROMPT = ROOT / "prompts" / "daily_page_v2.txt"
 
 
 # Testers found a whole night laid out, with other people's chats in it, "too much" and "creepy".
-# The page keeps to the person: their evening, their reels, their interests. No one else.
-ABOUT_YOU = ("day", "up_later_than_usual", "last_active", "usual_last_active", "reel_themes_today", "interests_today")
+# The page keeps to the person: their rest, their day, their reels, their interests. No one else.
+# No clock times: the night is one fact among others, never the headline.
+ABOUT_YOU = ("day", "rest", "scrolled_more_in_the_day", "reel_themes_today", "interests_today")
 
 
 def write_page(facts, journal_today=None, effort="low"):
@@ -55,8 +56,8 @@ def reveal(demo, i, settings):
         latest = max(rows, key=lambda r: r["last_active"] or 0)
         from engine.demo import weekday
         return {"day": n, "title": "The shape of your week",
-                "text": f"{weekday(latest['day'])} nights run later for you. Muse compares each night with "
-                        "nights like it, so a late weekend is never a signal by itself."}
+                "text": f"Your week has a rhythm: {weekday(latest['day'])}s run later for you. Muse compares each day with "
+                        "days like it, so a late weekend is never a signal by itself."}
     if n == settings.get("lifts_switch_on_day", 7):
         return {"day": n, "title": "Lifts switch on",
                 "text": "I know your normal now. Choose, person by person, when they may get a little lift "

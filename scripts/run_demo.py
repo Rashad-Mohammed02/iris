@@ -80,9 +80,30 @@ def journal_only():
     print("patched journal days", [i + 1 for i in JOURNAL_SCRIPT])
 
 
+def pages_only():
+    """Rewrite just the private pages and reveals and patch them into the existing web/demo_data.js."""
+    demo = Demo()
+    data = json.loads(OUT.read_text()[len("window.DEMO = "):].rstrip().rstrip(";"))
+
+    def page(i):
+        j = data["days"][i].get("journal")
+        jt = {"named": j.get("named")} if j else None
+        return daily_page.write_page(demo.day_facts(i), jt) if i >= 2 else None
+
+    with ThreadPoolExecutor(6) as ex:
+        pages = list(ex.map(page, range(len(demo.days))))
+    for i, d in enumerate(data["days"]):
+        d["page"] = pages[i]
+        d["reveal"] = daily_page.reveal(demo, i, demo.settings)
+    OUT.write_text("window.DEMO = " + json.dumps(data, ensure_ascii=False, indent=1) + ";\n", encoding="utf-8")
+    print("patched pages and reveals")
+
+
 def main():
     if "--journal" in sys.argv:
         return journal_only()
+    if "--pages" in sys.argv:
+        return pages_only()
     demo = Demo()
     n = len(demo.days)
     print(f"{demo.first}: {n} days")

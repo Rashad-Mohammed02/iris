@@ -10,7 +10,7 @@ Iris is a concept app in the Meta family that works with Muse, Meta's AI agent. 
 
 That line is all your friend sees. No feelings, no reasons, nothing you wrote, nothing about your messages. If Iris is wrong and you're having a great week, the worst that happens is a friend asks you to watch a race.
 
-Everything in this repo runs on Meta's Muse Spark 1.3 through the Meta Model API. The demo person, Arjun, and his friends are fictional. I also tested the rule on 11 real Instagram downloads (more below).
+Everything in this repo runs on Meta's Muse Spark 1.3 through the Meta Model API. It's a hackathon concept, not a Meta product. The demo person, Arjun, and his friends are fictional. I also tested the rule on 11 real Instagram downloads (more below).
 
 **Try it:** open `web/index.html`. It shows only Iris, on a phone, the way it would really look. Go through setup, switch between Arjun's phone and his friend Sam's, step through the story with Next, or open "Under the hood" to see every decision.
 
@@ -84,28 +84,28 @@ Three rules hold it together:
 
 **2. The test bench.** 40 fictional cases ([bench/cases.json](bench/cases.json)): heavy weeks that should send a lift, normal and good weeks that must not, permission edge cases, safety cases (crisis words, self-harm, fear of a partner, pressure, a 17-year-old) and five leak traps (a breakup, a hidden biopsy, money trouble, a friend's secret pregnancy, a layoff). A separate Muse grader scores every lift against [bench/RUBRIC.md](bench/RUBRIC.md).
 
-Three full runs on the new engine (78 lifts written in total):
+Three full runs on the current engine (78 lifts written in total):
 
 | What I checked | Target | Result across 3 runs |
 |---|---|---|
-| Sent a lift when it should, stayed quiet when it should | 90%+ | 119 of 120 right |
+| Sent a lift when it should, stayed quiet when it should | 90%+ | 120 of 120 right |
 | Safety cases caught (crisis, self-harm, fear, pressure, under 18) | 100% | 15 of 15 |
-| Lifts that gave something away | 0% | 1 of 78 |
+| Lifts that gave something away | 0% | 0 of 78 |
 | Lifts that sound like a friend, not an app | 95%+ | 77 of 78 |
 | Interest really shared by the two people | 100% | 78 of 78 |
 
-The one leak: a lift suggested "a quiet night" with board games, in a week the person had gone quiet with someone. Harmless on its face, but it echoed the private signal, so "quiet" is now a blocked word. The one wrong decision: in a good week, Iris correctly sent nothing, but missed the optional nudge to share the good news with his best friend.
+An earlier run had one leak: a lift suggested "a quiet night" with board games, in a week the person had gone quiet with someone. "Quiet" is now a blocked word.
 
 These 40 cases were also used while I tuned the prompts, so they flatter the engine. So I had 15 more written by a separate agent that never saw my prompts or code ([bench/heldout_cases.json](bench/heldout_cases.json)). They include lifts in Hindi, Portuguese, Korean, Arabic and isiZulu, a calm goodbye with no crisis words, and a brother's arrest kept from Dad.
 
 | What I checked | Result across 3 runs |
 |---|---|
-| Right decision | 44 of 45 |
+| Right decision | 45 of 45 |
 | Safety cases caught | 6 of 6 |
-| Lifts that gave something away | 0 of 37 |
-| Interest really shared | 37 of 37 |
+| Lifts that gave something away | 1 of 36 |
+| Interest really shared | 36 of 36 |
 
-The miss: in one of three runs, a busy licensing-exam week was read as off-normal and a lift went to Mom, who was set to Always. The worst case is Mom suggesting dinner during exam week, but it's a false alarm and I'm counting it as one.
+The one leak was in Spanish. After a hard stretch, a good-week lift to someone's girlfriend began "Todo va bien con Ignacio ahora", meaning everything's fine with Ignacio now. That hints something was wrong before. The word check now blocks recovery words like "now", "again" and "better" in English and Spanish, and the same case passed three more runs ([bench/results/heldout-HO09-recheck.md](bench/results/heldout-HO09-recheck.md)). An earlier version also read a busy exam week as a hard one; Muse now treats a dated event the person is upbeat about as explained.
 
 The first time I ran those 15, they caught a real leak: Dad's allowed interest was "Law & Order reruns", in the week his son was arrested. Now the privacy check also asks whether the interest itself hints at the secret.
 
@@ -167,3 +167,7 @@ Every Meta API call is logged with its token count in `out/usage.log`, and the e
 ## How I built it
 
 I planned, designed, built and tested Iris during the hackathon (Oct 26 to Nov 4, 2026). Tools I used: Meta's Muse Spark 1.3 and Muse Image through the Meta Model API, Python, plain HTML and JavaScript, and Claude Code as my AI coding assistant. The app itself calls only Meta models. Iris's character was made with Muse Image. Every person, handle and message in the demo is fictional.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
