@@ -120,6 +120,9 @@ def main():
             "page": pages[i],
             "orbit": demo.orbit(i),
             "signals": [SIGNAL_WORDS[s] for s in rule["off_signals"]],
+            "families": rule.get("families", []), "weight": rule.get("weight", 0),
+            "reconnected": [n.split()[0] for n in rule.get("reconnected_with", [])],
+            "shared": {m["name"].split()[0]: demo.shared_interests(m["name"], i) for m in demo.settings["circle"]},
             "rule": "heavy" if rule["heavy_stretch"] else ("lighter" if rule["lighter_stretch"] else
                     ("learning" if rule["learning"] else "normal")),
             "stretch": decision["stretch"],

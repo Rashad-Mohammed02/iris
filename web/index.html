@@ -3,76 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Muse Circle prototype</title>
+<title>Circle Prototype</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="top">
   <div class="brand">
-    <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+    <img class="mark" src="img/peach-avatar.png" alt="">
     <div>
-      <div class="name">Muse Circle</div>
-      <div class="sub">Hackathon prototype, not a Meta product. Every person and message is fictional.</div>
+      <div class="name">Circle</div>
+      <div class="sub">from Meta · works with Muse. Hackathon prototype, not a Meta product. Every person and message is fictional. Character made with Muse Image.</div>
     </div>
   </div>
   <div class="scrub">
-    <button id="prev" aria-label="Previous day">&#8249;</button>
+    <button id="prev" type="button" aria-label="Previous day">&#8249;</button>
     <div class="scrub-mid">
       <div id="dayLabel" class="day-label"></div>
-      <input id="day" type="range" min="1" max="30" value="26" aria-label="Day">
+      <input id="day" type="range" min="1" max="30" value="23" aria-label="Day">
     </div>
-    <button id="next" aria-label="Next day">&#8250;</button>
+    <button id="next" type="button" aria-label="Next day">&#8250;</button>
   </div>
   <div class="views" role="tablist">
-    <button data-view="crosses" class="on">What crosses</button>
-    <button data-view="hood">Under the hood</button>
+    <button type="button" data-view="crosses" class="on">What crosses</button>
+    <button type="button" data-view="hood">Under the hood</button>
   </div>
   <nav class="chapters" id="chapters" aria-label="The story"></nav>
 </header>
 
 <main class="stage">
-  <section class="device-wrap left" aria-label="Arjun's Muse">
+  <section class="device-wrap" aria-label="Arjun's phone">
     <div class="device-label"><b>Arjun's phone</b><span class="appswitch" id="appA"></span></div>
     <div class="device">
-      <div class="glass">
+      <div class="glass" id="glassA">
         <div class="status"><span class="time">9:41</span><span class="island"></span><span class="sys"></span></div>
-        <div class="appbar">
-          <button class="round menu" data-sheet="menu" aria-label="Menu"></button>
-          <div class="title" id="titleA">Circle</div>
-          <span class="pair" id="pairA"></span>
-        </div>
-        <nav class="seg tabs" id="tabs">
-          <button data-tab="today" class="on">Today</button>
-          <button data-tab="orbit">Orbit</button>
-          <button data-tab="journal">Journal</button>
-          <button data-tab="lifts">Lifts</button>
-          <button data-tab="people">People</button>
-        </nav>
-        <div id="screen" class="screen"></div>
-        <div class="composer" id="composerA"></div>
-        <div class="sheet-layer" id="sheet"></div>
-        <div class="home-ind"></div>
+        <div class="view" id="viewA"></div>
+        <nav class="tabbar" id="tabbar"></nav>
+        <div class="layer" id="sheetA"></div>
       </div>
     </div>
   </section>
 
-  <section class="device-wrap right" aria-label="A friend's Muse">
+  <section class="device-wrap friend" aria-label="A friend's phone">
     <div class="device-label"><b id="rxWho"></b><span class="appswitch" id="devB"></span><span class="rx-pick" id="rxPick"></span></div>
-    <div class="device">
-      <div class="glass">
+    <div class="device" id="deviceB">
+      <div class="glass" id="glassB">
         <div class="status"><span class="time">9:41</span><span class="island"></span><span class="sys"></span></div>
-        <div class="appbar">
-          <button class="round menu" data-sheet-b="menu" aria-label="Menu"></button>
-          <div class="title">Today</div>
-          <span></span>
-        </div>
-        <div id="rxScreen" class="screen"></div>
-        <div class="composer" id="composerB"></div>
-        <div class="sheet-layer" id="sheetB"></div>
-        <div class="home-ind"></div>
+        <div class="view" id="viewB"></div>
+        <div class="layer" id="sheetB"></div>
       </div>
-      <span class="lanyard" aria-hidden="true"><svg viewBox="0 0 60 170"><path d="M30 0v70" stroke="#2c2c31" stroke-width="6" stroke-linecap="round"/>
-        <circle cx="30" cy="82" r="11" fill="#2c2c31"/><path d="M26 92c-4 26-10 50-14 76M34 92c4 26 8 50 12 76" stroke="#2c2c31" stroke-width="5" stroke-linecap="round" fill="none"/></svg></span>
+      <span class="lanyard" aria-hidden="true"><svg viewBox="0 0 60 170"><path d="M30 0v70" stroke="#2c2c31" stroke-width="6" stroke-linecap="round"/><circle cx="30" cy="82" r="11" fill="#2c2c31"/><path d="M26 92c-4 26-10 50-14 76M34 92c4 26 8 50 12 76" stroke="#2c2c31" stroke-width="5" stroke-linecap="round" fill="none"/></svg></span>
     </div>
   </section>
 

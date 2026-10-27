@@ -9,6 +9,7 @@ window.DEMO = {
  "settings": {
   "note": "Arjun's choices in the demo: who is in his circle, how each person relates, the permission he set, and which of his interests each person may ever hear about. All fictional.",
   "age": 28,
+  "send_mode": "ask_first",
   "circle": [
    {
     "name": "Maya Chen",
@@ -61,7 +62,7 @@ window.DEMO = {
     ]
    }
   ],
-  "lifts_switch_on_day": 7
+  "lifts_switch_on_day": 15
  },
  "days": [
   {
@@ -124,6 +125,16 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [],
+    "Sam": [],
+    "Dev": [],
+    "Priya": [],
+    "Omar": []
+   },
    "rule": "learning",
    "stretch": "none",
    "why": "",
@@ -215,6 +226,18 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [],
+    "Sam": [
+     "F1"
+    ],
+    "Dev": [],
+    "Priya": [],
+    "Omar": []
+   },
    "rule": "learning",
    "stretch": "none",
    "why": "",
@@ -256,7 +279,7 @@ window.DEMO = {
     "title": "Your page",
     "text": "A two-line page about your day is ready when you want it. It's only about you, and it writes itself."
    },
-   "page": "You spent Wednesday on Formula 1 and comedy, with some home espresso in the mix.",
+   "page": "You kept it classic today with Formula 1, comedy and a little home espresso tinkering.",
    "orbit": [
     {
      "name": "Maya",
@@ -300,6 +323,18 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [],
+    "Sam": [
+     "F1"
+    ],
+    "Dev": [],
+    "Priya": [],
+    "Omar": []
+   },
    "rule": "learning",
    "stretch": "none",
    "why": "",
@@ -337,7 +372,7 @@ window.DEMO = {
    "date": "2026-10-08",
    "weekday": "Thursday",
    "reveal": null,
-   "page": "You spent Thursday with Formula 1 and plenty of comedy.",
+   "page": "You had a Thursday full of Formula 1, comedy and a little NBA on the side.",
    "orbit": [
     {
      "name": "Maya",
@@ -381,6 +416,19 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [],
+    "Priya": [],
+    "Omar": []
+   },
    "rule": "learning",
    "stretch": "none",
    "why": "",
@@ -422,7 +470,7 @@ window.DEMO = {
     "title": "The shape of your week",
     "text": "Friday nights run later for you. Muse compares each night with nights like it, so a late weekend is never a signal by itself."
    },
-   "page": "You spent Friday with comedy and Formula 1, plus a little film photography on the side.",
+   "page": "You spent Friday with comedy and Formula 1, with a little film photography tucked in.",
    "orbit": [
     {
      "name": "Maya",
@@ -466,6 +514,21 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [],
+    "Priya": [],
+    "Omar": []
+   },
    "rule": "learning",
    "stretch": "none",
    "why": "",
@@ -503,7 +566,7 @@ window.DEMO = {
    "date": "2026-10-10",
    "weekday": "Saturday",
    "reveal": null,
-   "page": "You kept Saturday easy with comedy and Formula 1 reels, plus a little cooking on the side.",
+   "page": "You spent Saturday drifting between comedy and Formula 1, with a little cooking tucked in.",
    "orbit": [
     {
      "name": "Maya",
@@ -547,6 +610,25 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": -2,
+   "reconnected": [
+    "Priya"
+   ],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [],
+    "Priya": [],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "learning",
    "stretch": "none",
    "why": "",
@@ -583,12 +665,8 @@ window.DEMO = {
    "n": 7,
    "date": "2026-10-11",
    "weekday": "Sunday",
-   "reveal": {
-    "day": 7,
-    "title": "Lifts switch on",
-    "text": "I know your normal now. Choose, person by person, when they may get a little lift from you. Nobody can see what you chose."
-   },
-   "page": "You kept Sunday easy with Formula One, comedy and a bit of cooking.",
+   "reveal": null,
+   "page": "You closed out Sunday with Formula 1 and some comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -632,33 +710,48 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [],
+    "Priya": [],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "learning",
    "stretch": "none",
    "why": "",
-   "families_off": [
-    "reel_themes_heavy"
-   ],
+   "families_off": [],
    "lifts": [],
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Sam",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Dev",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Priya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Omar",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     }
    ],
    "prompts": [],
@@ -671,7 +764,7 @@ window.DEMO = {
    "date": "2026-10-12",
    "weekday": "Monday",
    "reveal": null,
-   "page": "You spent Monday with Formula 1 and plenty to laugh at. A fast and funny kind of day.",
+   "page": "You wound down with Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -715,33 +808,51 @@ window.DEMO = {
     }
    ],
    "signals": [],
-   "rule": "normal",
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [],
+    "Omar": [
+     "film photography"
+    ]
+   },
+   "rule": "learning",
    "stretch": "none",
    "why": "",
-   "families_off": [
-    "reel_themes_heavy"
-   ],
+   "families_off": [],
    "lifts": [],
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Sam",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Dev",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Priya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Omar",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     }
    ],
    "prompts": [],
@@ -754,7 +865,7 @@ window.DEMO = {
    "date": "2026-10-13",
    "weekday": "Tuesday",
    "reveal": null,
-   "page": "You hung out with comedy and Formula 1 today, with some film photography on the side.",
+   "page": "You kept it light today with comedy and Formula 1, and a little film photography in between.",
    "orbit": [
     {
      "name": "Maya",
@@ -798,33 +909,51 @@ window.DEMO = {
     }
    ],
    "signals": [],
-   "rule": "normal",
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [],
+    "Omar": [
+     "film photography"
+    ]
+   },
+   "rule": "learning",
    "stretch": "none",
    "why": "",
-   "families_off": [
-    "reel_themes_heavy"
-   ],
+   "families_off": [],
    "lifts": [],
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Sam",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Dev",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Priya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Omar",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     }
    ],
    "prompts": [],
@@ -841,7 +970,7 @@ window.DEMO = {
     "title": "What your reels say",
     "text": "Lately your reels are mostly Formula 1, comedy and NBA. Only you see this."
    },
-   "page": "You spent today with Formula 1 and plenty of comedy.",
+   "page": "You kept it light today with Formula 1 and comedy, and a little cooking on the side.",
    "orbit": [
     {
      "name": "Maya",
@@ -885,33 +1014,51 @@ window.DEMO = {
     }
    ],
    "signals": [],
-   "rule": "normal",
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [],
+    "Omar": [
+     "film photography"
+    ]
+   },
+   "rule": "learning",
    "stretch": "none",
    "why": "",
-   "families_off": [
-    "reel_themes_heavy"
-   ],
+   "families_off": [],
    "lifts": [],
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Sam",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Dev",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Priya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Omar",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     }
    ],
    "prompts": [],
@@ -924,7 +1071,7 @@ window.DEMO = {
    "date": "2026-10-15",
    "weekday": "Thursday",
    "reveal": null,
-   "page": "You kept things light today with Formula 1 and comedy reels.",
+   "page": "You had a Thursday full of Formula 1 and comedy, with some indie music in the mix.",
    "orbit": [
     {
      "name": "Maya",
@@ -968,33 +1115,53 @@ window.DEMO = {
     }
    ],
    "signals": [],
-   "rule": "normal",
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
+   "rule": "learning",
    "stretch": "none",
    "why": "",
-   "families_off": [
-    "reel_themes_heavy"
-   ],
+   "families_off": [],
    "lifts": [],
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Sam",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Dev",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Priya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Omar",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     }
    ],
    "prompts": [],
@@ -1011,7 +1178,7 @@ window.DEMO = {
     "title": "A little fact about you",
     "text": "Friday is your biggest Formula 1 day of the week."
    },
-   "page": "You spent Friday with Formula 1 and a good run of comedy reels.",
+   "page": "You spent Friday on Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1055,33 +1222,53 @@ window.DEMO = {
     }
    ],
    "signals": [],
-   "rule": "normal",
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
+   "rule": "learning",
    "stretch": "none",
    "why": "",
-   "families_off": [
-    "reel_themes_heavy"
-   ],
+   "families_off": [],
    "lifts": [],
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Sam",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Dev",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Priya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Omar",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     }
    ],
    "prompts": [],
@@ -1094,7 +1281,7 @@ window.DEMO = {
    "date": "2026-10-17",
    "weekday": "Saturday",
    "reveal": null,
-   "page": "You spent Saturday with Formula 1 and plenty of comedy. Pretty solid lineup for a Saturday.",
+   "page": "You kept Saturday light with Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1138,33 +1325,53 @@ window.DEMO = {
     }
    ],
    "signals": [],
-   "rule": "normal",
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
+   "rule": "learning",
    "stretch": "none",
    "why": "",
-   "families_off": [
-    "reel_themes_heavy"
-   ],
+   "families_off": [],
    "lifts": [],
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Sam",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Dev",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Priya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Omar",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     }
    ],
    "prompts": [],
@@ -1181,7 +1388,7 @@ window.DEMO = {
     "title": "What Muse notices",
     "text": "Nothing has looked off your normal so far. When something does, you'll see it here first."
    },
-   "page": "You spent Sunday down a happy rabbit hole of comedy and Formula 1.",
+   "page": "You kept it light Sunday with comedy and Formula 1 reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1225,7 +1432,29 @@ window.DEMO = {
     }
    ],
    "signals": [],
-   "rule": "normal",
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
+   "rule": "learning",
    "stretch": "none",
    "why": "",
    "families_off": [],
@@ -1233,23 +1462,23 @@ window.DEMO = {
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Sam",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Dev",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Priya",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     },
     {
      "name": "Omar",
-     "why": "Nothing to lift"
+     "why": "Still learning their normal"
     }
    ],
    "prompts": [],
@@ -1261,8 +1490,12 @@ window.DEMO = {
    "n": 15,
    "date": "2026-10-19",
    "weekday": "Monday",
-   "reveal": null,
-   "page": "You spent the day with Formula 1 and some comedy mixed in.",
+   "reveal": {
+    "day": 15,
+    "title": "Lifts switch on",
+    "text": "I know your normal now. Choose, person by person, when they may get a little lift from you. Nobody can see what you chose."
+   },
+   "page": "You kept Monday light with Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1306,6 +1539,28 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "normal",
    "stretch": "none",
    "why": "",
@@ -1345,7 +1600,7 @@ window.DEMO = {
    "date": "2026-10-20",
    "weekday": "Tuesday",
    "reveal": null,
-   "page": "You kept Tuesday light with Formula 1 and some comedy.",
+   "page": "You spent today with Formula 1 and comedy, with a little indie music tucked in.",
    "orbit": [
     {
      "name": "Maya",
@@ -1389,6 +1644,28 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "normal",
    "stretch": "none",
    "why": "",
@@ -1432,7 +1709,7 @@ window.DEMO = {
     "title": "A little fact about you",
     "text": "Your comedy reels peak around midnight."
    },
-   "page": "You kept Wednesday light with Formula 1 and a steady run of comedy.",
+   "page": "You kept Wednesday light with Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1476,6 +1753,28 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "normal",
    "stretch": "none",
    "why": "",
@@ -1515,7 +1814,7 @@ window.DEMO = {
    "date": "2026-10-22",
    "weekday": "Thursday",
    "reveal": null,
-   "page": "You were up past 1:30 with Formula 1 and comedy reels.",
+   "page": "You were up past 1:30, winding down with Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1561,6 +1860,30 @@ window.DEMO = {
    "signals": [
     "up later than your usual"
    ],
+   "families": [
+    "T1_active_window"
+   ],
+   "weight": 3,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "normal",
    "stretch": "none",
    "why": "",
@@ -1600,7 +1923,7 @@ window.DEMO = {
    "date": "2026-10-23",
    "weekday": "Friday",
    "reveal": null,
-   "page": "You spent Friday with Formula 1 and comedy reels, plus a little film photography.",
+   "page": "You kept Friday light with Formula 1 and comedy.",
    "orbit": [
     {
      "name": "Maya",
@@ -1644,6 +1967,28 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "normal",
    "stretch": "none",
    "why": "",
@@ -1683,7 +2028,7 @@ window.DEMO = {
    "date": "2026-10-24",
    "weekday": "Saturday",
    "reveal": null,
-   "page": "You spent Saturday with comedy clips and Formula 1.",
+   "page": "You spent your Saturday on comedy clips and Formula 1.",
    "orbit": [
     {
      "name": "Maya",
@@ -1727,6 +2072,28 @@ window.DEMO = {
     }
    ],
    "signals": [],
+   "families": [],
+   "weight": 0,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "normal",
    "stretch": "none",
    "why": "",
@@ -1770,7 +2137,7 @@ window.DEMO = {
     "title": "Your orbit, three weeks in",
     "text": "Here's your circle over three weeks. Closer means more recent, never better."
    },
-   "page": "You gave your Sunday to Formula 1 and a good laugh.",
+   "page": "You kept Sunday easy with Formula 1 and a good dose of comedy.",
    "orbit": [
     {
      "name": "Maya",
@@ -1813,7 +2180,33 @@ window.DEMO = {
      "permission": "Never"
     }
    ],
-   "signals": [],
+   "signals": [
+    "a lot more scrolling during the day"
+   ],
+   "families": [
+    "T2_daytime_binge"
+   ],
+   "weight": 2,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "normal",
    "stretch": "none",
    "why": "",
@@ -1853,7 +2246,7 @@ window.DEMO = {
    "date": "2026-10-26",
    "weekday": "Monday",
    "reveal": null,
-   "page": "You were up past 1:40 winding down with Formula 1 and comedy reels.",
+   "page": "You were up past 1:40 with Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1898,8 +2291,35 @@ window.DEMO = {
    ],
    "signals": [
     "up later than your usual",
-    "heavier reels than usual"
+    "heavier reels than usual",
+    "less of what you usually love"
    ],
+   "families": [
+    "C1_heavy_content",
+    "C3_interest_drift",
+    "T1_active_window"
+   ],
+   "weight": 7,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "normal",
    "stretch": "none",
    "why": "",
@@ -1939,7 +2359,7 @@ window.DEMO = {
    "date": "2026-10-27",
    "weekday": "Tuesday",
    "reveal": null,
-   "page": "You were up past 2, scrolling through comedy and burnout reels.",
+   "page": "You were up past 2, with burnout and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -1984,13 +2404,43 @@ window.DEMO = {
    ],
    "signals": [
     "up later than your usual",
+    "more reels than usual",
     "heavier reels than usual",
-    "sending heavy reels",
-    "gone quiet with someone"
+    "less of what you usually love",
+    "gone quiet with someone",
+    "sending heavier reels"
    ],
+   "families": [
+    "C1_heavy_content",
+    "C3_interest_drift",
+    "S4_reel_sending",
+    "T1_active_window",
+    "T4_volume"
+   ],
+   "weight": 10,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "lighter",
    "stretch": "off_normal",
-   "why": "Shift in reels watched and a quiet stretch with your brother.",
+   "why": "Burnout and sad-song reels and a quiet stretch with your brother.",
    "families_off": [
     "reel_themes_heavy",
     "withdrawal"
@@ -2000,14 +2450,14 @@ window.DEMO = {
      "to": "Sam",
      "kind": "support",
      "interest": "F1",
-     "text": "Arjun has had a full week. F1 is Arjun's thing right now, so plan a race watch with Arjun.",
+     "text": "Arjun has had a full week. Maybe watch the next F1 race together?",
      "fallback": false,
      "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Uses only allowed 'full week' phrase with baseline F1 interest and neutral watch gesture, no burnout/sleep/late-night detail.",
+      "reason": "Uses only allowed 'full week' phrase with baseline F1 interest and watch-together gesture, with no hint of burnout, late nights, or reel themes.",
       "voice_ok": true
      },
      "lint": []
@@ -2016,14 +2466,14 @@ window.DEMO = {
      "to": "Priya",
      "kind": "support",
      "interest": "stand-up comedy",
-     "text": "Arjun could use a reason to grin. Send Arjun a favorite stand-up comedy clip for the weekend.",
+     "text": "Arjun could use a reason to grin. Maybe share a favorite stand-up comedy clip with Arjun tonight?",
      "fallback": false,
      "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic lift phrase plus baseline interest comedy clip reveals no burnout, sleep, or other private signals.",
+      "reason": "Allowed soft phrase plus baseline comedy interest with generic clip share, reveals no burnout, sleep, or other private detail.",
       "voice_ok": true
      },
      "lint": []
@@ -2049,14 +2499,14 @@ window.DEMO = {
     {
      "kind": "lift",
      "to": "Sam",
-     "text": "Arjun has had a full week. F1 is Arjun's thing right now, so plan a race watch with Arjun.",
-     "why": "Shift in reels watched and a quiet stretch with your brother."
+     "text": "Arjun has had a full week. Maybe watch the next F1 race together?",
+     "why": "Burnout and sad-song reels and a quiet stretch with your brother."
     },
     {
      "kind": "lift",
      "to": "Priya",
-     "text": "Arjun could use a reason to grin. Send Arjun a favorite stand-up comedy clip for the weekend.",
-     "why": "Shift in reels watched and a quiet stretch with your brother."
+     "text": "Arjun could use a reason to grin. Maybe share a favorite stand-up comedy clip with Arjun tonight?",
+     "why": "Burnout and sad-song reels and a quiet stretch with your brother."
     }
    ],
    "journal": null
@@ -2066,7 +2516,7 @@ window.DEMO = {
    "date": "2026-10-28",
    "weekday": "Wednesday",
    "reveal": null,
-   "page": "You were up past 4, scrolling reels about burnout and tired nights.",
+   "page": "You were up past 4, sitting with reels about burnout and not sleeping.",
    "orbit": [
     {
      "name": "Maya",
@@ -2111,12 +2561,41 @@ window.DEMO = {
    ],
    "signals": [
     "up later than your usual",
+    "more reels than usual",
     "heavier reels than usual",
+    "less of what you usually love",
     "gone quiet with someone"
    ],
+   "families": [
+    "C1_heavy_content",
+    "C3_interest_drift",
+    "T1_active_window",
+    "T4_volume"
+   ],
+   "weight": 8,
+   "reconnected": [],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "heavy",
    "stretch": "clearly_heavy",
-   "why": "Three late nights, a shift in reel themes, more heavy reels shared, and a quiet stretch with Dev.",
+   "why": "Three late nights, heavier reels and a quiet stretch with Dev.",
    "families_off": [
     "late_scroll",
     "reel_themes_heavy",
@@ -2127,15 +2606,15 @@ window.DEMO = {
     {
      "to": "Maya",
      "kind": "support",
-     "interest": "film photography",
-     "text": "Arjun has had a full week. Offer to model for an afternoon of film photography with Arjun.",
+     "interest": "stand-up comedy",
+     "text": "Arjun has had a full week. Maybe watch some stand-up comedy together and pick a favorite bit?",
      "fallback": false,
      "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Uses only allowed 'full week' phrase plus current film photography interest with neutral modeling gesture, no hint of burnout, sleep, or reels.",
+      "reason": "Uses only allowed 'full week' phrase with baseline comedy interest and a harmless watch-together gesture.",
       "voice_ok": true
      },
      "lint": []
@@ -2143,15 +2622,15 @@ window.DEMO = {
     {
      "to": "Dev",
      "kind": "support",
-     "interest": "the NBA",
-     "text": "Arjun could use a reason to grin. Queue up the NBA and keep Arjun company for the fourth quarter.",
+     "interest": "F1",
+     "text": "Arjun is due for something good. Maybe catch the next F1 race together this week?",
      "fallback": false,
      "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Allowed soft phrase plus baseline interest NBA with doable hangout gesture, no hint of burnout, late nights, or quiet contacts.",
+      "reason": "Generic uplift plus baseline F1 interest with race invite reveals no burnout, sleep, or reel details.",
       "voice_ok": true
      },
      "lint": []
@@ -2181,14 +2660,14 @@ window.DEMO = {
     {
      "kind": "lift",
      "to": "Maya",
-     "text": "Arjun has had a full week. Offer to model for an afternoon of film photography with Arjun.",
-     "why": "Three late nights, a shift in reel themes, more heavy reels shared, and a quiet stretch with Dev."
+     "text": "Arjun has had a full week. Maybe watch some stand-up comedy together and pick a favorite bit?",
+     "why": "Three late nights, heavier reels and a quiet stretch with Dev."
     },
     {
      "kind": "lift",
      "to": "Dev",
-     "text": "Arjun could use a reason to grin. Queue up the NBA and keep Arjun company for the fourth quarter.",
-     "why": "Three late nights, a shift in reel themes, more heavy reels shared, and a quiet stretch with Dev."
+     "text": "Arjun is due for something good. Maybe catch the next F1 race together this week?",
+     "why": "Three late nights, heavier reels and a quiet stretch with Dev."
     }
    ],
    "journal": null
@@ -2198,7 +2677,7 @@ window.DEMO = {
    "date": "2026-10-29",
    "weekday": "Thursday",
    "reveal": null,
-   "page": "You were up past 3:45, scrolling tired reels and slow sad songs.",
+   "page": "You were up past 3:45 with reels about burnout and not sleeping.",
    "orbit": [
     {
      "name": "Maya",
@@ -2243,14 +2722,48 @@ window.DEMO = {
    ],
    "signals": [
     "up later than your usual",
+    "more reels than usual",
     "heavier reels than usual",
-    "slower replies",
+    "less of what you usually love",
     "shorter replies",
-    "gone quiet with someone"
+    "gone quiet with someone",
+    "sending heavier reels"
    ],
+   "families": [
+    "C1_heavy_content",
+    "C3_interest_drift",
+    "S2_messaging",
+    "S3_quiet_with_one",
+    "S4_reel_sending",
+    "T1_active_window",
+    "T4_volume"
+   ],
+   "weight": 13,
+   "reconnected": [
+    "Sam"
+   ],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "heavy",
    "stretch": "clearly_heavy",
-   "why": "Four late nights to 4:04 AM, heavier reels watched and sent, slower replies to Priya and Sam, and going quiet with Dev.",
+   "why": "Four late nights, heavy reels and shares, slower replies to Priya and Sam, and going quiet with Dev.",
    "families_off": [
     "late_scroll",
     "reel_themes_heavy",
@@ -2310,7 +2823,7 @@ window.DEMO = {
    "date": "2026-10-30",
    "weekday": "Friday",
    "reveal": null,
-   "page": "You were up past 4, moving between reels about burnout and not sleeping, with some comedy and F1 mixed in.",
+   "page": "You were up past 4 with reels about burnout and not sleeping.",
    "orbit": [
     {
      "name": "Maya",
@@ -2356,11 +2869,42 @@ window.DEMO = {
    "signals": [
     "up later than your usual",
     "heavier reels than usual",
-    "gone quiet with someone"
+    "less of what you usually love",
+    "gone quiet with someone",
+    "sending heavier reels"
    ],
+   "families": [
+    "C1_heavy_content",
+    "C3_interest_drift",
+    "S4_reel_sending",
+    "T1_active_window"
+   ],
+   "weight": 7,
+   "reconnected": [
+    "Omar"
+   ],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "heavy",
    "stretch": "clearly_heavy",
-   "why": "Five late nights, different reels watched and sent, shorter replies, and going quiet with Dev.",
+   "why": "Five late nights, heavier reels and shares, slower replies, and going quiet with Dev.",
    "families_off": [
     "late_scroll",
     "reel_themes_heavy",
@@ -2415,14 +2959,10 @@ window.DEMO = {
        "Maya"
       ],
       "about_chip": "About Maya?",
-      "chips": [
-       "Just listening",
-       "Talking through stuff",
-       "Hard to say"
-      ],
-      "connection": "A lot of your reels lately have been about supporting a partner",
+      "chips": [],
+      "connection": "Up later than usual this week.",
       "feeling_words": [],
-      "reply": "Another night on the phone with Maya till 3, just there for her. A lot of your reels lately have been about supporting a partner, was it one of those nights?",
+      "reply": "Another 3am call with Maya, and sitting with that nobody asks how you are doing. Been a lot of late nights this week, has it mostly been these calls?",
       "safety": "none",
       "step": "notice",
       "tone": "unpleasant"
@@ -2433,16 +2973,15 @@ window.DEMO = {
        "Maya",
        "Dev"
       ],
-      "about_chip": "About Dev?",
+      "about_chip": "Maya, Dev",
       "chips": [
-       "Yeah",
-       "Not really"
+       "About Dev?"
       ],
       "connection": "You haven't written to Dev since Saturday.",
       "feeling_words": [],
-      "reply": "You haven't written to Dev since Saturday. Is that part of it too?",
+      "reply": "That not texting D back is on your mind too. It has been quiet with Dev since Saturday, what was the last thing that happened?",
       "safety": "none",
-      "step": "listen",
+      "step": "notice",
       "tone": "unpleasant"
      },
      {
@@ -2451,7 +2990,7 @@ window.DEMO = {
        "Maya",
        "Dev"
       ],
-      "about_chip": "",
+      "about_chip": "About Maya and Dev?",
       "chips": [
        "hide",
        "sleep",
@@ -2459,7 +2998,7 @@ window.DEMO = {
       ],
       "connection": "",
       "feeling_words": [],
-      "reply": "That tight and heavy chest after being up till 3. What does it make you want to do right now?",
+      "reply": "That tight and heavy in your chest sounds hard to sit with. When it feels like that, what does it make you want to do?",
       "safety": "none",
       "step": "urge",
       "tone": "unpleasant"
@@ -2473,18 +3012,18 @@ window.DEMO = {
       "about_chip": "About Maya and Dev?",
       "chips": [
        "drained",
-       "unseen",
-       "guilty",
-       "stretched thin"
+       "overlooked",
+       "weighed down",
+       "guilty"
       ],
       "connection": "",
       "feeling_words": [
        "drained",
-       "unseen",
-       "guilty",
-       "stretched thin"
+       "overlooked",
+       "weighed down",
+       "guilty"
       ],
-      "reply": "Up late with her and wanting to disappear with that tight heavy feeling. Would drained, unseen, guilty, or stretched thin fit at all. It can be two things at once.",
+      "reply": "That urge to disappear into your phone makes sense with the tight heavy chest and long nights. Does any of this fit, it can be two at once: drained, overlooked, weighed down, guilty.",
       "safety": "none",
       "step": "name",
       "tone": "unpleasant"
@@ -2495,17 +3034,17 @@ window.DEMO = {
        "Maya",
        "Dev"
       ],
-      "about_chip": "About Maya",
+      "about_chip": "About Maya?",
       "chips": [
-       "Yes, help me say it",
-       "Not yet"
+       "Yes please",
+       "Not now"
       ],
       "connection": "",
       "feeling_words": [
        "stretched thin",
        "left out"
       ],
-      "reply": "Stretched thin and a bit left out makes sense after giving so much late at night. Would it help to find a few words for Maya about how you are doing?",
+      "reply": "Stretched thin and left out makes sense after those 3am calls. Do you want help putting that into a few words you could share with Maya?",
       "safety": "none",
       "step": "share",
       "tone": "unpleasant"
@@ -2515,9 +3054,9 @@ window.DEMO = {
       "about": [
        "Dev"
       ],
-      "about_chip": "About Dev?",
+      "about_chip": "About Dev",
       "chips": [
-       "Yeah, help me word it",
+       "Yes, help me word it",
        "Not yet"
       ],
       "connection": "",
@@ -2525,7 +3064,7 @@ window.DEMO = {
        "stretched thin",
        "left out"
       ],
-      "reply": "Got it, Dev not Maya. Want help finding a short text back to him that holds that stretched thin feeling without overexplaining?",
+      "reply": "Got it, Dev. Want help with a short reply that just says you have been stretched thin lately?",
       "safety": "none",
       "step": "share",
       "tone": "unpleasant"
@@ -2536,10 +3075,10 @@ window.DEMO = {
      "Maya"
     ],
     "own_words": {
-     "left_out": "maya and the late night calls",
+     "left_out": "maya 3am calls, tight heavy chest, phone avoidance",
      "options": [
-      "hey sorry i went quiet since saturday. been up late and feeling stretched thin. will text properly soon",
-      "my bad for not getting back. been feeling stretched thin and kinda left out lately. still here tho"
+      "sorry i went quiet and didn't text back since saturday. been feeling stretched thin and kind of left out. wanna hang sometime this week?",
+      "my bad for not replying. i've just been stretched thin lately and feeling a bit left out. all good if you're busy just wanted to say that"
      ]
     },
     "named": "not maya. dev. i owe him a text"
@@ -2550,7 +3089,7 @@ window.DEMO = {
    "date": "2026-10-31",
    "weekday": "Saturday",
    "reveal": null,
-   "page": "You were up past 2:56 with slow songs and reels about burnout.",
+   "page": "You were up past 2:56 with slow songs and reels about not sleeping.",
    "orbit": [
     {
      "name": "Maya",
@@ -2595,14 +3134,48 @@ window.DEMO = {
    ],
    "signals": [
     "up later than your usual",
+    "more reels than usual",
     "heavier reels than usual",
-    "sending heavy reels",
+    "less of what you usually love",
     "slower replies",
-    "shorter replies"
+    "shorter replies",
+    "sending heavier reels"
    ],
+   "families": [
+    "C1_heavy_content",
+    "C3_interest_drift",
+    "S1_reply_rhythm",
+    "S2_messaging",
+    "S4_reel_sending",
+    "T1_active_window",
+    "T4_volume"
+   ],
+   "weight": 14,
+   "reconnected": [
+    "Sam"
+   ],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "heavy",
    "stretch": "clearly_heavy",
-   "why": "Five late nights, different reels and shares, slower replies, and a quiet stretch with Dev.",
+   "why": "Five late nights past your usual, 11 reels sent to Maya, slower replies to three people, and 7 days quiet with Dev.",
    "families_off": [
     "late_scroll",
     "reel_themes_heavy",
@@ -2656,7 +3229,7 @@ window.DEMO = {
    "date": "2026-11-01",
    "weekday": "Sunday",
    "reveal": null,
-   "page": "You spent Sunday on Formula 1 and comedy reels that honestly made your whole week.",
+   "page": "Up past 1:55 with Formula 1 and comedy reels that honestly made your whole week.",
    "orbit": [
     {
      "name": "Maya",
@@ -2700,11 +3273,48 @@ window.DEMO = {
     }
    ],
    "signals": [
-    "heavier reels than usual"
+    "up later than your usual",
+    "a lot more scrolling during the day",
+    "more reels than usual",
+    "heavier reels than usual",
+    "less of what you usually love",
+    "gone quiet with someone",
+    "sending heavier reels"
    ],
-   "rule": "normal",
-   "stretch": "none",
-   "why": "Four late nights, heavier reels, slower replies, and going quiet with Dev.",
+   "families": [
+    "C1_heavy_content",
+    "C3_interest_drift",
+    "S4_reel_sending",
+    "T1_active_window",
+    "T2_daytime_binge",
+    "T4_volume"
+   ],
+   "weight": 10,
+   "reconnected": [
+    "Sam"
+   ],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
+   "rule": "heavy",
+   "stretch": "clearly_heavy",
+   "why": "Five late nights, different reels with many sent to Maya, slower replies, and going quiet with Dev.",
    "families_off": [
     "late_scroll",
     "reel_themes_heavy",
@@ -2716,23 +3326,23 @@ window.DEMO = {
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Nothing to lift"
+     "why": "Already had a lift this week"
     },
     {
      "name": "Sam",
-     "why": "Nothing to lift"
+     "why": "Already had a lift this week"
     },
     {
      "name": "Dev",
-     "why": "Nothing to lift"
+     "why": "Already had a lift this week"
     },
     {
      "name": "Priya",
-     "why": "Nothing to lift"
+     "why": "Just this once does not cover this"
     },
     {
      "name": "Omar",
-     "why": "Nothing to lift"
+     "why": "Never does not cover this"
     }
    ],
    "prompts": [
@@ -2740,15 +3350,23 @@ window.DEMO = {
      "kind": "close_the_loop",
      "about": "Sam",
      "text": "Sam sent you something. How did that feel?"
-    },
-    {
-     "kind": "tell_them",
-     "about": "Sam",
-     "text": "You and Sam have been on a good run. Tell them?"
     }
    ],
    "cards": [],
-   "log": [],
+   "log": [
+    {
+     "kind": "held",
+     "text": "Held a lift to Maya: one per week."
+    },
+    {
+     "kind": "held",
+     "text": "Held a lift to Sam: one per week."
+    },
+    {
+     "kind": "held",
+     "text": "Held a lift to Dev: one per week."
+    }
+   ],
    "journal": {
     "turns": [
      {
@@ -2756,11 +3374,15 @@ window.DEMO = {
       "about": [
        "Sam"
       ],
-      "about_chip": "About Sam",
-      "chips": [],
+      "about_chip": "About Sam?",
+      "chips": [
+       "F1 race",
+       "Something else",
+       "Not sure yet"
+      ],
       "connection": "",
       "feeling_words": [],
-      "reply": "Vegas tickets from Sam out of nowhere, that is quite a surprise. What went through your mind when you saw them?",
+      "reply": "Vegas tickets from Sam out of nowhere, that is huge. What are the tickets for?",
       "safety": "none",
       "step": "listen",
       "tone": "pleasant"
@@ -2772,12 +3394,12 @@ window.DEMO = {
       ],
       "about_chip": "About Sam?",
       "chips": [
-       "Yes, help me tell him",
-       "Just enjoying it"
+       "Yes, help me say it",
+       "I'll tell him later"
       ],
       "connection": "",
       "feeling_words": [],
-      "reply": "That kind of surprise stays with you. Want help putting that into a few words to send back to Sam?",
+      "reply": "That kind of surprise stays with you. Want help finding the words to tell Sam what it meant?",
       "safety": "none",
       "step": "share",
       "tone": "pleasant"
@@ -2795,7 +3417,7 @@ window.DEMO = {
    "date": "2026-11-02",
    "weekday": "Monday",
    "reveal": null,
-   "page": "You spent Monday with Formula 1 and plenty to laugh at.",
+   "page": "Up past 2:45 with Formula 1 and comedy reels. It was a Monday night running a little long for you.",
    "orbit": [
     {
      "name": "Maya",
@@ -2839,12 +3461,40 @@ window.DEMO = {
     }
    ],
    "signals": [
-    "heavier reels than usual",
-    "slower replies"
+    "up later than your usual",
+    "heavier reels than usual"
    ],
-   "rule": "heavy",
-   "stretch": "clearly_heavy",
-   "why": "Three late nights, a shift in watched and shared reels, and slower replies with Dev, Omar, Priya and Sam.",
+   "families": [
+    "C1_heavy_content",
+    "T1_active_window"
+   ],
+   "weight": 3,
+   "reconnected": [
+    "Dev",
+    "Sam"
+   ],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
+   "rule": "normal",
+   "stretch": "none",
+   "why": "Five late nights past 12:43 AM, burnout and sad-song reels sent to Maya and Sam, and slower replies with Omar, Priya and Sam.",
    "families_off": [
     "late_scroll",
     "reel_themes_heavy",
@@ -2855,41 +3505,28 @@ window.DEMO = {
    "not_sent": [
     {
      "name": "Maya",
-     "why": "Already had a lift this week"
+     "why": "Nothing to lift"
     },
     {
      "name": "Sam",
-     "why": "Already had a lift this week"
+     "why": "Nothing to lift"
     },
     {
      "name": "Dev",
-     "why": "Already had a lift this week"
+     "why": "Nothing to lift"
     },
     {
      "name": "Priya",
-     "why": "Just this once does not cover this"
+     "why": "Nothing to lift"
     },
     {
      "name": "Omar",
-     "why": "Never does not cover this"
+     "why": "Nothing to lift"
     }
    ],
    "prompts": [],
    "cards": [],
-   "log": [
-    {
-     "kind": "held",
-     "text": "Held a lift to Maya: one per week."
-    },
-    {
-     "kind": "held",
-     "text": "Held a lift to Sam: one per week."
-    },
-    {
-     "kind": "held",
-     "text": "Held a lift to Dev: one per week."
-    }
-   ],
+   "log": [],
    "journal": null
   },
   {
@@ -2897,7 +3534,7 @@ window.DEMO = {
    "date": "2026-11-03",
    "weekday": "Tuesday",
    "reveal": null,
-   "page": "You kept it light today with Formula 1 and comedy on repeat.",
+   "page": "You were up past 3, mostly Formula 1 and comedy reels.",
    "orbit": [
     {
      "name": "Maya",
@@ -2940,11 +3577,41 @@ window.DEMO = {
      "permission": "Never"
     }
    ],
-   "signals": [],
+   "signals": [
+    "up later than your usual",
+    "waking up to scroll"
+   ],
+   "families": [
+    "T1_active_window"
+   ],
+   "weight": 1,
+   "reconnected": [
+    "Dev"
+   ],
+   "shared": {
+    "Maya": [
+     "stand-up comedy"
+    ],
+    "Sam": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Dev": [
+     "F1",
+     "stand-up comedy"
+    ],
+    "Priya": [
+     "stand-up comedy"
+    ],
+    "Omar": [
+     "film photography"
+    ]
+   },
    "rule": "normal",
    "stretch": "none",
-   "why": "Changed reel themes, more heavy reels sent, and slower replies with Dev, Omar and Sam.",
+   "why": "Five late nights, different reel themes, more heavy reels shared, and slower replies with Sam and Omar.",
    "families_off": [
+    "late_scroll",
     "reel_themes_heavy",
     "reels_sent_heavy",
     "reply_rhythm"

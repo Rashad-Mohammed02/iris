@@ -59,7 +59,7 @@ def decide(situation, reading=None, write_lifts=True):
         return skip_all("Adults only")
 
     # 2. Still learning their normal.
-    if pattern.get("learning_day", 99) < LEARNING_DAYS:
+    if pattern.get("learning_day", 99) <= LEARNING_DAYS:  # days 1 to 14 only learn
         return skip_all("Still learning their normal")
 
     r = reading or muse_read(situation)
