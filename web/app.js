@@ -1,5 +1,5 @@
-// Iris prototype: one phone, like the real thing. Arjun's phone and a friend's (or their Muse Charm),
-// with a lock screen, a home screen and the apps. Reads window.DEMO (scripts/run_demo.py, real engine output),
+// Iris prototype: only the Iris app, on one phone like the real thing. Arjun's phone and a friend's
+// (or their Muse Charm). Reads window.DEMO (scripts/run_demo.py, real engine output),
 // window.BENCH (bench/export_web.py) and window.IG (scripts/export_instagram.py). No network calls.
 
 (function () {
@@ -37,7 +37,7 @@
 
   const ui = {
     day: 1, tab: "today", view: "crosses", app: "circle", rx: "Sam", rxDev: "phone", ob: null, handle: "arjun.rao",
-    phone: "arjun", screen: { arjun: "home", friend: "lock" }, appB: "here", setupDone: false, chapter: 0, drawer: null,
+    phone: "arjun", banner: {}, setupDone: false, chapter: 0, drawer: null,
     perms: {}, nick: {}, removed: {}, picked: new Set(circle.map(m => m.first)),
     send: D.settings.send_mode === "automatic" ? "auto" : "ask", pause: "on",
     approved: {}, stopped: {}, notMe: {}, think: {}, right: {}, wrong: {}, loop: {}, told: {}, together: {}, jx: {},
@@ -85,18 +85,16 @@
   }
 
   // ---------------- The story ----------------
-  // Each moment sets the day, whose phone you hold, and what's on its screen. Between moments
-  // everything is live: unlock, open any app, tap anything.
+  // Each moment sets the day and whose phone you hold. Between moments everything in Iris is live.
   const CHAPTERS = [
-    { day: 1, label: "Arjun finds Iris", hint: "Tap Iris on the home screen to set it up.", phone: "arjun", screen: "home", fresh: true },
-    { day: 2, label: "Sam gets an invite", hint: "Tap the notification on Sam's phone.", phone: "friend", rx: "Sam", screen: "lock" },
-    { day: LIFTS_ON, label: "Lifts switch on", hint: "Two weeks in, Iris knows Arjun's normal.", phone: "arjun", screen: "app", app: "circle", tab: "today" },
-    { day: 24, label: "A rough week on Instagram", hint: "Arjun's watch history and messages this week.", phone: "arjun", screen: "app", app: "ig" },
-    { day: 24, label: "A lift waits for Arjun's OK", hint: "Tap the notification, then Send.", phone: "arjun", screen: "lock" },
-    { day: 24, label: "Sam gets the lift", hint: "This line is all Sam ever sees.", phone: "friend", rx: "Sam", screen: "lock", approve: "Sam" },
-    { day: LANDS, label: "Sam shows up", hint: "To Arjun, it's just Sam being Sam.", phone: "arjun", screen: "app", app: "ig" },
-    { day: LANDS, label: "How did that feel?", hint: "Only Arjun sees this question.", phone: "arjun", screen: "lock" },
-    { day: LANDS, label: "Together", hint: "Coming soon: plans with people who love the same things.", phone: "arjun", screen: "app", app: "circle", tab: "together" },
+    { day: 1, label: "Arjun sets up Iris", hint: "Sign in with Instagram, pick up to five people, choose who may get a lift.", phone: "arjun", fresh: true },
+    { day: 2, label: "Sam gets an invite", hint: "Every circle is mutual. Sam says yes, or doesn't.", phone: "friend", rx: "Sam", banner: true },
+    { day: LIFTS_ON, label: "Lifts switch on", hint: "Two weeks in, Iris knows Arjun's normal.", phone: "arjun", tab: "today" },
+    { day: 24, label: "A rough week", hint: "Only Arjun sees what Iris noticed, in plain words.", phone: "arjun", tab: "today", think: true },
+    { day: 24, label: "A lift waits for Arjun's OK", hint: "Tap the banner, then Send.", phone: "arjun", tab: "today", banner: true },
+    { day: 24, label: "Sam gets the lift", hint: "This line is all Sam ever sees.", phone: "friend", rx: "Sam", approve: "Sam", banner: true },
+    { day: LANDS, label: "How did that feel?", hint: "Sam showed up. Only Arjun sees this question.", phone: "arjun", tab: "today", banner: true },
+    { day: LANDS, label: "Together", hint: "Coming soon: plans with people who love the same things.", phone: "arjun", tab: "together" },
   ];
 
   // ================= Arjun's phone =================
@@ -127,8 +125,7 @@
           sigs.map(s => { const key = d.n + ":" + s, off = ui.notMe[key];
             return `<div class="notice"><span style="${off ? "text-decoration:line-through;color:var(--ink-3)" : ""}">${esc(cap(s))}</span><button class="pill sm" type="button" data-notme="${esc(key)}">${off ? "Count it" : "Not about me"}</button></div>`; }).join("")
           : `<div>Nothing off your normal today.</div>`}
-          <div class="secure">${ic(P.lock, 15)}Worked out privately by Muse. Nobody else sees it.</div>
-          <button class="link" type="button" data-app="ig" style="justify-self:start;padding-left:0">See your Instagram activity ›</button></div>`;
+          <div class="secure">${ic(P.lock, 15)}Worked out privately by Muse. Nobody else sees it.</div></div>`;
       }
     }
     if (ui.pause !== "on" && d.lifts.length) h += `<div class="widget flat"><div class="who">Lifts are paused</div><div class="small">Nothing goes out until you turn them back on in You.</div></div>`;
@@ -275,24 +272,6 @@
       <div class="small" style="text-align:center;padding-bottom:6px">Iris runs on Meta's Muse Spark through the Meta Model API.</div>`;
   }
 
-  function tInstagram() {
-    const g = ig();
-    if (!g) return `<p class="agent">No Instagram data for this day.</p>`;
-    const hue = s => [...s].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
-    let h = `<div class="head"><div><div class="sub">Day ${g.n}</div><div class="ig-word">Instagram</div></div><button class="round" type="button" data-app="circle" aria-label="Back to Iris">${face(30)}</button></div>
-      <div class="stats"><div><b>${g.reels_watched}</b><span>reels watched today</span></div><div><b>${esc(g.last_active || "-")}</b><span>last active</span></div></div>
-      <div class="h2">Watch history</div><div class="reels">${g.latest_reels.map(r => `<div class="reel" style="--h:${hue(r.creator)}"><span class="play">▶</span><span class="rc">@${esc(r.creator)}</span><span class="rtime">${esc(r.time)}</span></div>`).join("")}</div>`;
-    if (g.saved.length) h += `<div class="h2">Saved</div>` + g.saved.map(s => `<div class="thread"><span class="av" style="background:hsl(${hue(s.creator)} 50% 50%);border-radius:10px">▶</span><div><b>@${esc(s.creator)}</b><div class="small">${esc(s.time)}</div></div></div>`).join("");
-    h += `<div class="h2">Messages</div>` + g.threads.map(t => {
-      const star = g.n === LANDS && t.first === "Sam";
-      return `<div class="thread ${star ? "star" : ""}"><span class="av" style="background:hsl(${HUES[t.first] || 200} 55% 52%)">${esc(t.group ? "#" : t.first[0])}</span><div><b>${esc(t.group ? t.name : nameOf(t.first))}</b>
-        <div class="small">${esc(t.last)} · ${esc(t.time)} · ${t.sent + t.received} messages</div>${star ? `<div class="star-note">Sam reached out about the race. To ${esc(D.owner)}, it's just Sam being Sam.</div>` : ""}</div>${t.last === "New message" ? `<span class="dot"></span>` : ""}</div>`;
-    }).join("");
-    h += `<div class="widget mint"><div class="eyebrow">What Iris reads here</div><div>What kind of reels and when, and who ${esc(D.owner)} talks to and when. Never the words in anyone's messages. Read securely by Muse, inside Meta.</div>
-      <button class="pill dark" type="button" data-app="circle" data-thinking="1">See what Iris made of this</button></div>`;
-    return h;
-  }
-
   // ---------------- Setup: the first-run journey ----------------
   const SETUP = ["welcome", "login", "connect", "pick", "nick", "perms", "send", "notify", "done"];
   const SETUP_BG = { welcome: "var(--peach)", nick: "var(--butter)", done: "var(--mint)" };
@@ -344,83 +323,31 @@
     return "";
   }
 
-  // ================= The phone itself: lock screen, home screen, apps =================
-  const APP_NAME = { circle: "Iris", here: "Iris", ig: "Instagram", muse: "Muse" };
-  const appIcon = (id, cls) => `<span class="appic ${id === "here" ? "circle" : id} ${cls || ""}">${id === "circle" || id === "here" ? `<img src="${FACE}" alt="">`
-    : `<svg viewBox="0 0 24 24">${id === "ig" ? P.insta : P.spark}</svg>`}</span>`;
+  // ================= The phone: only Iris =================
   const friendLift = () => allLifts(ui.day).filter(x => x.to === ui.rx && delivered(x.n, x.to) && ui.day - x.n <= 2).pop();
   const fresh = () => !ui.setupDone && ui.day === 1;
 
-  // What each phone's lock screen shows today. Arjun's never preview anything private.
+  // Iris's own notifications, dropped in as a banner over the app. Arjun's never preview anything private.
   function notifs() {
     const d = cur(), out = [];
     if (ui.phone === "arjun") {
       if (fresh()) return out;
-      if (ui.pause === "on") d.lifts.filter(l => !ui.stopped[liftKey(d.n, l.to)] && !ui.approved[liftKey(d.n, l.to)]).forEach(l => out.push({ app: "circle", tab: "today",
+      if (ui.pause === "on") d.lifts.filter(l => !ui.stopped[liftKey(d.n, l.to)] && !ui.approved[liftKey(d.n, l.to)]).forEach(l => out.push({
         title: ui.send === "ask" ? `A lift for ${nameOf(l.to)} is ready` : `A lift goes to ${nameOf(l.to)} in 10 minutes`,
         body: ui.send === "ask" ? "Take a look. Nothing goes out until you tap Send." : "Tap to read it, or stop it." }));
-      d.prompts.filter(p => !ui.loop[d.n + p.kind + p.about] && !ui.told[d.n + p.kind + p.about]).forEach(p => out.push({ app: "circle", tab: "today", title: "Just for you", body: p.text }));
-      if (d.reveal) out.push({ app: "circle", tab: "today", title: d.reveal.title, body: "New on your page. Only you can see it." });
-      else if (d.page && ui.notif.page) out.push({ app: "circle", tab: "today", title: "Your page is ready", body: "Only you can see it." });
-      if (ui.day === LANDS) out.push({ app: "ig", title: "Sam", body: "Sent you a message" });
+      d.prompts.filter(p => !ui.loop[d.n + p.kind + p.about] && !ui.told[d.n + p.kind + p.about]).forEach(p => out.push({ title: "Just for you", body: p.text }));
     } else {
       const who = ui.rx, l = friendLift();
       if (ui.rxLeft[who]) return out;
-      if (ui.day <= 2 && (ui.invited || ui.day === 2) && !ui.joined[who]) out.push({ app: "here", title: `${D.owner} asked you into their circle`, body: "Tap to see what that means." });
-      else if (l && !ui.plan[liftKey(l.n, who)]) out.push({ app: "here", title: "Suggested by Muse", body: l.text });
-      else if (ui.day === LANDS && who === "Sam") out.push({ app: "here", title: "Reminder you set", body: `Race day. Watching it with ${D.owner}?` });
+      if (ui.day <= 2 && (ui.invited || ui.day === 2) && !ui.joined[who]) out.push({ title: `${D.owner} asked you into their circle`, body: "Tap to see what that means." });
+      else if (l && !ui.plan[liftKey(l.n, who)]) out.push({ title: "Suggested by Muse", body: l.text });
     }
     return out;
   }
-
-  function lockScreen() {
-    const ns = notifs(), date = new Date(cur().date + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
-    return `<div class="lock fadein"><div class="lk-date">${date}</div><div class="lk-time">8:12</div><div class="notifs">` +
-      ns.map((n, i) => `<button class="notif pop" style="animation-delay:${.15 + i * .1}s" type="button" data-open="${n.app}"${n.tab ? ` data-opentab="${n.tab}"` : ""}>${appIcon(n.app, "sm")}
-        <div><div class="nh"><b>${APP_NAME[n.app]}</b><span>now</span></div><div class="nt">${esc(n.title)}</div><div class="nb">${esc(n.body)}</div></div></button>`).join("") +
-      `</div><div class="lk-hint">${ns.length ? "Tap a notification, or anywhere to unlock" : "Tap anywhere to unlock"}</div></div>`;
-  }
-
-  function homeScreen() {
-    const mine = ui.phone === "arjun", d = cur(), ns = notifs();
-    const apps = mine ? ["circle", "ig", "muse"] : ["here", "muse"];
-    const waiting = d.lifts.find(l => !ui.stopped[liftKey(d.n, l.to)] && !delivered(d.n, l.to));
-    let line, pose = "stand";
-    if (mine) {
-      if (fresh()) { line = "For the people who'd show up for you. Setup takes a minute."; pose = "wave"; }
-      else if (d.n < LIFTS_ON) { line = `Learning your normal. Day ${d.n} of ${LIFTS_ON - 1}.`; pose = "sleep"; }
-      else if (waiting && ui.pause === "on") { line = `A lift for ${nameOf(waiting.to)} needs your OK.`; pose = "letter"; }
-      else { line = "Your page for today is ready."; pose = "heart"; }
-    } else {
-      const l = friendLift();
-      line = l && !ui.plan[liftKey(l.n, ui.rx)] ? `Something small you could do for ${D.owner}.` : "All quiet in your circle.";
-      pose = l ? "letter" : "stand";
-    }
-    return `<div class="home fadein">
-      <button class="hw" type="button" data-open="${apps[0]}"><img class="bob" src="${POSE(pose)}" alt=""><div><div class="hw-k">Iris</div><div class="hw-t">${esc(line)}</div></div></button>
-      <div class="apps">${apps.map(id => { const n = ns.filter(x => x.app === id).length;
-        return `<button class="app" type="button" data-open="${id}">${n ? `<span class="badge2">${n}</span>` : ""}${appIcon(id)}<span>${APP_NAME[id]}</span></button>`; }).join("")}</div>
-      ${mine && fresh() && !ui.ob ? `<div class="coach pop">Tap Iris to set it up</div>` : ""}</div>`;
-  }
-
-  function museApp() {
-    const mine = ui.phone === "arjun", d = cur();
-    let h = `<div class="head"><div><div class="sub">${esc(d.weekday)}</div><h1>Muse</h1></div>${appIcon("muse", "sm")}</div>`;
-    if (mine) {
-      h += `<div class="widget sky"><div class="eyebrow">Connected app</div><div>Iris works with Muse. Lifts you allow can arrive in your friends' Muse, or on their Muse Charm.</div>
-        <div class="row"><button class="pill dark" type="button" data-open="circle">Open Iris</button></div></div>
-        <div class="muse-line">${face(22)}<p>Hi ${esc(D.owner)}. What's on your mind?</p></div>
-        <div class="row"><button class="chip" type="button" data-sheet-a="reads">What does Iris read?</button><button class="chip" type="button" data-open="circle" data-opentab="you">Pause my lifts</button></div>`;
-      return h;
-    }
-    const l = friendLift(), lk = l && liftKey(l.n, ui.rx), plan = lk && ui.plan[lk];
-    if (l && !ui.rxLeft[ui.rx]) h += `<div class="widget"><div class="eyebrow">From Iris</div><p class="quote">${esc(l.text)}</p><div class="sig">${face(22)}<span>Suggested by Muse. ${esc(D.owner)} didn't ask.</span></div>` +
-      (plan === "no" ? `<div class="small">Okay. ${esc(D.owner)} won't know.</div>` : plan ? `<div class="ok">${esc(plan)}</div>`
-        : `<div class="row"><button class="pill blue" type="button" data-sheet-b="plan" data-k="${esc(lk)}">Plan something</button><button class="pill" type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`) + `</div>`;
-    else h += `<div class="muse-line">${face(22)}<p>Hi ${esc(ui.rx)}. What's on your mind?</p></div>`;
-    (ui.rxAsks[ui.rx] || []).forEach(q => { h += `<div class="bub me">${esc(q)}</div><div class="muse-line">${face(22)}<p>${esc(rxAnswer(q))}</p></div>`; });
-    h += `<button class="compose" type="button" data-sheet-b="ask" style="margin-top:auto;cursor:text"><span class="small" style="flex:1;text-align:left">Ask Muse…</span></button>`;
-    return h;
+  function banner() {
+    const n = ui.banner[ui.phone] && notifs()[0];
+    return n ? `<button class="banner" type="button" data-banner="1"><img src="${FACE}" alt=""><div><div class="nh"><b>Iris</b><span>now</span></div>
+      <div class="nt">${esc(n.title)}</div><div class="nb">${esc(n.body)}</div></div></button>` : "";
   }
 
   // ---------------- Arjun's Iris app ----------------
@@ -481,17 +408,14 @@
   }
 
   function renderPhone(animate) {
-    const dev = $("#device"), glass = $("#glass"), view = $("#view"), tb = $("#tabbar");
-    const mine = ui.phone === "arjun", charm = !mine && ui.rxDev === "charm", scr = ui.screen[ui.phone];
-    dev.classList.toggle("charm", charm);
-    tb.hidden = true; $("#homebar").hidden = charm;
-    glass.classList.toggle("wall", !charm && scr !== "app");
-    glass.style.backgroundColor = charm || scr !== "app" ? "" : "var(--screen)";
+    const glass = $("#glass"), view = $("#view"), mine = ui.phone === "arjun", charm = !mine && ui.rxDev === "charm";
+    $("#device").classList.toggle("charm", charm);
+    $("#tabbar").hidden = true;
+    glass.style.backgroundColor = charm ? "" : "var(--screen)";
+    $("#banner").innerHTML = charm ? "" : banner();
     if (charm) { view.innerHTML = charmScreen(); return; }
-    if (scr === "lock") { view.innerHTML = lockScreen(); return; }
-    if (scr === "home") { view.innerHTML = homeScreen(); return; }
-    if (mine && ui.app === "circle") return renderHere(animate);
-    paint(view, mine ? (ui.app === "ig" ? tInstagram() : museApp()) : (ui.appB === "muse" ? museApp() : friendHere()), animate);
+    if (mine) return renderHere(animate);
+    paint(view, friendHere(), animate);
   }
   const RXASK = ["Why did I get this?", "What does Arjun see?"];
   const rxAnswer = q => q === RXASK[0] ? `Muse doesn't say, and can't. ${D.owner} chose to let you get the odd lift. That's all.` : `Nothing about what you do with it. If you plan something, it's just you being you.`;
@@ -603,7 +527,7 @@
 
   function storyDrawer() {
     return `<div class="dh"><h2>The story</h2><button class="x" type="button" data-closedrawer="1" aria-label="Close">&times;</button></div>
-      <p class="lede">Arjun's month in nine moments. Between them, everything on the phone is live.</p>
+      <p class="lede">Arjun's month in eight moments. Between them, everything in Iris is live.</p>
       <div class="chs">${CHAPTERS.map((c, i) => `<button class="ch ${i === ui.chapter ? "on" : ""}" type="button" data-chapter="${i}"><span>Day ${c.day} · ${c.phone === "arjun" ? D.owner : c.rx}'s phone</span><b>${esc(c.label)}</b></button>`).join("")}</div>
       <div class="section-title">Or jump to any day</div><input type="range" id="day" min="1" max="${D.days.length}" value="${ui.day}" aria-label="Day">
       <p class="note">For the first ${LIFTS_ON - 1} days Iris only learns. Lifts can go out from day ${LIFTS_ON}. Hackathon prototype, not a Meta product. Every person and message is fictional.</p>`;
@@ -615,19 +539,13 @@
 
   function goChapter(i) {
     const c = CHAPTERS[i];
-    Object.assign(ui, { chapter: i, day: c.day, phone: c.phone, ob: null, sheetA: null, sheetB: null, setupDone: !c.fresh });
+    Object.assign(ui, { chapter: i, day: c.day, phone: c.phone, sheetA: null, sheetB: null, setupDone: !c.fresh, ob: c.fresh ? "welcome" : null, banner: { [c.phone]: !!c.banner } });
     if (c.fresh) ui.invited = false;
     if (c.rx) ui.rx = c.rx;
-    if (c.phone === "friend") { ui.rxDev = "phone"; ui.appB = "here"; ui.screen.friend = c.screen; }
-    else { ui.screen.arjun = c.screen; if (c.app) ui.app = c.app; ui.tab = c.tab || "today"; }
+    if (c.phone === "friend") ui.rxDev = "phone"; else ui.tab = c.tab || "today";
+    if (c.think) ui.think[c.day] = true;
     if (c.approve) ui.approved[liftKey(c.day, c.approve)] = true;
     lastDay = c.day;
-  }
-  function openApp(id, tab) {
-    if (ui.phone === "friend") { ui.screen.friend = "app"; ui.appB = id === "muse" ? "muse" : "here"; return; }
-    ui.screen.arjun = "app"; ui.app = id === "here" ? "circle" : id;
-    if (tab) ui.tab = tab;
-    if (ui.app === "circle" && fresh() && !ui.ob) ui.ob = "welcome";
   }
 
   // ================= Wiring =================
@@ -670,21 +588,18 @@
     const k = ui.phone === "arjun" ? "A" : "B";
     if (e.target.id === "sheet") { ui["sheet" + k] = null; render(false); return; }
     if (e.target.id === "scrim") { ui.drawer = null; render(false); return; }
-    if (e.target.closest(".lock") && !e.target.closest("button")) { ui.screen[ui.phone] = "home"; render(true); return; }
     const t = e.target.closest("button"); if (!t || t.disabled) return;
     const ds = t.dataset; let anim = false;
     if (ds.chapter) { goChapter(+ds.chapter); ui.drawer = null; anim = true; }
     else if (t.id === "storyBtn") ui.drawer = ui.drawer === "story" ? null : "story";
     else if (t.id === "hoodBtn") ui.drawer = ui.drawer === "hood" ? null : "hood";
     else if (ds.closedrawer) ui.drawer = null;
-    else if (t.id === "homebar") { ui.screen[ui.phone] = "home"; ui["sheet" + k] = null; anim = true; }
     else if (ds.phone) { ui.phone = ds.phone; anim = true; }
-    else if (ds.open) { openApp(ds.open, ds.opentab); anim = true; }
+    else if (ds.banner) { ui.banner[ui.phone] = false; if (ui.phone === "arjun") ui.tab = "today"; }
     else if (ds.ob) { const i = SETUP.indexOf(ui.ob);
       if (ds.ob === "next") ui.ob = SETUP[i + 1]; else if (ds.ob === "back") ui.ob = SETUP[Math.max(0, i - 1)];
       else if (ds.ob === "finish") { ui.ob = null; ui.setupDone = true; ui.invited = true; ui.tab = "today"; } anim = true; }
     else if (ds.pick) { const p = ds.pick; ui.picked.has(p) ? ui.picked.delete(p) : (ui.picked.size < 5 && ui.picked.add(p)); }
-    else if (ds.app) { ui.app = ds.app; ui.screen.arjun = "app"; if (ds.thinking) { ui.tab = "today"; ui.think[ui.day] = true; } anim = true; }
     else if (ds.goto) { ui.day = +ds.goto; if (ds.tab) ui.tab = ds.tab; anim = true; }
     else if (ds.tab) { ui.tab = ds.tab; ui.app = "circle"; anim = true; }
     else if (ds.view) ui.view = ds.view;
@@ -692,7 +607,7 @@
     else if (ds.notme) ui.notMe[ds.notme] = !ui.notMe[ds.notme];
     else if (ds.right) ui.right[ds.right] = !ui.right[ds.right];
     else if (ds.wrong) ui.wrong[ds.wrong] = "Not about me, noted";
-    else if (ds.approve) { ui.approved[ds.approve] = true; ui.rx = ds.approve.split(":")[1]; render(false); toast("#glass", "Sent to " + nameOf(ui.rx) + ". Check their phone."); return; }
+    else if (ds.approve) { ui.approved[ds.approve] = true; ui.rx = ds.approve.split(":")[1]; ui.banner.friend = true; render(false); toast("#glass", "Sent to " + nameOf(ui.rx) + ". Check their phone."); return; }
     else if (ds.stop) ui.stopped[ds.stop] = true;
     else if (ds.loop) ui.loop[ds.loop] = ds.v;
     else if (ds.told) ui.told[ds.told] = true;
@@ -730,9 +645,8 @@
   addEventListener("resize", () => document.documentElement.style.setProperty("--barh", document.querySelector(".bar").offsetHeight + "px"));
   const q = new URLSearchParams(location.search);
   goChapter(Math.min(CHAPTERS.length - 1, Math.max(0, +(q.get("chapter") || 1) - 1)));
-  if (q.get("day")) { ui.day = Math.min(D.days.length, Math.max(1, +q.get("day"))); ui.setupDone = true; ui.screen.arjun = "app"; }
-  if (q.get("tab")) { ui.tab = q.get("tab"); ui.app = "circle"; ui.screen.arjun = "app"; }
-  if (q.get("app") === "ig") { ui.app = "ig"; ui.screen.arjun = "app"; }
+  if (q.get("day")) { ui.day = Math.min(D.days.length, Math.max(1, +q.get("day"))); ui.setupDone = true; ui.ob = null; }
+  if (q.get("tab")) { ui.tab = q.get("tab"); ui.setupDone = true; ui.ob = null; }
   if (q.get("phone") === "friend") ui.phone = "friend";
   if (q.get("charm")) { ui.phone = "friend"; ui.rxDev = "charm"; }
   if (q.get("view")) { ui.view = q.get("view"); ui.drawer = "hood"; }
