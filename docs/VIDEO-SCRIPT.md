@@ -50,7 +50,7 @@ The writer that drafts the lift only ever sees three things: Arjun's name, Sam's
 
 Permissions, the weekly limit and the safety rules are plain code, so no model can talk its way past them. Crisis words never become a lift. They show 988, and nothing goes to anyone.
 
-We tested it on 40 fictional cases, including a breakup, a hidden biopsy and a layoff. Across three runs, nothing private leaked once, and it made the right call every time. {Add the held-out score if it's good.}
+We tested it on 40 fictional cases, including a breakup, a hidden biopsy and a layoff. Across three runs, nothing private leaked, and it made the right call 119 times out of 120. Then we wrote 15 new cases it had never seen, and they caught a real leak, which we fixed.
 
 **2:30 to 3:00 · Why Meta**
 
