@@ -9,7 +9,7 @@ window.DEMO = {
  "settings": {
   "note": "Arjun's choices in the demo: who is in his circle, how each person relates, the permission he set, and which of his interests each person may ever hear about. All fictional.",
   "age": 28,
-  "send_mode": "ask_first",
+  "send_mode": "automatic",
   "circle": [
    {
     "name": "Maya Chen",
@@ -62,7 +62,8 @@ window.DEMO = {
     ]
    }
   ],
-  "lifts_switch_on_day": 15
+  "lifts_switch_on_day": 15,
+  "country": "US"
  },
  "days": [
   {

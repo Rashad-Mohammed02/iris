@@ -44,7 +44,7 @@ CHECK_SCHEMA = {
 # Used only if every written option fails the checks twice. Safe by construction.
 FALLBACK = {
     "support": "{name}'s had a full week. Maybe plan something around {interest} together this week?",
-    "good": "Things are good with {name} right now. A little {interest} plan would make it even better.",
+    "good": "Things are good with {name} right now. A little {interest} plan together would make the week.",
 }
 
 

@@ -41,9 +41,25 @@ def test_other_names_and_private_terms():
     assert lint("Arjun could use a lift. Halvorsen fans love F1.", "F1", private_terms=["Halvorsen"])
 
 
+def test_recovery_words_in_every_language():
+    """A good-day lift can't hint things were bad before, in English or Spanish."""
+    assert lint("Todo va bien con Ignacio ahora, quizas ver el partido juntos?", language="es")
+    assert lint("Arjun is doing better these days. F1 night this weekend?", "F1")
+    assert lint("Arjun is into F1 again. Race night this weekend?", "F1")
+    assert lint("Ignacio esta de vuelta con el futbol. Partido el sabado?", language="es")
+
+
+def test_fallback_lines_pass():
+    from engine.lift import FALLBACK
+    for kind, line in FALLBACK.items():
+        assert lint(line.format(name="Arjun", interest="F1"), "F1") == [], (kind, line)
+
+
 if __name__ == "__main__":
     test_good_lifts_pass()
     test_bad_lifts_fail()
     test_whole_words_only()
     test_other_names_and_private_terms()
+    test_recovery_words_in_every_language()
+    test_fallback_lines_pass()
     print("voice tests passed")

@@ -33,6 +33,7 @@ BANNED = {
         "profound", "not just", "not only", "lands big", "elevate", "unwind",
     ],
     # A good-day lift must never hint that things were bad before ("doing well now", "back to himself").
+    # Checked in every language, since it holds the Spanish words too.
     "recovery": ["again", "back to", "better", "now that", "these days", "anymore", "ahora", "otra vez", "de nuevo",
                  "de vuelta", "mejor", "va bien", "ya no"],
     # Names only: Muse never guesses anyone's pronouns.
@@ -43,6 +44,8 @@ BANNED = {
         "ansiedad", "preocupado", "preocupada", "porque", "desde", "apoyo", "mensajes",
     ],
 }
+
+EVERY_LANGUAGE = {"recovery"}  # lists checked whatever the friend's language
 
 _PATTERNS = {
     cat: re.compile(r"(?<![\w'])(" + "|".join(re.escape(w) for w in words) + r")(?![\w'])", re.I)
@@ -61,7 +64,7 @@ def lint(text, interest=None, other_names=(), private_terms=(), language="en"):
     """Return a list of problems; empty means the line passes."""
     problems = []
     for cat, pat in _PATTERNS.items():
-        if (cat.endswith("(es)")) != (language == "es"):
+        if cat not in EVERY_LANGUAGE and cat.endswith("(es)") != (language == "es"):
             continue  # each language gets its own word list
         for m in pat.finditer(text):
             problems.append(f"{cat} word: {m.group(0)!r}")

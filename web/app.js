@@ -39,7 +39,7 @@
     day: 1, tab: "today", view: "crosses", app: "circle", rx: "Sam", rxDev: "phone", ob: null, handle: "arjun.rao",
     phone: "arjun", banner: {}, setupDone: false, chapter: 0, drawer: null,
     perms: {}, nick: {}, removed: {}, picked: new Set(circle.map(m => m.first)),
-    send: D.settings.send_mode === "automatic" ? "auto" : "ask", pause: "on",
+    send: D.settings.send_mode === "ask_first" ? "ask" : "auto", pause: "on",
     approved: {}, stopped: {}, notMe: {}, think: {}, right: {}, wrong: {}, loop: {}, told: {}, together: {}, jx: {},
     invited: false, joined: {}, added: {}, rxLeft: {}, plan: {}, rxAsks: {}, notif: { lifts: true, page: true, together: true },
     sheetA: null, argA: null, sheetB: null, argB: null, deleted: false,
@@ -75,6 +75,8 @@
   const STATUS = `<svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
     <svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="20" height="8" rx="1.9"/></svg>`;
 
+  // The friend's sign-off. "Didn't ask" is only true when the lift went out on its own.
+  const signed = () => ui.send === "auto" ? `Suggested by Muse. ${esc(D.owner)} didn't ask.` : "Suggested by Muse.";
   // A lift reaches the friend only if it wasn't stopped, lifts aren't paused, and,
   // when Arjun chose "Ask me first", he tapped Send.
   const delivered = (n, to) => !ui.stopped[liftKey(n, to)] && ui.pause === "on" && (ui.send === "auto" || ui.approved[liftKey(n, to)]);
@@ -91,7 +93,7 @@
     { day: 2, label: "Sam gets an invite", hint: "Every circle is mutual. Sam says yes, or doesn't.", phone: "friend", rx: "Sam", banner: true },
     { day: LIFTS_ON, label: "Lifts switch on", hint: "Two weeks in, Iris knows Arjun's normal.", phone: "arjun", tab: "today" },
     { day: 24, label: "A rough week", hint: "Only Arjun sees what Iris noticed, in plain words.", phone: "arjun", tab: "today", think: true },
-    { day: 24, label: "A lift waits for Arjun's OK", hint: "Tap the banner, then Send.", phone: "arjun", tab: "today", banner: true },
+    { day: 24, label: "A lift goes out in 10 minutes", hint: "Tap the banner to read it. Arjun can still stop it.", phone: "arjun", tab: "today", banner: true },
     { day: 24, label: "Sam gets the lift", hint: "This line is all Sam ever sees.", phone: "friend", rx: "Sam", approve: "Sam", banner: true },
     { day: LANDS, label: "How did that feel?", hint: "Sam showed up. Only Arjun sees this question.", phone: "arjun", tab: "today", banner: true },
     { day: LANDS, label: "Together", hint: "Coming soon: plans with people who love the same things.", phone: "arjun", tab: "together" },
@@ -133,7 +135,7 @@
       const lk = liftKey(d.n, l.to), st = ui.stopped[lk] ? "stopped" : (ui.approved[lk] ? "sent" : "");
       h += `<div class="h2">A lift for ${esc(nameOf(l.to))}</div><div class="widget" id="lift-${esc(lk)}">
         <div class="eyebrow">What ${esc(nameOf(l.to))} will see</div><p class="quote">${esc(l.text)}</p>
-        <div class="sig">${face(22)}<span>Suggested by Muse. ${esc(D.owner)} didn't ask.</span></div>
+        <div class="sig">${face(22)}<span>${signed()}</span></div>
         ${st === "stopped" ? `<div class="small">Not sent. ${esc(l.to)} won't know.</div>`
           : (st === "sent" || ui.send === "auto" && !st) && ui.send === "auto" ? `<div class="row"><span class="small">Sends in 10 minutes</span><button class="pill sm" type="button" data-stop="${esc(lk)}">Stop it</button></div>`
           : st === "sent" ? `<div class="ok">${ic(P.check, 16)}Sent. ${esc(nameOf(l.to))} sees the line, never why.</div>`
@@ -261,7 +263,7 @@
       ${row("music", "Music", "Coming soon", "")}
       ${row("chat", "WhatsApp and Messenger", "Coming soon", "")}
       <div class="sh">Notifications</div>
-      ${row("bell", "Lifts that need your OK", "", tog(ui.notif.lifts, "lifts"))}
+      ${row("bell", "Lifts about to go out", "", tog(ui.notif.lifts, "lifts"))}
       ${row("page", "Your page", "Evenings", tog(ui.notif.page, "page"))}
       ${row("people", "Together ideas", "", tog(ui.notif.together, "together"))}
       <div class="sh">Privacy and safety</div>
@@ -278,7 +280,7 @@
   function setup() {
     const s = ui.ob, back = SETUP.indexOf(s) > 0 ? `<button class="round" type="button" data-ob="back" aria-label="Back" style="background:#ffffffb3">${ICON.back}</button>` : "";
     const next = (label, cls, dis) => `<div class="go"><button class="btn ${cls || "primary"}" type="button" data-ob="next" ${dis ? "disabled" : ""}>${label}</button></div>`;
-    if (s === "welcome") return `<img class="pose bob pop" src="${POSE("wave")}" alt="" style="margin-top:auto"><div class="kicker" style="text-align:center">from Meta · works with Muse</div>
+    if (s === "welcome") return `<img class="pose bob pop" src="${POSE("wave")}" alt="" style="margin-top:auto"><div class="kicker" style="text-align:center">a concept for Muse</div>
       <h1 class="h1" style="text-align:center;font-size:44px">Iris</h1><p class="lead" style="text-align:center">For the people who'd show up for you, if they only knew.</p>${next("Continue with Instagram", "ig")}`;
     if (s === "login") return `${back}<div style="margin-top:auto;display:grid;justify-items:center;gap:8px;text-align:center"><div class="ig-word" style="font-size:34px">Instagram</div>
       <p class="agent" style="color:var(--ink-2);max-width:270px">Iris signs in with your Instagram. No new account, no new password.</p></div>
@@ -306,10 +308,10 @@
         return `<div style="display:grid;gap:6px"><div class="who">${esc(nameOf(f))}</div><div class="seg">${LEVELS.map(l => `<button type="button" class="${l === p ? "on" : ""}" data-perm="${esc(f)}" data-level="${l}">${l}</button>`).join("")}</div><div class="small">${LEVEL_HELP[p]}</div></div>`; }).join("") +
       `</div>${next("Next", "blue")}`;
     if (s === "send") return `${back}<div class="head"><h1 style="font-size:24px">Before a lift goes out</h1></div><p class="agent">I write each lift. You decide how it leaves.</p>` +
-      [["ask", "Ask me first", "Each lift waits until you tap Send"], ["auto", "Send on its own", "You get 10 minutes to stop it"]].map(([k, t, sub]) =>
+      [["auto", "Send on its own", "You get 10 minutes to stop it"], ["ask", "Ask me first", "Each lift waits until you tap Send"]].map(([k, t, sub]) =>
         `<button class="opt ${ui.send === k ? "on" : ""}" type="button" data-send="${k}"><span>${ui.send === k ? ic(P.check, 18) : ""}</span><span><b>${t}</b><span>${sub}</span></span></button>`).join("") + next("Next", "blue");
-    if (s === "notify") return `<img class="pose sm bob" src="${POSE("phone")}" alt="" style="margin-top:auto"><p class="agent" style="text-align:center">I'll only tap you when a lift needs your OK, or a friend could use one.</p>
-      <div class="dim"><div class="alert"><b>"Iris" Would Like to Send You Notifications</b><p>Lifts that need your OK, and lifts for the people you care about.</p>
+    if (s === "notify") return `<img class="pose sm bob" src="${POSE("phone")}" alt="" style="margin-top:auto"><p class="agent" style="text-align:center">I'll only tap you when a lift is about to go out, or a friend could use one.</p>
+      <div class="dim"><div class="alert"><b>"Iris" Would Like to Send You Notifications</b><p>Lifts about to go out, and lifts for the people you care about.</p>
       <div class="two"><button type="button" data-ob="next">Don't Allow</button><button type="button" data-ob="next">Allow</button></div></div></div>`;
     if (s === "done") {
       const names = [...ui.picked];
@@ -389,7 +391,7 @@
         `<div>Circles go both ways. Add ${esc(D.owner)} to yours?</div><div class="row"><button class="pill dark" type="button" data-add="${esc(who)}">Add ${esc(D.owner)}</button></div>`}</div>`;
     } else if (l) {
       h += `<div class="widget"><div class="eyebrow">Someone in your circle could use something small</div><p class="quote">${esc(l.text)}</p>
-        <div class="sig">${face(22)}<span>Suggested by Muse. ${esc(D.owner)} didn't ask.</span></div>` +
+        <div class="sig">${face(22)}<span>${signed()}</span></div>` +
         (plan === "no" ? `<div class="small">Okay. ${esc(D.owner)} won't know.</div>` : plan ? `<div class="ok">${esc(plan)}</div>`
           : `<div class="row"><button class="pill blue" type="button" data-sheet-b="plan" data-k="${esc(lk)}">Plan something</button><button class="pill" type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`) +
         `</div><div class="small">That's everything ${esc(who)} sees: no feelings, no reasons, nothing ${esc(D.owner)} wrote.</div>`;
@@ -433,7 +435,7 @@
         <button class="link" type="button" data-remove="${esc(f)}" style="color:var(--bad)">Remove from my circle</button><div class="small" style="text-align:center">Removing is silent. ${esc(nameOf(f))} isn't told.</div>`; },
     add: () => `<h3>Add to your circle</h3><div class="small">From your Instagram Close Friends. They get an invite.</div>` +
       EXTRA.map(e => `<button class="li" type="button" data-invite="${esc(e.first)}"><span class="ring">${av(e.first)}</span><div><div class="who">${esc(e.first)}</div><div class="small">${esc(e.h)}</div></div><span class="pill sm">Invite</span></button>`).join(""),
-    send: () => `<h3>Before a lift goes out</h3>` + [["ask", "Ask me first", "Each lift waits until you tap Send"], ["auto", "Send on its own", "You get 10 minutes to stop it"]].map(([k, t, sub]) =>
+    send: () => `<h3>Before a lift goes out</h3>` + [["auto", "Send on its own", "You get 10 minutes to stop it"], ["ask", "Ask me first", "Each lift waits until you tap Send"]].map(([k, t, sub]) =>
       `<button class="opt ${ui.send === k ? "on" : ""}" type="button" data-send="${k}"><span>${ui.send === k ? ic(P.check, 18) : ""}</span><span><b>${t}</b><span>${sub}</span></span></button>`).join("") + `<button class="btn primary" type="button" data-close="A">Done</button>`,
     history: () => { const ls = allLifts(ui.day);
       return `<h3>Lift history</h3>` + (ls.length ? ls.reverse().map(l => `<div class="widget flat"><div class="small">Day ${l.n} · to ${esc(nameOf(l.to))} · ${delivered(l.n, l.to) ? "sent" : ui.stopped[liftKey(l.n, l.to)] ? "not sent" : "waiting for you"}</div><div>${esc(l.text)}</div></div>`).join("")
@@ -445,7 +447,7 @@
       <div><b>Never shares</b><p class="agent" style="color:var(--ink-2);font-size:14.5px">Anything at all, except one short lift you allowed, to one person you chose.</p></div><button class="btn primary" type="button" data-close="A">Got it</button>`,
     pressure: () => `<h3>Just for you</h3><p class="agent">Is anyone pushing you to share more than you want to, or to keep Iris on?</p><div class="small">If you say yes, I'll quietly stop all lifts to that person. They won't be told.</div>
       <div class="row"><button class="pill" type="button" data-close="A" data-toast="Thanks">No, all good</button><button class="pill blue" type="button" data-close="A" data-toast="Got it. Handled quietly.">Yes, someone is</button></div>
-      <div class="small">If you ever feel unsafe, in the US you can call or text 988, or the domestic violence hotline at 1-800-799-7233.</div>`,
+      <div class="small">If you ever feel unsafe, in the US you can call or text 988, or the domestic violence hotline at 1-800-799-7233. Elsewhere, findahelpline.com lists free, private lines where you are.</div>`,
     delete: () => ui.deleted ? `<h3>All deleted</h3><div class="small">Everything Iris knew about you is gone.</div><button class="btn primary" type="button" data-close="A">Close</button>` :
       `<h3>Delete everything?</h3><p class="agent">This erases what Iris learned about your normal, your journal and your lift history. Your circle isn't told.</p>
       <button class="btn" type="button" data-delete="1" style="background:#fde8e8;color:var(--bad)">Delete everything</button><button class="link" type="button" data-close="A">Cancel</button>`,

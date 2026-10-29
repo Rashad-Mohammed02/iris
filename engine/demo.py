@@ -63,6 +63,9 @@ class Demo:
         self.by_day = {}
         for e in self.events:
             self.by_day.setdefault(e["day"], []).append(e)
+        # Only the people he put in his Iris circle are ever named to Muse. Everyone else he talks to,
+        # and every group chat, stays out of what Muse reads (they never agreed to anything).
+        self.circle = {m["name"] for m in self.settings["circle"]}
         self.owner = self.profile["owner"]["name"]
         self.first = self.owner.split()[0]
 
@@ -123,16 +126,17 @@ class Demo:
             "heavy_reel_share": {"recent": round(median(self.rows[j]["heavy_share"] for j in idx), 2),
                                  "usual": round(base["heavy_share"]["median"], 2) if base else None},
             "reels_sent_to": [{"to": n.split()[0], "count": self.reels_sent(n, recent)}
-                              for n in row["people"] if self.reels_sent(n, recent)],
+                              for n in row["people"] if n in self.circle and self.reels_sent(n, recent)],
             "reply_rhythm": {n.split()[0]: f["evidence"] for j in idx for f in [self.rule[j]]
                              for n in f["evidence"].get("slower_replies", []) + f["evidence"].get("shorter_replies", [])},
             "quiet_with": [{"name": n.split()[0],
-                            "days_since_you_wrote": i - (self.last_sent(n, i) or 0)} for n in rule["quiet_with"]],
+                            "days_since_you_wrote": i - (self.last_sent(n, i) or 0)} for n in rule["quiet_with"]
+                           if n in self.circle],
             "interests": [{"topic": t, "status": "current"} for t in self.interests],
             "crisis_content": self.crisis_content(self.days[i]),
         }
         signals["reply_rhythm"] = sorted({n.split()[0] for j in idx for k in ("slower_replies", "shorter_replies")
-                                          for n in self.rule[j]["evidence"].get(k, [])})
+                                          for n in self.rule[j]["evidence"].get(k, []) if n in self.circle})
         sent_week = state.get("lifts_sent", [])
         circle = []
         for m in self.settings["circle"]:
@@ -147,13 +151,13 @@ class Demo:
         stretch = "clearly_heavy" if rule["heavy_stretch"] else ("off_normal" if rule["lighter_stretch"] else "none")
         return {
             "id": f"demo-day-{i + 1}",
-            "user": {"name": self.first, "age": self.settings["age"]},
+            "user": {"name": self.first, "age": self.settings["age"], "country": self.settings.get("country", "US")},
             "circle": circle,
             "pattern": {"learning_day": i + 1, "window": f"last {len(recent)} days vs his own normal",
                         "signals": signals, "journal": state.get("journal", {}).get(i, []),
                         "settings": {"pause": "all lifts paused"} if state.get("paused") else {}},
             "rule_stretch": stretch,
-            "send_mode": self.settings.get("send_mode", "ask_first"),
+            "send_mode": self.settings.get("send_mode", "automatic"),
             "corrections": state.get("corrections", []),
             "recent_lines": {},
         }
@@ -228,12 +232,17 @@ class Demo:
         if "later_to_sleep" in r["off_signals"] or "shorter_rest" in r["off_signals"]:
             week.append("Getting to sleep later than usual this week.")
         for q in self.rule[i]["quiet_with"]:
+            if q not in self.circle:
+                continue
             ls = self.last_sent(q, i)
             if ls is not None and i - ls >= 2:
                 week.append(f"You haven't written to {q.split()[0]} since {weekday(self.days[ls])}.")
-        if facts["reels_sent_to"]:
-            week.append("Sent reels to " + ", ".join(facts["reels_sent_to"]) + " today.")
+        sent_to = self.rows[i]["reels_sent_to"]
+        if sent_to:
+            named = [n.split()[0] for n in sent_to if n in self.circle]
+            others = "other people" if any(n not in self.circle for n in sent_to) else None
+            week.append("Sent reels to " + ", ".join(named + ([others] if others else [])) + " today.")
         week.append("Reels lately: mostly " + ", ".join(facts["reel_themes_today"]).lower() + ".")
-        return {"person": self.first,
+        return {"person": self.first, "country": self.settings.get("country", "US"),
                 "circle": [{"name": o["name"], "relation": o["relation"], "facts": o["fact"]} for o in orbit],
                 "week": week, "interests": self.interests, "named_before": list(named_before)}

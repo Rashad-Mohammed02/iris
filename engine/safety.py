@@ -30,6 +30,43 @@ CARDS = {
                       "You can call or text 988 anytime, day or night. Nothing was shared with anyone.",
 }
 
+# Help lines by country (ISO code). The person's country picks the line; anywhere else gets findahelpline.com.
+DEFAULT_COUNTRY = "US"
+HELP_LINES = {
+    "US": "You can call or text 988 anytime, day or night.",
+    "CA": "You can call or text 988 anytime, day or night.",
+    "GB": "You can call Samaritans on 116 123 anytime, day or night.",
+    "IE": "You can call Samaritans on 116 123 anytime, day or night.",
+    "AU": "You can call Lifeline on 13 11 14 anytime, day or night.",
+    "IN": "You can call Tele-MANAS on 14416 anytime, day or night.",
+}
+FIND_A_LINE = "findahelpline.com lists free, private help lines where you are."
+# The cards above are the US text. Elsewhere, these lines take the place of 988 and the US hotlines.
+US_LINES = {
+    "suicide": "You can call or text 988 anytime, day or night.",
+    "self_harm": "You can call or text 988, or text HOME to 741741, anytime.",
+    "crisis_content": "You can call or text 988 anytime, day or night.",
+    "fear": "If you want to talk to someone, the National Domestic Violence Hotline is free and private: call "
+            "1-800-799-7233 or text START to 88788.",
+}
+
+
+def help_line(country=None):
+    return HELP_LINES.get(str(country or DEFAULT_COUNTRY).upper(), FIND_A_LINE)
+
+
+def card(kind, country=None):
+    """The private card for this kind, with the help line for the person's country."""
+    text, country = CARDS[kind], str(country or DEFAULT_COUNTRY).upper()
+    if kind not in US_LINES or country == "US":
+        return text
+    if kind == "fear":
+        line = "If you want to talk to someone, " + FIND_A_LINE  # no national hotline we've checked outside the US
+    else:
+        line = help_line(country)
+    return text.replace(US_LINES[kind], line)
+
+
 # Reel themes that mean "show help, never a lift". In the real product these come from Meta's own
 # content labels for suicide and self-harm; in the demo they come from the simulated theme hints.
 CRISIS_THEMES = {"self_harm", "suicide"}

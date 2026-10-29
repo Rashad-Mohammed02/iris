@@ -22,7 +22,7 @@ from engine.read import read as muse_read  # noqa: E402
 
 LEARNING_DAYS = 14  # matches engine/baseline.py: nothing is judged in the first two weeks
 UNDO_MINUTES = 10
-SEND_MODES = ("ask_first", "automatic")  # the person's choice; asking first is the default
+SEND_MODES = ("automatic", "ask_first")  # the person's choice; sending on its own (10 minutes to stop it) is the default
 
 
 def is_paused(situation):
@@ -46,6 +46,7 @@ def allows(member, stretch, good_broad=True):
 
 def decide(situation, reading=None, write_lifts=True):
     user, pattern, circle = situation["user"], situation["pattern"], situation["circle"]
+    country = user.get("country")  # picks the help line on any card; the demo and bench default to the US
     out = {"user": user["name"], "lifts": [], "not_sent": [], "cards": [], "prompts": [], "log": [],
            "state_after": {}, "read": None, "stretch": "none"}
 
@@ -55,12 +56,12 @@ def decide(situation, reading=None, write_lifts=True):
 
     # 1. Adults only: no reading at all.
     if safety.is_minor(user, pattern):
-        out["cards"].append({"kind": "minor", "text": safety.CARDS["minor"]})
+        out["cards"].append({"kind": "minor", "text": safety.card("minor", country)})
         return skip_all("Adults only")
 
     # 1b. Crisis from what they watch: help for them only, no lifts, no model call. Applies even while learning.
     if safety.watched_crisis(pattern.get("signals", {}).get("crisis_content")):
-        out["cards"].append({"kind": "crisis_content", "text": safety.CARDS["crisis_content"]})
+        out["cards"].append({"kind": "crisis_content", "text": safety.card("crisis_content", country)})
         out["log"].append({"kind": "safety", "text": "Crisis-themed reels: help shown to the person only."})
         return skip_all("Serious is never automatic")
 
@@ -81,7 +82,7 @@ def decide(situation, reading=None, write_lifts=True):
 
     # 3. Crisis: no lifts to anyone, help to the person only.
     if r["crisis"] != "none":
-        out["cards"].append({"kind": "crisis", "text": safety.CARDS[r["crisis"]]})
+        out["cards"].append({"kind": "crisis", "text": safety.card(r["crisis"], country)})
         return skip_all("Serious is never automatic")
 
     # 4. Fear and pressure. Nothing automatic goes to anyone while either is open.
@@ -93,9 +94,9 @@ def decide(situation, reading=None, write_lifts=True):
             if n not in r["pressured_on"]:
                 out["state_after"][n] = {"in_circle": False, "notified": False}
         if r["pressure_flag"]:
-            out["cards"].append({"kind": "pressure", "text": safety.CARDS["pressure"], "when": "later, privately"})
+            out["cards"].append({"kind": "pressure", "text": safety.card("pressure", country), "when": "later, privately"})
         if r["fear_flag"]:
-            out["cards"].append({"kind": "fear", "text": safety.CARDS["fear"]})
+            out["cards"].append({"kind": "fear", "text": safety.card("fear", country)})
         return skip_all("Serious is never automatic")
 
     # 6. Pause wins over every permission, and nobody nags to unpause.
@@ -133,7 +134,7 @@ def decide(situation, reading=None, write_lifts=True):
                 out["not_sent"].append({"name": m["name"], "why": "No interest was safe to mention this week"})
                 continue
             today.append(w["text"])
-            if situation.get("send_mode", "ask_first") == "automatic":
+            if situation.get("send_mode", "automatic") == "automatic":
                 w.update(status="queued", undo_minutes=UNDO_MINUTES)
             else:
                 w.update(status="waiting_for_ok")  # nothing leaves until the person taps Send

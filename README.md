@@ -10,7 +10,7 @@ Iris is a concept app in the Meta family that works with Muse, Meta's AI agent. 
 
 That line is all your friend sees. No feelings, no reasons, nothing you wrote, nothing about your messages. If Iris is wrong and you're having a great week, the worst that happens is a friend asks you to watch a race.
 
-Everything in this repo runs on Meta's Muse Spark 1.3 through the Meta Model API. It's a hackathon concept, not a Meta product. The demo person, Arjun, and his friends are fictional. I also tested the rule on 11 real Instagram downloads (more below).
+Everything in this repo runs on Meta's Muse Spark 1.3 through the Meta Model API. It's a hackathon concept, not a Meta product. The demo person, Arjun, and his friends are fictional. I also tested the rule on real Instagram downloads from 11 research test accounts (more below).
 
 **Try it:** open `web/index.html`. It shows only Iris, on a phone, the way it would really look. Go through setup, switch between Arjun's phone and his friend Sam's, step through the story with Next, or open "Under the hood" to see every decision.
 
@@ -47,7 +47,7 @@ A day only counts as off when two of these agree, from two different areas, and 
 
 **What you see.** A short private page about your day, and "What I'm noticing this week" in plain words, with a "Not about me" button on each line, like Instagram's reels controls. How Iris read each reel stays out of your view.
 
-**The lift.** When you're off your normal and someone's setting allows it, Muse writes one or two sentences for them. You choose how it leaves: "Ask me first" (the default, you tap Send) or "Send on its own" (with 10 minutes to stop it). At most one lift per person per week.
+**The lift.** When you're off your normal and someone's setting allows it, Muse writes one or two sentences for them. You choose how it leaves: "Send on its own" (the default, with 10 minutes to stop it) or "Ask me first" (you tap Send). At most one lift per person per week.
 
 **The friend's side.** Your friend sees the line and "Suggested by Muse", and can plan something or tap Not now. You never know which. If they ask Muse why, it won't say. They can leave your circle any time. Lifts can land in the Iris app, Instagram, Muse, or on a Muse Charm.
 
@@ -67,7 +67,7 @@ Instagram download ─▶ reader ─▶ your side only ─▶ daily signals ─�
                     weekly limit, each person's setting                       │
                                                                              ▼
    Shared interest (from the reels you send that friend) ─▶ Muse writes the lift
-   ─▶ word check ─▶ Muse privacy check ─▶ waits for your OK
+   ─▶ word check ─▶ Muse privacy check ─▶ sends, with 10 minutes to stop it
 ```
 
 Three rules hold it together:
@@ -76,7 +76,7 @@ Three rules hold it together:
 2. **The writer can't leak what it never saw.** It only knows your first name, your friend's name and one interest the two of you already share, which Iris works out from the reels you send that friend ([engine/demo.py](engine/demo.py)).
 3. **Every line is checked twice anyway.** A word check ([engine/voice.py](engine/voice.py)) blocks feelings, reasons, therapy words, AI-sounding words and private terms. Then a separate Muse call that does see the private facts answers one question: does this line give anything away, even a hint? If the interest itself points at the secret, it switches interest or sends nothing.
 
-**Safety comes first, in code.** Crisis words in the journal, or reels about suicide or self-harm that you watch, save or send, never become a lift. You see the 988 line and nothing goes to anyone, even during the first two weeks ([engine/safety.py](engine/safety.py)). Someone you're afraid of is quietly removed. A setting someone pressured you into is held at Never. Adults only.
+**Safety comes first, in code.** Crisis words in the journal, or reels about suicide or self-harm that you watch, save or send, never become a lift. You see a help line for your country (988 in the US and Canada, Samaritans in the UK and Ireland, Lifeline in Australia, Tele-MANAS in India, findahelpline.com anywhere else) and nothing goes to anyone, even during the first two weeks ([engine/safety.py](engine/safety.py)). Someone you're afraid of is quietly removed. A setting someone pressured you into is held at Never. Adults only.
 
 ## How I tested it
 
@@ -84,7 +84,7 @@ Three rules hold it together:
 
 **2. The test bench.** 40 fictional cases ([bench/cases.json](bench/cases.json)): heavy weeks that should send a lift, normal and good weeks that must not, permission edge cases, safety cases (crisis words, self-harm, fear of a partner, pressure, a 17-year-old) and five leak traps (a breakup, a hidden biopsy, money trouble, a friend's secret pregnancy, a layoff). A separate Muse grader scores every lift against [bench/RUBRIC.md](bench/RUBRIC.md).
 
-Three full runs on the current engine (78 lifts written in total):
+Three full runs on the current engine, after I tuned the prompts on these same cases. Each run writes lifts in 26 different situations (one case, one friend), so 78 lifts in total:
 
 | What I checked | Target | Result across 3 runs |
 |---|---|---|
@@ -96,7 +96,9 @@ Three full runs on the current engine (78 lifts written in total):
 
 An earlier run had one leak: a lift suggested "a quiet night" with board games, in a week the person had gone quiet with someone. "Quiet" is now a blocked word.
 
-These 40 cases were also used while I tuned the prompts, so they flatter the engine. So I had 15 more written by a separate agent that never saw my prompts or code ([bench/heldout_cases.json](bench/heldout_cases.json)). They include lifts in Hindi, Portuguese, Korean, Arabic and isiZulu, a calm goodbye with no crisis words, and a brother's arrest kept from Dad.
+Because I tuned on these 40 cases, they flatter the engine. So I had 15 more written by a separate agent that never saw my prompts or code ([bench/heldout_cases.json](bench/heldout_cases.json)). They include lifts in Hindi, Portuguese, Korean, Arabic and isiZulu, a calm goodbye with no crisis words, and a brother's arrest kept from Dad.
+
+Each run writes lifts in 12 different situations, so 36 lifts in total. To be honest, this set is no longer fully held out: I made three fixes (HO-15, HO-06 and HO-09) after I first scored it. The table is from after the first two. The HO-09 fix came after it, and I rechecked that case on its own.
 
 | What I checked | Result across 3 runs |
 |---|---|
@@ -105,11 +107,11 @@ These 40 cases were also used while I tuned the prompts, so they flatter the eng
 | Lifts that gave something away | 1 of 36 |
 | Interest really shared | 36 of 36 |
 
-The one leak was in Spanish. After a hard stretch, a good-week lift to someone's girlfriend began "Todo va bien con Ignacio ahora", meaning everything's fine with Ignacio now. That hints something was wrong before. The word check now blocks recovery words like "now", "again" and "better" in English and Spanish, and the same case passed three more runs ([bench/results/heldout-HO09-recheck.md](bench/results/heldout-HO09-recheck.md)). An earlier version also read a busy exam week as a hard one; Muse now treats a dated event the person is upbeat about as explained.
+The one leak was in Spanish. After a hard stretch, a good-week lift to someone's girlfriend began "Todo va bien con Ignacio ahora", meaning everything's fine with Ignacio now. That hints something was wrong before. The word check now blocks recovery words like "now that", "again" and "better" in every language, plus Spanish ones like "ahora" and "va bien". The same case passed three reruns ([bench/results/heldout-HO09-recheck.md](bench/results/heldout-HO09-recheck.md)), but those ran before the word check really covered Spanish. I fixed that later and haven't rerun it yet. An earlier version also read a busy exam week as a hard one; Muse now treats a dated event the person is upbeat about as explained.
 
 The first time I ran those 15, they caught a real leak: Dad's allowed interest was "Law & Order reruns", in the week his son was arrested. Now the privacy check also asks whether the interest itself hints at the secret.
 
-**3. Real Instagram downloads.** I wanted to know whether the rule cries wolf on real people's messy lives. Researchers at Utrecht University published 11 real Instagram downloads from accounts they created and used for one to two weeks ([Boeschoten, van den Goorbergh and Oberski, 2021](https://doi.org/10.5281/zenodo.4472606), CC BY 4.0). They use Instagram's older 2020 layout, so I taught the reader that format too ([data/parse_export_2020.py](data/parse_export_2020.py)). Five accounts had enough activity. I repeated each person's real days to six weeks, then changed the last week ([bench/real_rhythms.py](bench/real_rhythms.py)):
+**3. Real Instagram downloads.** I wanted to know whether the rule cries wolf on real activity, not just my fictional month. Researchers at Utrecht University published 11 real Instagram downloads from research test accounts they created and used for one to two weeks ([Boeschoten, van den Goorbergh and Oberski, 2021](https://doi.org/10.5281/zenodo.4472606), CC BY 4.0). They use Instagram's older 2020 layout, so I taught the reader that format too ([data/parse_export_2020.py](data/parse_export_2020.py)). Five of the 11 had enough activity to use. I built each account's normal weeks by repeating its real days out to six weeks, then changed the last week ([bench/real_rhythms.py](bench/real_rhythms.py)):
 
 | What changed in the last week | Result |
 |---|---|
@@ -117,9 +119,9 @@ The first time I ran those 15, they caught a real leak: Dad's allowed interest w
 | Hard week: nights fall apart and they message their people far less | Caught for 2 of 5 people |
 | Late nights only, or quieter only | Flagged 1 time in 10 |
 
-The two people it caught message their circle every day. The three it missed barely do, so Iris could see their nights change but had nothing on the social side to agree with, and it held back instead of guessing. That's the trade-off I chose. The normal weeks are real; the hard week is made up, because these accounts never had one. Full results: [bench/results/real_rhythms.md](bench/results/real_rhythms.md).
+The two people it caught message their circle every day. The three it missed barely do, so Iris could see their nights change but had nothing on the social side to agree with, and it held back instead of guessing. That's the trade-off I chose. The normal weeks are built from real days; the hard week is made up, because these accounts never had one. Full results: [bench/results/real_rhythms.md](bench/results/real_rhythms.md).
 
-**4. People.** Friends tried the idea through a walkthrough with their own people's names, and their answers changed the design. Late nights alone are never a signal ("that's a normal week for me"). The daily page shrank to a line or two about you alone ("keep it about me"). Lifts now wait for your OK by default, because finding out after the fact felt like "my app told on me". The test I share with friends and family is a separate page from this prototype.
+**4. People.** Friends tried the idea through a walkthrough with their own people's names, and their answers changed the design. Late nights alone are never a signal ("that's a normal week for me"). The daily page shrank to a line or two about you alone ("keep it about me"). Lifts send on their own by default, with 10 minutes to stop them, and "Ask me first" is there for anyone who wants to approve each one, because a tester asked to see a lift before it goes. The test I share with friends and family is a separate page from this prototype.
 
 ## What isn't finished
 
@@ -132,7 +134,8 @@ The two people it caught message their circle every day. The three it missed bar
 ## Privacy
 
 - **Your side only.** The reader drops the words of every message someone else wrote before anything else runs. A test enforces it ([tests/test_parser.py](tests/test_parser.py)).
-- **Secure, inside Meta.** Everything Iris reads is processed by Meta's Muse models through the Meta Model API. Nothing is used for ads.
+- **Where your data goes.** In this prototype, data goes to the Meta Model API. In a real product it would run inside Meta's private processing, never used for ads or training.
+- **Consent.** Iris would need your explicit opt-in. Teen Accounts are never eligible. Your friends' message timing is used, never their words, and people outside your circle are never named to Muse.
 - **Mutual and invisible.** Nobody gets lifts about you unless you both agreed, and nobody can see what you set them to.
 - **One thing crosses, because you chose it:** that you could use something nice. Never why.
 

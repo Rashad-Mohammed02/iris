@@ -58,9 +58,10 @@ def turn(history, context, effort="medium"):
     """
     mine = [h["text"] for h in history if h["role"] == "user"]
     flags = safety.scan(mine)
+    country = context.get("country")
     if flags["crisis"] != "none":
         # Never wait on a model for this.
-        return {"reply": safety.CARDS[flags["crisis"]], "step": "safety", "about": [], "about_chip": "",
+        return {"reply": safety.card(flags["crisis"], country), "step": "safety", "about": [], "about_chip": "",
                 "connection": "", "chips": [], "feeling_words": [], "tone": "unpleasant",
                 "safety": flags["crisis"]}
 
@@ -73,10 +74,10 @@ def turn(history, context, effort="medium"):
     r["about"] = [first_names.get(n.split()[0], n) for n in r.get("about", []) if n.split()[0] in first_names]
 
     if r["safety"] in ("suicide", "self_harm"):
-        r["reply"], r["step"] = safety.CARDS[r["safety"]], "safety"
+        r["reply"], r["step"] = safety.card(r["safety"], country), "safety"
     elif r["safety"] == "fear" or flags["fear"]:
         r["safety"], r["step"] = "fear", "safety"
-        r["reply"] = r["reply"].rstrip() + " " + safety.CARDS["fear"]
+        r["reply"] = r["reply"].rstrip() + " " + safety.card("fear", country)
     return r
 
 
