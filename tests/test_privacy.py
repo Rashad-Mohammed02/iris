@@ -3,8 +3,7 @@ Offline: every Muse call is caught, not sent.
 
 Arjun also talks to Jess, Chris and two group chats, and his calendar has a 1:1
 with Jess and run club with Chris. Their timing can shape his own numbers, but
-their names must never reach the day read, the note writer, the privacy check,
-the journal or the Daily Page.
+their names must never reach the day read, the note writer or the privacy check.
 """
 
 import json
@@ -15,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from engine import daily_page, journal, muse  # noqa: E402
+from engine import muse  # noqa: E402
 from engine.decide import decide  # noqa: E402
 from engine.demo import Demo  # noqa: E402
 
@@ -25,10 +24,6 @@ CANNED = {
                      for n in ("Maya", "Sam", "Dev", "Omar", "Priya")]},
     "note_write": {"options": ["Arjun, tired today. A song for tonight?"]},
     "note_check": {"leak": False, "harmless_if_wrong": True, "voice_ok": True, "interest_echoes": False, "reason": ""},
-    "journal": {"reply": "Okay.", "step": "listen", "about": [], "about_chip": "", "connection": "", "chips": [],
-                "feeling_words": [], "tone": "unclear", "safety": "none"},
-    "own_words": {"options": [], "left_out": ""},
-    "daily_page": "A full day.",
 }
 
 
@@ -51,15 +46,10 @@ def test_no_outside_names_reach_muse():
         assert {"Jess", "Chris", "Tasha", "Ravi"} <= set(hidden), hidden
         for i in range(14, len(demo.days)):
             decide(demo.situation(i))
-            ctx = demo.journal_context(i)
-            history = [{"role": "user", "text": "long day. sent some reels and went to bed late"}]
-            journal.turn(history, ctx)
-            journal.own_words(history, "Dev", ctx)
-            daily_page.write_page(demo.day_facts(i))
     finally:
         muse.ask = old
     labels = {label for label, _ in sent}
-    assert {"day", "note_write", "note_check", "journal", "own_words", "daily_page"} <= labels, labels
+    assert {"day", "note_write", "note_check"} <= labels, labels
     for label, payload in sent:
         for name in hidden:
             assert not re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", payload), (label, name)

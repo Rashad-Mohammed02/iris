@@ -1,4 +1,4 @@
-"""The parser must never carry other people's words into events. Only his own (own_words, v2)."""
+"""The parser must never carry other people's words into events. Only his own (own_words)."""
 
 import json
 import sys

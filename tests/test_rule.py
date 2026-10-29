@@ -1,5 +1,5 @@
 """The rule must catch the low stretch in Arjun's month and stay quiet on normal weeks.
-In v2 the rule is one input to the day read, not the decider.
+The rule is one input to the day read, not the decider.
 
 Uses the demo's ground-truth file, which only tests may read.
 """

@@ -1,4 +1,4 @@
-"""v2 word check: mood words pass, everything private still fails. Offline."""
+"""The word check: mood words pass, everything private still fails. Offline."""
 
 import sys
 from pathlib import Path

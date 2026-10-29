@@ -1,4 +1,4 @@
-"""Every v2 gate, with fake Muse readings. Offline: no model call is made."""
+"""Every gate, with fake Muse readings. Offline: no model call is made."""
 
 import sys
 from pathlib import Path
