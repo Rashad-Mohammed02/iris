@@ -1,3 +1,5 @@
+<p align="center"><img src="web/img/p-wave.webp" alt="Iris, a small peach plush character, waving" width="220"></p>
+
 # Iris
 
 **Keeps you close to your 5 people, every day.**
