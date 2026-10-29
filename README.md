@@ -129,7 +129,6 @@ These are numbers after tuning. I wrote the cases first, then adjusted the note 
 - **Your friends' moods** in the friend's view are simulated, as if they used Iris too.
 - **Delivery to friends and the Muse Charm** is simulated. Muse can't send to another person's Muse today.
 - **Quiet people.** If you rarely message anyone, Iris has less to go on.
-- **The journal**, a private place to write about your day, is in the engine ([engine/journal.py](engine/journal.py)) but not in this demo yet.
 
 ## Privacy
 
