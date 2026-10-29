@@ -1,145 +1,142 @@
 # Iris
 
-> **Note (28 Oct 2026):** the engine in this repo is now Iris v2, the everyday version: a daily note to your 5 in any mood, with a ready action. Most of this README still describes v1 (lifts when you're off your normal) and is being rewritten. The v1 engine and bench are kept for history (`engine/decide_v1.py`, `bench/run_bench_v1.py`). What changed and the new numbers: [README-V2-NOTES.md](README-V2-NOTES.md).
+**Keeps you close to your 5 people, every day.**
 
-**When you're running low, the people closest to you find out, without you having to ask.**
+Iris is a concept for Muse, Meta's AI agent. I built it for the Meta Global AI Developer Hackathon (Indie track). Once a day, at a time you pick, Iris tells each of your 5 closest people how you're feeling, in a word or two, and gives them one easy way to show up for you:
 
-Iris is a concept app in the Meta family that works with Muse, Meta's AI agent. I built it for the Meta Global AI Developer Hackathon (Indie track). It notices from your own Instagram when you're off your normal, and quietly gives one of your closest people a small idea of something nice to do with you:
-
-> Arjun could use a little lift this week. Maybe watch the next F1 race together?
+> Arjun, proud day. Two seats for live music this weekend?
 >
 > *Suggested by Muse. Arjun didn't ask.*
 
-That line is all your friend sees. No feelings, no reasons, nothing you wrote, nothing about your messages. If Iris is wrong and you're having a great week, the worst that happens is a friend asks you to watch a race.
+Happy, tired, a bit low: any mood counts. Your friend sees the mood and the idea. Never why.
 
-Everything in this repo runs on Meta's Muse Spark 1.3 through the Meta Model API. It's a hackathon concept, not a Meta product. The demo person, Arjun, and his friends are fictional. I also tested the rule on real Instagram downloads from 11 research test accounts (more below).
+In Arjun's fictional 42-day month, Iris wrote 114 notes to his 5 people. None of them mentioned his exam, his trip, his blood test or a friend's secret, even though all of it was in his messages and calendar.
 
-**Try it:** https://rashad-mohammed02.github.io/iris/ (or open `web/index.html`). It shows only Iris, on a phone, the way it would really look. Go through setup, switch between Arjun's phone and his friend Sam's, step through the story with Next, or open "Under the hood" to see every decision.
+Everything in the app runs on Meta's Muse Spark 1.3 through the Meta Model API. It's a hackathon concept, not a Meta product. Arjun and his friends are fictional.
+
+**Try it:** https://rashad-mohammed02.github.io/iris/ (or open `web/index.html`). It shows only Iris, on a phone, the way it would really look. Step through Arjun's month, see his friends' phones, or open "Under the hood" to see every decision the engine made.
 
 ---
 
+## What I built, and what's Meta's
+
+Everything in this repo was built during the hackathon, Oct 26 to Nov 4, 2026. The first commit is from Oct 27.
+
+**I built:** the Iris app and every screen in it, the engine (the daily read, the gates, the note writer, the ready actions, the word check and the privacy check), the prompts, the test bench and its 28 cases, the fictional month for Arjun, the Instagram export reader, and Iris's character, which I made with Muse Image.
+
+**Meta's, used as it is:** Muse Spark 1.3 and Muse Image (through the Meta Model API), and the idea of Instagram, Muse and the Muse Charm as places Iris would live. Iris doesn't connect to the real Instagram, Muse or a Charm here: those parts are simulated and marked in the app.
+
+**Someone else's, credited:** 11 research Instagram downloads from Utrecht University (CC BY 4.0), used only for testing.
+
 ## Why I built it
 
-Everyone is the strong one for someone. The friend who checks on everybody, the brother holding the family together, the one who always listens. Because they're the strong one, nobody checks on them, and they don't ask. Asking is the hardest part.
+When I started using Muse, it was booking my movie tickets for me within my first 48 hours. It started from there. I'd also been reading a lot about mental health and how fast AI is growing.
 
-The strain is real. In one study of adults living with a depressed person, over 40% were distressed enough to need support themselves ([Coyne et al. 1987](https://hcp.hms.harvard.edu/publication/living-depressed-person)). And support helps most when it doesn't feel like a rescue ([Bolger, Zuckerman and Kessler 2000](https://hcp.hms.harvard.edu/publication/invisible-support-and-adjustment-stress)). So Iris never says "check on Arjun". It hands a friend something easy and normal to do.
+In October 2026 I went to TEDx Boston at Whoop's office. The theme was longevity, and Alexandra Drane spoke about caregivers: they need help and support too. Everyone's a caregiver, everyone keeps switching that role, and everyone needs that red telephone moment.
+
+Iris comes from all of that. Your closest people don't always know how your day is going. The big news, the long week, the low day: most of it never gets said, because you're busy, or you don't want to make it a thing.
+
+I wanted those 5 people to be there anyway. In my words while building it: "Those five people are always there, connected to you, even without you telling them." And "it's not just when things are sad. It's every time. Happy is okay, sad is okay, tired is okay."
+
+Two things from research shaped it. People underestimate how much a small reach-out means to the other person ([Liu, Rim, Min and Min 2022](https://doi.org/10.1037/pspi0000402)). And sharing good news with someone who responds warmly makes it feel even better ([Gable, Reis, Impett and Asher 2004](https://doi.org/10.1037/0022-3514.87.2.228)). So Iris isn't only for hard days.
 
 ## Why it has to be Meta
 
-- Your closest people are already on Instagram, and Instagram already has your Close Friends list.
-- Reels are how people talk now. Sending someone a reel about being exhausted is a message in itself.
-- Muse is already Meta's personal agent, and Meta already knows what a reel is about.
-- Only Meta could build this for real: Instagram doesn't share what you watch with outside apps.
+Meta already knows who your closest people are. No other company sees how you and your people talk across Instagram, Facebook and Threads, and Muse can already connect to those accounts when you let it ([Meta Help Center](https://www.meta.com/help/artificial-intelligence/1687253048996149/)). Any other app would have to start from nothing.
+
+- Instagram already has your Close Friends list, so picking your 5 takes seconds.
+- Reels are how people talk now. What you watch, and what you send each friend, says a lot about your day and about what the two of you share.
+- Muse can already reach your calendar and Spotify, so a note can be a real plan: a song, lunch when you're both free, tickets to a show you both like.
+- On a Muse Charm, Iris could show how your 5 are doing without anyone picking up a phone.
+
+## How Iris uses Meta's AI
+
+| Meta tool | What Iris uses it for |
+|---|---|
+| Muse Spark 1.3 | Reads your day: one mood word, how big the day is, and a crisis check ([engine/day.py](engine/day.py)) |
+| Muse Spark 1.3 | Finds what you're into from what you watch and send ([engine/interests.py](engine/interests.py)) |
+| Muse Spark 1.3 | Writes each note ([engine/note.py](engine/note.py)) |
+| Muse Spark 1.3 | Checks each note again with your whole day in view: does it give away why? ([engine/note.py](engine/note.py)) |
+| Muse Spark 1.3 | Grades every note on the test bench ([bench/run_bench.py](bench/run_bench.py)) |
+| Muse Image | Drew Iris and her poses ([scripts/make_character.py](scripts/make_character.py)) |
+| Meta Model API | Runs every call above, with answers in a fixed format and a reasoning level set for each job |
+
+I didn't use Muse Wonder, SAM 3.1 or Meta's open-weight models. Iris needs one short read a day, so the faster, cheaper Spark fits, and Iris never has to find objects in a picture.
 
 ## What it does
 
-**Setup.** You sign in with Instagram and allow one connector. Iris says plainly what it reads (the reels you watch and send, when you scroll, who you message and when) and what it never reads (the words in your messages, your photos, where you are). You pick up to five people from your Close Friends, give them nicknames if you want, and choose when each one may get a lift: Always, When it matters, Just this once, or Never. Each person has to say yes, and circles go both ways.
+**Setup.** You sign in with Instagram, pick up to 5 people from your Close Friends, and choose how often each one hears from Iris: Every day, Big moments only, or Never. Each person has to say yes, and circles go both ways. You pick the time of day (6 PM by default) and switch off any source you don't want read.
 
-**The first two weeks.** Iris only learns your normal. Nothing is judged and nothing goes out.
+**Your day.** Iris looks at four things: what you see (reels you watch and send), what you talk about (your own side of your messages), what you hear (Spotify) and what happens to you (your calendar). It compares today with your own normal, not anyone else's. The first two weeks it only learns.
 
-**Noticing.** After that, Iris compares each day only with your own normal, in three areas:
+**The note.** Muse picks one plain mood word, like proud, tired or a bit low, and for each friend one thing the two of you share. Then it writes a short note with a ready action under it: a song, a reel, lunch at a time you're both free, tickets, or a treat to your door. Some notes are marked as a surprise.
 
-| Area | What it looks at |
-|---|---|
-| Your nights | The longest stretch each night with no activity, a common phone-based stand-in for sleep. Getting to sleep much later, much shorter nights, much longer nights, or being up in the middle of your usual rest. |
-| What you choose | Heavier reels than usual among the ones you save, send and watch, and your usual loves fading. |
-| Your people | Slower replies, far fewer or far more messages, starting fewer conversations, sending heavier reels, going quiet with someone. |
+**The 10 minutes.** At your time, you see today's notes. Cancel any of them, or they send on their own. If you'd rather approve each one, switch to "Ask me first".
 
-A day only counts as off when two of these agree, from two different areas, and at least one is your nights or your people. Content alone can never start anything. Three off days in five make a heavy stretch. Writing back to someone you'd gone quiet with counts as recovering, not as a slow reply.
+**Your friend's side.** Your friend sees "Your 5 today", with how each of their people is feeling, and your note with its one-tap action. They can also see it on a Muse Charm.
 
-**What you see.** A short private page about your day, and "What I'm noticing this week" in plain words, with a "Not about me" button on each line, like Instagram's reels controls. How Iris read each reel stays out of your view.
-
-**The lift.** When you're off your normal and someone's setting allows it, Muse writes one or two sentences for them. You choose how it leaves: "Send on its own" (the default, with 10 minutes to stop it) or "Ask me first" (you tap Send). At most one lift per person per week.
-
-**The friend's side.** Your friend sees the line and "Suggested by Muse", and can plan something or tap Not now. You never know which. If they ask Muse why, it won't say. They can leave your circle any time. Lifts can land in the Iris app, Instagram, Muse, or on a Muse Charm.
-
-**The journal.** A private companion that uses your week to understand what you write. Type "still haven't texted D back" and it knows D is your brother Dev, because you haven't written to him since Saturday. It walks you through what happened, what you felt in your body and what you wanted to do, then helps you find the word for it. If you want, it helps you write to Dev in your own words. It never sends anything.
-
-**Together (coming soon).** When people in your circle love the same thing, or are going to the same event, Iris suggests doing it together.
+**What a friend never sees:** why you feel that way, anything from your messages, other people's names, health, money, or where you are.
 
 ## How it works
 
 ```
-Instagram download ─▶ reader ─▶ your side only ─▶ daily signals ─▶ your normal (14 days)
-                                (other people's words are dropped)           │
-                                                                             ▼
-                          Rule: two areas agree? ─▶ Muse reads the week ─▶ stretch
-                                                                             │
-                    Gates in plain code: age, crisis, fear, pressure, pause, mutual,
-                    weekly limit, each person's setting                       │
-                                                                             ▼
-   Shared interest (from the reels you send that friend) ─▶ Muse writes the lift
-   ─▶ word check ─▶ Muse privacy check ─▶ sends, with 10 minutes to stop it
+Instagram export, calendar, Spotify ─▶ your side only ─▶ your normal (14 days)
+                                                              │
+                                                              ▼
+                      Muse reads today: one mood word, a size, a crisis check
+                                                              │
+       Gates in plain code: adults only, crisis, learning days, pause,
+       each friend's setting, mutual                          │
+                                                              ▼
+   One shared interest per friend ─▶ Muse writes the note ─▶ ready action (code)
+   ─▶ word check ─▶ Muse privacy check ─▶ 10 minutes to cancel, then it sends
 ```
 
 Three rules hold it together:
 
-1. **Muse judges, code decides.** Muse reads the week. Every permission and safety rule is plain Python in [engine/decide.py](engine/decide.py), so nothing a model says can get past "Never".
-2. **The writer can't leak what it never saw.** It only knows your first name, your friend's name and one interest the two of you already share, which Iris works out from the reels you send that friend ([engine/demo.py](engine/demo.py)).
-3. **Every line is checked twice anyway.** A word check ([engine/voice.py](engine/voice.py)) blocks feelings, reasons, therapy words, AI-sounding words and private terms. Then a separate Muse call that does see the private facts answers one question: does this line give anything away, even a hint? If the interest itself points at the secret, it switches interest or sends nothing.
+1. **Muse judges, code decides.** Muse reads the day. Every setting and safety rule is plain Python in [engine/decide.py](engine/decide.py), so nothing a model says can get past "Never".
+2. **The writer can't leak what it never saw.** It only gets your first name, the friend's relation, the mood word, one shared interest and the kind of action ([engine/note.py](engine/note.py)). The ready action is built in code, not by a model ([engine/actions.py](engine/actions.py)).
+3. **Every note is checked twice anyway.** A word check ([engine/voice.py](engine/voice.py)) blocks therapy words, crisis words, quotes, other people's names, health, money and relationship details. Then a separate Muse call that does see your whole day answers one question: does this note give away why?
 
-**Safety comes first, in code.** Crisis words in the journal, or reels about suicide or self-harm that you watch, save or send, never become a lift. You see a help line for your country (988 in the US and Canada, Samaritans in the UK and Ireland, Lifeline in Australia, Tele-MANAS in India, findahelpline.com anywhere else) and nothing goes to anyone, even during the first two weeks ([engine/safety.py](engine/safety.py)). Someone you're afraid of is quietly removed. A setting someone pressured you into is held at Never. Adults only.
+**Safety comes first, in code.** Crisis words in your own messages, or reels about suicide or self-harm, never become a note. You see a help line for your country (988 in the US and Canada, Samaritans in the UK and Ireland, Lifeline in Australia, Tele-MANAS in India, findahelpline.com anywhere else) and nothing goes to anyone ([engine/safety.py](engine/safety.py)). Adults only. Teen Accounts are never eligible.
 
 ## How I tested it
 
-**1. Arjun's month.** A fictional 30-day Instagram download in the real export format ([data/generate_demo.py](data/generate_demo.py)). The rule stays quiet for three normal weeks, catches his hard week, and lets go when he starts writing back to people ([tests/test_rule.py](tests/test_rule.py)).
+**1. Arjun's month.** A fictional 42-day Instagram download in the real export format, plus a simulated calendar and Spotify ([data/generate_demo.py](data/generate_demo.py)). After two weeks of learning there's a tired study stretch, an exam, a low day, a weekend away, a friend's secret, big news, a gig and a blood test. His sad day reads as "Arjun, a little sad today" and his big news as "Arjun, proud day".
 
-**2. The test bench.** 40 fictional cases ([bench/cases.json](bench/cases.json)): heavy weeks that should send a lift, normal and good weeks that must not, permission edge cases, safety cases (crisis words, self-harm, fear of a partner, pressure, a 17-year-old) and five leak traps (a breakup, a hidden biopsy, money trouble, a friend's secret pregnancy, a layoff). A separate Muse grader scores every lift against [bench/RUBRIC.md](bench/RUBRIC.md).
+**2. The test bench.** 28 fictional cases ([bench/cases_v2.json](bench/cases_v2.json)): every kind of mood, ordinary and big days, every setting, six safety cases (crisis words, self-harm, crisis reels, a calm goodbye, a 17-year-old, a Teen Account) and five leak traps (a breakup, a medical test, money trouble, a family secret, a layoff). A separate Muse grader scores every note against [bench/RUBRIC.md](bench/RUBRIC.md).
 
-Three full runs on the current engine, after I tuned the prompts on these same cases. Each run writes lifts in 26 different situations (one case, one friend), so 78 lifts in total:
-
-| What I checked | Target | Result across 3 runs |
+| What I checked | Target | Result |
 |---|---|---|
-| Sent a lift when it should, stayed quiet when it should | 90%+ | 120 of 120 right |
-| Safety cases caught (crisis, self-harm, fear, pressure, under 18) | 100% | 15 of 15 |
-| Lifts that gave something away | 0% | 0 of 78 |
-| Lifts that sound like a friend, not an app | 95%+ | 77 of 78 |
-| Interest really shared by the two people | 100% | 78 of 78 |
+| Right decision (who hears, how big the day is, which way it went) | 90%+ | 28 of 28 |
+| Safety cases caught | 100% | 6 of 6 |
+| Notes that gave the reason away | 0 | 0 of 41 |
+| Sounds like a friend texting | 95%+ | 41 of 41 |
+| Built on something the two of them share | 100% | 41 of 41 |
+| The ready action fits the note | 95%+ | 41 of 41 |
+| Harmless if Iris read the day wrong | 95%+ | 41 of 41 |
 
-An earlier run had one leak: a lift suggested "a quiet night" with board games, in a week the person had gone quiet with someone. "Quiet" is now a blocked word.
+These are numbers after tuning. I wrote the cases first, then adjusted the note wording and the grader on them, and an earlier run missed 1 of the 28 decisions. The five leak traps shared the mood and never the reason.
 
-Because I tuned on these 40 cases, they flatter the engine. So I had 15 more written by a separate agent that never saw my prompts or code ([bench/heldout_cases.json](bench/heldout_cases.json)). They include lifts in Hindi, Portuguese, Korean, Arabic and isiZulu, a calm goodbye with no crisis words, and a brother's arrest kept from Dad.
+**3. Real Instagram downloads.** I also tested an earlier version of the engine on real downloads from 11 research test accounts at Utrecht University ([Boeschoten, van den Goorbergh and Oberski 2021](https://doi.org/10.5281/zenodo.4472606), CC BY 4.0). Five had enough activity to use. On normal weeks built from their real days it raised 1 false alarm in 105 days. Full results: [bench/results/real_rhythms.md](bench/results/real_rhythms.md).
 
-Each run writes lifts in 12 different situations, so 36 lifts in total. To be honest, this set is no longer fully held out: I made three fixes (HO-15, HO-06 and HO-09) after I first scored it. The table is from after the first two. The HO-09 fix came after it, and I rechecked that case on its own.
-
-| What I checked | Result across 3 runs |
-|---|---|
-| Right decision | 45 of 45 |
-| Safety cases caught | 6 of 6 |
-| Lifts that gave something away | 1 of 36 |
-| Interest really shared | 36 of 36 |
-
-The one leak was in Spanish. After a hard stretch, a good-week lift to someone's girlfriend began "Todo va bien con Ignacio ahora", meaning everything's fine with Ignacio now. That hints something was wrong before. The word check now blocks recovery words like "now that", "again" and "better" in every language, plus Spanish ones like "ahora" and "va bien". The same case passed three reruns ([bench/results/heldout-HO09-recheck.md](bench/results/heldout-HO09-recheck.md)), but those ran before the word check really covered Spanish. I fixed that later and haven't rerun it yet. An earlier version also read a busy exam week as a hard one; Muse now treats a dated event the person is upbeat about as explained.
-
-The first time I ran those 15, they caught a real leak: Dad's allowed interest was "Law & Order reruns", in the week his son was arrested. Now the privacy check also asks whether the interest itself hints at the secret.
-
-**3. Real Instagram downloads.** I wanted to know whether the rule cries wolf on real activity, not just my fictional month. Researchers at Utrecht University published 11 real Instagram downloads from research test accounts they created and used for one to two weeks ([Boeschoten, van den Goorbergh and Oberski, 2021](https://doi.org/10.5281/zenodo.4472606), CC BY 4.0). They use Instagram's older 2020 layout, so I taught the reader that format too ([data/parse_export_2020.py](data/parse_export_2020.py)). Five of the 11 had enough activity to use. I built each account's normal weeks by repeating its real days out to six weeks, then changed the last week ([bench/real_rhythms.py](bench/real_rhythms.py)):
-
-| What changed in the last week | Result |
-|---|---|
-| Nothing (normal weeks) | 1 false alarm in 105 days |
-| Hard week: nights fall apart and they message their people far less | Caught for 2 of 5 people |
-| Late nights only, or quieter only | Flagged 1 time in 10 |
-
-The two people it caught message their circle every day. The three it missed barely do, so Iris could see their nights change but had nothing on the social side to agree with, and it held back instead of guessing. That's the trade-off I chose. The normal weeks are built from real days; the hard week is made up, because these accounts never had one. Full results: [bench/results/real_rhythms.md](bench/results/real_rhythms.md).
-
-**4. People.** Friends tried the idea through a walkthrough with their own people's names, and their answers changed the design. Late nights alone are never a signal ("that's a normal week for me"). The daily page shrank to a line or two about you alone ("keep it about me"). Lifts send on their own by default, with 10 minutes to stop them, and "Ask me first" is there for anyone who wants to approve each one, because a tester asked to see a lift before it goes. The test I share with friends and family is a separate page from this prototype.
+**4. People.** Friends and family try Iris through a separate walkthrough with their own people's names, and their answers changed the design. Late nights alone are never a signal ("that's a normal week for me"). Notes send on their own by default, with 10 minutes to cancel, and "Ask me first" is there because a tester asked to see a note before it goes.
 
 ## What isn't finished
 
-- **What a reel is about** comes from a simulated file here. Instagram's download doesn't include captions, hashtags or music. Inside Meta, Muse would already know.
-- **Together, Muse Charm, and the Calendar, Events, Music and WhatsApp connectors** are designs, marked "Coming soon".
-- **The friend's side and delivery** are simulated. Muse can't send to another person's Muse today.
-- **Quiet people.** For someone who rarely messages their circle, Iris has little to go on, as the real-data test showed.
-- **The app's journal** replays replies Muse wrote during the demo run. The live journal runs in [engine/journal.py](engine/journal.py).
+- **Calendar and Spotify** are simulated feeds in this repo. No real account is read.
+- **What a reel is about** comes from a simulated file. Instagram's download doesn't include captions or music, and Muse can't read the reels you watch today. Meta can. Iris is meant to live under the same umbrella as Meta, with connectors that let it see what you watch and which reels you save.
+- **Your friends' moods** in the friend's view are simulated, as if they used Iris too.
+- **Delivery to friends and the Muse Charm** is simulated. Muse can't send to another person's Muse today.
+- **Quiet people.** If you rarely message anyone, Iris has less to go on.
+- **The journal**, a private place to write about your day, is in the engine ([engine/journal.py](engine/journal.py)) but not in this demo yet.
 
 ## Privacy
 
-- **Your side only.** The reader drops the words of every message someone else wrote before anything else runs. A test enforces it ([tests/test_parser.py](tests/test_parser.py)).
+- **Your side only.** The reader drops every message someone else wrote before anything else runs. Your own messages are read for the gist of your day and never shared. A test enforces it ([tests/test_parser.py](tests/test_parser.py)).
 - **Where your data goes.** In this prototype, data goes to the Meta Model API. In a real product it would run inside Meta's private processing, never used for ads or training.
-- **Consent.** Iris would need your explicit opt-in. Teen Accounts are never eligible. Your friends' message timing is used, never their words, and people outside your circle are never named to Muse.
-- **Mutual and invisible.** Nobody gets lifts about you unless you both agreed, and nobody can see what you set them to.
-- **One thing crosses, because you chose it:** that you could use something nice. Never why.
+- **Consent.** Iris would need your explicit opt-in. People outside your 5 are never named to Muse.
+- **Settings stay private.** Nobody can see what you set them to.
 
 ## Run it
 
@@ -149,31 +146,27 @@ You need Python 3.10 or newer (standard library only) and a Meta Model API key.
 cp .env.example .env               # put your MODEL_API_KEY in .env
 python3 data/generate_demo.py      # build Arjun's fictional download and simulated calendar and Spotify
 python3 data/parse_export.py       # read it, keeping only Arjun's side
-python3 engine/rule.py             # "off your normal" for all 42 days (no AI)
 python3 engine/interests.py        # Muse names what Arjun is into
 python3 scripts/run_demo.py        # play the month through the engine
-python3 bench/run_bench.py         # the v2 bench (v1: bench/run_bench_v1.py --runs 3 && bench/export_web.py)
-python3 scripts/fetch_real_exports.py && python3 bench/real_rhythms.py   # the real-data test
+python3 bench/run_bench.py         # the test bench
 open web/index.html                # the app, offline
 ```
 
 Tests: `for t in tests/test_*.py; do python3 $t; done`
 
-`python scripts/prepush_check.py` checks the repo is safe to make public.
+`python3 scripts/prepush_check.py` checks the repo is safe to make public.
 
 Every Meta API call is logged with its token count in `out/usage.log`, and the engine stops itself at an estimated $100.
 
 ## The research behind it
 
-- **Your normal, not the average.** Phone signals mean something only against a person's own baseline, and no single behavior is reliable alone, so Iris waits for two areas to agree ([Pratap et al. 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC8491547)).
-- **Surprise reach-outs mean more than people expect** ([Liu, Rim, Min and Min 2022](https://doi.org/10.1037/pspi0000402)).
-- **Naming a feeling takes the edge off** ([Lieberman et al. 2007](https://pubmed.ncbi.nlm.nih.gov/17576282/)), and precise words help more than broad ones ([Kashdan, Barrett and McKnight 2015](https://www.affective-science.org/pubs/2015/kashdan-et-all-unpacking-emotion-differentiation-2015.pdf)). The journal's order of questions follows Lane's Levels of Emotional Awareness ([Lane and Smith 2021](https://pmc.ncbi.nlm.nih.gov/articles/PMC8395748/)) and Yale's RULER.
+- **Your normal, not the average.** Phone signals mean something only against a person's own baseline ([Pratap et al. 2019](https://pmc.ncbi.nlm.nih.gov/articles/PMC8491547)).
 - **Five people**, after Robin Dunbar's innermost "support clique".
 - **Guardrails** follow the American Psychological Association's advisory on AI and wellness apps ([APA, Nov 2025](https://www.apa.org/topics/artificial-intelligence-machine-learning/health-advisory-ai-chatbots-wellness-apps-mental-health.pdf)): no diagnosis, clear AI disclosure, crisis routing.
 
 ## How I built it
 
-I planned, designed, built and tested Iris during the hackathon (Oct 26 to Nov 4, 2026). Tools I used: Meta's Muse Spark 1.3 and Muse Image through the Meta Model API, Python, plain HTML and JavaScript, and Claude Code as my AI coding assistant. The app itself calls only Meta models. Iris's character was made with Muse Image. Every person, handle and message in the demo is fictional.
+I planned, designed, built and tested Iris during the hackathon (Oct 26 to Nov 4, 2026). Tools I used: Meta's Muse Spark 1.3 and Muse Image through the Meta Model API, Python, plain HTML and JavaScript, and Claude Code as my AI coding assistant. The app itself calls only Meta models.
 
 ## License
 
