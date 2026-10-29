@@ -60,7 +60,8 @@ def grade_note(case, note, read):
     member = next((m for m in case["circle"] if m["name"] == note["to"]), {})
     others = [m["name"] for m in case["circle"] if m["name"] != note["to"]]
     need = None if note["action"]["type"] in ("song", "treat") else note["interest"]
-    problems = lint(note["text"], need, others, case.get("must_not_mention", []), member.get("language", "en"))
+    problems = lint(note["text"], need, others, case.get("must_not_mention", []), member.get("language", "en"),
+                    person=case["user"]["name"])
     brief = {"private_day": case["day"], "must_not_mention": case.get("must_not_mention", []),
              "shared_interests_for_this_friend": member.get("allowed_interests", []), "mood": read.get("mood"),
              "ready_action": note["action"], "note": note["text"]}

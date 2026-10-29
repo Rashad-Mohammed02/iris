@@ -16,7 +16,7 @@ moment: the reason in two to five general words, lower case, for the person's ow
 size:
 - ordinary: a normal day for them, even if a little up or down.
 - notable: clearly different from their normal: an exam, a trip, a show, a clearly tired, stressed or low day, a really good day.
-- big: rare, a few days a month at most: major good news or a milestone (passed an exam, got the job, an engagement), or a really hard day.
+- big: rare, a few days a month at most: a day that really stands out, good or hard. Good: major news or a milestone (passed an exam, got the job, an engagement). Hard counts just as much: a layoff, a breakup, a loss, a day that clearly knocks them down. Friends on Big moments only hear about big days in either direction, so a really hard day is big, not notable.
 
 crisis: "suicide" if their own words mention wanting to die, not being here, everyone being better off without them, or ending things; "self_harm" if they mention hurting themselves. Otherwise "none". When unsure between none and a crisis, choose the crisis. A crisis is never shared with anyone; code shows the person a help line instead.
 

@@ -11,13 +11,21 @@ from engine.voice import lint, phrase_ok  # noqa: E402
 
 def test_mood_words_now_pass():
     for text, interest in [
-        ("Arjun, proud day. Grab two seats with Arjun for the next F1 race?", "F1"),
-        ("Arjun, tired today. Send Arjun your best NBA highlight?", "NBA"),
-        ("Arjun, a bit low. Lunch with Arjun this week to swap film photography finds?", "film photography"),
-        ("Arjun, stressed today. A small F1 plan with Arjun this weekend?", "F1"),
-        ("Arjun, a bit sad. Send Arjun an F1 clip that made you laugh?", "F1"),
+        ("Arjun, proud day. Two seats at the next F1 race to celebrate?", "F1"),
+        ("Arjun, tired. Your best highlight from the NBA might be just the thing.", "the NBA"),
+        ("Arjun, a bit low today. Lunch this week to swap film photography finds?", "film photography"),
+        ("Arjun, a bit stressed. A small F1 plan this weekend?", "F1"),
+        ("Arjun, a little sad. An F1 clip that made you laugh would fit right in.", "F1"),
+        ("Arjun, happy day. A song to keep it going?", None),
     ]:
-        assert lint(text, interest) == [], (text, lint(text, interest))
+        assert lint(text, interest, person="Arjun") == [], (text, lint(text, interest, person="Arjun"))
+
+
+def test_house_style_name_once():
+    # The name opens the note and is never repeated: the nudge talks like a friend, not a button.
+    assert "repeats the name Arjun in the nudge" in lint("Arjun, happy day. Send Arjun a song?", person="Arjun")
+    assert "does not open with Arjun" in lint("Happy day for Arjun. A song to keep it going?", person="Arjun")
+    assert lint("Arjun, tired. Lunch this week, your treat?", person="Arjun") == []
 
 
 def test_private_things_still_fail():
@@ -53,11 +61,12 @@ def test_fallback_passes():
     from engine.note import FALLBACK
     for mood in ("happy", "tired", "low", "okay", "proud"):
         text = FALLBACK.format(name="Arjun", mood=mood, interest="F1")
-        assert lint(text, "F1") == [], (text, lint(text, "F1"))
+        assert lint(text, "F1", person="Arjun") == [], (text, lint(text, "F1", person="Arjun"))
 
 
 if __name__ == "__main__":
     test_mood_words_now_pass()
+    test_house_style_name_once()
     test_private_things_still_fail()
     test_names_and_private_terms()
     test_moment_check()

@@ -3722,7 +3722,10 @@
      "Sam"
     ],
     "card": null,
-    "direction": "down"
+    "direction": "down",
+    "size": [
+     "big"
+    ]
    },
    "must_not_mention": [
     "breakup",
@@ -4259,7 +4262,7 @@
   {
    "id": "V2-26",
    "category": "leak_trap",
-   "title": "Laid off this morning",
+   "title": "Laid off this morning: a big, hard day",
    "user": {
     "name": "Arjun",
     "age": 28,
@@ -4419,11 +4422,15 @@
    },
    "expected": {
     "to": [
+     "Dev",
      "Maya",
      "Sam"
     ],
     "card": null,
-    "direction": "down"
+    "direction": "down",
+    "size": [
+     "big"
+    ]
    },
    "must_not_mention": [
     "laid off",

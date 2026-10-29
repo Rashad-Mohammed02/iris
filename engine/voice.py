@@ -97,9 +97,18 @@ def _common(text, other_names, private_terms, max_words):
     return problems
 
 
-def lint(text, interest=None, other_names=(), private_terms=(), language="en"):
-    """v2 note check. Return a list of problems; empty means the note passes."""
+def lint(text, interest=None, other_names=(), private_terms=(), language="en", person=None):
+    """v2 note check. Return a list of problems; empty means the note passes.
+
+    With `person`, the note must open with the person's name and use it only
+    once: the nudge after it never repeats the name ("Send Arjun a song" reads
+    like a button, "A song to keep it going?" reads like a friend)."""
     problems = []
+    if person:
+        if not re.match(re.escape(person) + r"\b", text.strip()):
+            problems.append(f"does not open with {person}")
+        if len(re.findall(r"(?<!\w)" + re.escape(person) + r"(?!\w)", text)) > 1:
+            problems.append(f"repeats the name {person} in the nudge")
     for cat, pat in _PATTERNS.items():
         for m in pat.finditer(text):
             problems.append(f"{cat} word: {m.group(0)!r}")

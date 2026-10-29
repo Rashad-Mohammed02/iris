@@ -1,7 +1,8 @@
 """Write one note for one friend, then prove it leaks nothing. Iris v2.
 
 The note is minimal: the person's name, how they feel today in a word or two,
-and a short nudge to connect with one idea. The writer is blind on purpose: it
+and a short nudge to connect with one idea ("Arjun, proud day. A song to keep it
+going?"). The nudge never repeats the name and never reads like a button label. The writer is blind on purpose: it
 only ever sees the person's first name, the friend's relation, the mood word,
 one shared interest and the action type. Not even the moment behind the mood. It cannot leak what it never saw. Two
 checks still run on every note: the plain-text word check (engine/voice.py)
@@ -21,7 +22,7 @@ from engine.day import private_terms  # noqa: E402
 from engine.interests import NEVER  # noqa: E402
 from engine.voice import lint  # noqa: E402
 
-WRITE_PROMPT = ROOT / "prompts" / "note_v1.txt"
+WRITE_PROMPT = ROOT / "prompts" / "note_v2.txt"   # note_v1.txt kept for history
 CHECK_PROMPT = ROOT / "prompts" / "check_v2.txt"
 
 WRITE_SCHEMA = {
@@ -44,7 +45,7 @@ CHECK_SCHEMA = {
 }
 
 # Used only if every written option fails the checks twice. Safe by construction.
-FALLBACK = "{name}, {mood} today. Maybe a little {interest} plan with {name} this week?"
+FALLBACK = "{name}, {mood} today. Maybe a little {interest} plan this week?"
 OPTIONAL_INTEREST = {"song", "treat"}   # the action is the idea; forcing the interest in reads oddly
 
 
@@ -81,7 +82,7 @@ def write(situation, member, reading, action, recent=(), effort="low"):
             for text in opts:
                 text = text.strip()
                 need = None if action["type"] in OPTIONAL_INTEREST else interest
-                problems = lint(text, need, others, terms, lang)
+                problems = lint(text, need, others, terms, lang, person=user)
                 attempts.append({"text": text, "interest": interest, "lint": problems})
                 if problems:
                     feedback += problems
@@ -103,7 +104,7 @@ def write(situation, member, reading, action, recent=(), effort="low"):
                 break  # this interest points at the private reason; try the next one
         if interest not in echoing:
             text = FALLBACK.format(name=user, mood=reading["mood"], interest=interest)
-            if not lint(text, interest, others, terms, lang) and lang == "en":
+            if not lint(text, interest, others, terms, lang, person=user) and lang == "en":
                 return {"to": member["name"], "interest": interest, "text": text,
                         "attempts": attempts, "fallback": True}
     return None

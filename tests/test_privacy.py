@@ -23,7 +23,7 @@ CANNED = {
     "day": {"mood": "tired", "moment": "a long week", "size": "big", "crisis": "none", "why": "x",
             "fits": [{"name": n, "interest": "F1", "action": "song", "surprise": False}
                      for n in ("Maya", "Sam", "Dev", "Omar", "Priya")]},
-    "note_write": {"options": ["Arjun, tired today. Send Arjun a song tonight?"]},
+    "note_write": {"options": ["Arjun, tired today. A song for tonight?"]},
     "note_check": {"leak": False, "harmless_if_wrong": True, "voice_ok": True, "interest_echoes": False, "reason": ""},
     "journal": {"reply": "Okay.", "step": "listen", "about": [], "about_chip": "", "connection": "", "chips": [],
                 "feeling_words": [], "tone": "unclear", "safety": "none"},
