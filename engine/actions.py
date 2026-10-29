@@ -43,7 +43,9 @@ def build(kind, person, friend, interest, direction, day, feeds, nearby=True):
     if kind == "reel":
         if not interest:
             return None
-        return {"type": "reel", "label": f"Send {person} a {interest} reel",
+        topic = interest[4:] if interest.lower().startswith("the ") else interest   # "the NBA" -> "an NBA reel"
+        spoken_vowel = topic[:1].lower() in "aeiou" or (topic[:2].isupper() and topic[:1] in "AEFHILMNORSX")
+        return {"type": "reel", "label": f"Send {person} {'an' if spoken_vowel else 'a'} {topic} reel",
                 "detail": "Iris lines up a few fresh ones. You pick one and send it."}
     if kind == "lunch":
         slot = feeds.free_lunch(friend, day) if feeds and nearby else None
