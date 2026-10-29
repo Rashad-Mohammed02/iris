@@ -63,8 +63,9 @@ def build(kind, person, friend, interest, direction, day, feeds, nearby=True):
         return {"type": "tickets", "label": f"Tickets: {e['title']}",
                 "detail": f"{_short(e['start'][:10])}. {seller} has seats for two.", "when": e["start"]}
     if kind == "treat":
-        return {"type": "treat", "label": f"Send {person} a small treat",
-                "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it."}
+        return {"type": "treat", "label": f"Check in on {person}",
+                "detail": f"Message {person}, or have Muse send something small, like ice cream or coffee. "
+                          "Muse orders it and fills in the address, so you never see it."}
     if kind == "message":
         return {"type": "message", "label": f"Message {person}", "detail": f"Opens your chat with {person}."}
     return None

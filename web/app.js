@@ -149,8 +149,8 @@ const chip = (t, cls) => el("span", { class: "chip-tag" + (cls ? " " + cls : "")
 const banner = (title, body) => el("div", { class: "banner" }, img(FACE), el("div", {}, el("div", { class: "bt" }, el("b", { text: "Iris" }), el("span", { text: "now" })), el("div", { class: "bb" }, el("b", { text: title + " " }), body || "")));
 const simLine = t => el("div", { class: "small", style: "display:flex;gap:6px;align-items:center" }, icon("info"), el("span", { text: t }));
 const sig = text => el("div", { class: "sig" }, img(FACE), el("span", { text: text || "Suggested by Muse." }));
-const ACT_BTN = { song: "Send the song", reel: "Pick a reel", lunch: "Book the table", tickets: "Get the two seats", treat: "Send the treat", message: "Open the chat" };
-const ACT_DONE = { song: "Song sent.", reel: "Reel sent.", lunch: "Table booked.", tickets: "Two seats booked.", treat: "Treat on its way.", message: "Chat opened." };
+const ACT_BTN = { song: "Send the song", reel: "Pick a reel", lunch: "Book the table", tickets: "Get the two seats", treat: "Message " + OWNER, message: "Open the chat" };
+const ACT_DONE = { song: "Song sent.", reel: "Reel sent.", lunch: "Table booked.", tickets: "Two seats booked.", treat: "Message sent.", message: "Chat opened." };
 const NEEDS_CONNECTOR = { lunch: "Calendar and Spotify are simulated here. The free hour comes from both simulated calendars.", tickets: "Calendar and Spotify are simulated here. The show comes from a simulated ticket list.", song: "Calendar and Spotify are simulated here. The song comes from a simulated Spotify history." };
 function actBox(n) {
   const a = n.action || {};
@@ -167,9 +167,11 @@ function friendNote(n, key) {
     el("p", { class: "quote", text: n.text }),
     actBox(n),
     a.surprise ? surpriseLine() : null,
-    done ? el("div", { class: "ok", text: done === "no" ? "Okay. " + OWNER + " won't know." : (ACT_DONE[a.type] || "Done.") + (a.surprise ? " " + OWNER + " won't know Iris suggested it." : "") })
+    done ? el("div", { class: "ok", text: done === "no" ? "Okay. " + OWNER + " won't know." : done === "muse" ? "Muse is ordering it. You never see the address." : (ACT_DONE[a.type] || "Done.") + (a.surprise ? " " + OWNER + " won't know Iris suggested it." : "") })
       : el("div", { class: "row" },
         el("button", { class: "pill blue", type: "button", onclick: () => { S.done[key] = "yes"; redraw(); } }, ACT_BTN[a.type] || "Do it"),
+        // A check-in can also hand off to Muse, which orders something small. Iris itself never orders or delivers.
+        a.type === "treat" ? el("button", { class: "pill", type: "button", onclick: () => { S.done[key] = "muse"; redraw(); } }, "Have Muse send something") : null,
         el("button", { class: "pill", type: "button", onclick: () => { S.done[key] = "no"; redraw(); } }, "Not now")),
     sig(n.signature));
 }
@@ -359,7 +361,7 @@ add({ ch: 1, bg: "app", title: TIRED.who + "'s phone", phone: TIRED.who, day: ()
   ];
 } });
 
-// A low day, then the treat on Maya's phone and her Charm
+// A low day, then the check-in on Maya's phone and her Charm
 add({ ch: 1, bg: "lilac", title: "A low day", phone: OWNER, day: () => LOW.day, render: () => {
   const d = LOW.day, low = d && (d.mood === "low" || d.mood === "sad");
   return [
@@ -377,7 +379,7 @@ add({ ch: 1, bg: "app", title: LOW.who + "'s phone and Charm", phone: LOW.who, d
     banner(OWNER + ":", firstSentence(n && n.text)),
     chip("On " + LOW.who + "'s phone"),
     friendNote(n, "low"),
-    t === "treat" ? el("div", { class: "small", text: "Iris fills in the address, so " + LOW.who + " never sees it." }) : null,
+    t === "treat" ? simLine("Concept: Muse ordering a treat is simulated here. Muse fills in the address, so " + LOW.who + " never sees it.") : null,
     NEEDS_CONNECTOR[t] ? simLine(NEEDS_CONNECTOR[t]) : null,
     el("div", { class: "who", style: "margin-top:4px", text: "The same note on " + LOW.who + "'s Muse Charm" }),
     el("div", { class: "charm" }, el("div", { class: "cbody" }), el("span", { class: "cam" }), el("div", { class: "cord", html: CORD }),

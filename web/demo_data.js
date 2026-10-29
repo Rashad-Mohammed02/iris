@@ -5356,8 +5356,8 @@ window.DEMO = {
      "interest": "F1",
      "action": {
       "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "label": "Check in on Arjun",
+      "detail": "Message Arjun, or have Muse send something small, like ice cream or coffee. Muse orders it and fills in the address, so you never see it.",
       "surprise": true,
       "suggested": "treat"
      },
@@ -5770,8 +5770,8 @@ window.DEMO = {
      "interest": "F1",
      "action": {
       "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "label": "Check in on Arjun",
+      "detail": "Message Arjun, or have Muse send something small, like ice cream or coffee. Muse orders it and fills in the address, so you never see it.",
       "surprise": true,
       "suggested": "treat"
      },
@@ -6210,8 +6210,8 @@ window.DEMO = {
      "interest": "F1",
      "action": {
       "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "label": "Check in on Arjun",
+      "detail": "Message Arjun, or have Muse send something small, like ice cream or coffee. Muse orders it and fills in the address, so you never see it.",
       "surprise": true,
       "suggested": "treat"
      },
@@ -6235,8 +6235,8 @@ window.DEMO = {
      "interest": "F1",
      "action": {
       "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "label": "Check in on Arjun",
+      "detail": "Message Arjun, or have Muse send something small, like ice cream or coffee. Muse orders it and fills in the address, so you never see it.",
       "surprise": true,
       "suggested": "lunch"
      },
@@ -7102,8 +7102,8 @@ window.DEMO = {
      "interest": "F1",
      "action": {
       "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "label": "Check in on Arjun",
+      "detail": "Message Arjun, or have Muse send something small, like ice cream or coffee. Muse orders it and fills in the address, so you never see it.",
       "surprise": true,
       "suggested": "treat"
      },
@@ -7546,8 +7546,8 @@ window.DEMO = {
      "interest": "F1",
      "action": {
       "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "label": "Check in on Arjun",
+      "detail": "Message Arjun, or have Muse send something small, like ice cream or coffee. Muse orders it and fills in the address, so you never see it.",
       "surprise": true,
       "suggested": "treat"
      },
@@ -7985,8 +7985,8 @@ window.DEMO = {
      "interest": "F1",
      "action": {
       "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "label": "Check in on Arjun",
+      "detail": "Message Arjun, or have Muse send something small, like ice cream or coffee. Muse orders it and fills in the address, so you never see it.",
       "surprise": true,
       "suggested": "treat"
      },
@@ -12074,8 +12074,8 @@ window.DEMO = {
      "interest": "the NBA",
      "action": {
       "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "label": "Check in on Arjun",
+      "detail": "Message Arjun, or have Muse send something small, like ice cream or coffee. Muse orders it and fills in the address, so you never see it.",
       "surprise": true,
       "suggested": "treat"
      },

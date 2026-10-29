@@ -71,7 +71,7 @@ I didn't use Muse Wonder, SAM 3.1 or Meta's open-weight models. Iris needs one s
 
 **Your day.** Iris looks at four things: what you see (reels you watch and send), what you talk about (your own side of your messages), what you hear (Spotify) and what happens to you (your calendar). It compares today with your own normal, not anyone else's. The first two weeks it only learns.
 
-**The note.** Muse picks one plain mood word, like proud, tired or a bit low, and for each friend one thing the two of you share. Then it writes a short note with a ready action under it: a song, a reel, lunch at a time you're both free, tickets, or a treat to your door. Some notes are marked as a surprise.
+**The note.** Muse picks one plain mood word, like proud, tired or a bit low, and for each friend one thing the two of you share. Then it writes a short note with a ready action under it: a song, a reel, lunch at a time you're both free, tickets, or a check-in, with Muse ready to send something small for you. Some notes are marked as a surprise.
 
 **The 10 minutes.** At your time, you see today's notes. Cancel any of them, or they send on their own. If you'd rather approve each one, switch to "Ask me first".
 
@@ -130,6 +130,7 @@ These are numbers after tuning. I wrote the cases first, then adjusted the note 
 - **What a reel is about** comes from a simulated file. Instagram's download doesn't include captions or music, and Muse can't read the reels you watch today. Meta can. Iris is meant to live under the same umbrella as Meta, with connectors that let it see what you watch and which reels you save.
 - **Your friends' moods** in the friend's view are simulated, as if they used Iris too.
 - **Delivery to friends and the Muse Charm** is simulated. Muse can't send to another person's Muse today.
+- **Muse ordering a treat** is simulated. No order is placed in this demo.
 - **Quiet people.** If you rarely message anyone, Iris has less to go on.
 
 ## Privacy
