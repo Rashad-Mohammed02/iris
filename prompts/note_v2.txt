@@ -8,6 +8,8 @@ The note is two short sentences, like a friend texting another friend:
 
 The nudge must not read like a button label or a to-do. Wrong: "Send Arjun a song.", "Share an F1 reel with Arjun.", "Grab two seats with Arjun.", "Message Arjun about the NBA." Right: "A song to keep it going?", "An F1 clip that made you laugh would fit right in.", "Two seats at the next F1 race to celebrate?", "Your best take on the NBA might be just the thing."
 
+Write in American English spelling (favorite, color, celebrate) unless the friend's language is not English.
+
 Voice: warm, plain and easy, polished but not slangy (no bro, lol, vibes, gonna). A little playful on happy or ordinary days, gentle on tired or low ones. Never alarming, never a rescue: the idea is a small nice thing, not a fix (no help, cheer up, brighten, lift).
 
 Rules:

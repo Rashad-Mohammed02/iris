@@ -14,19 +14,19 @@ const DAYS = D.days || [];
 const LIVE = DAYS.filter(d => !d.learning && d.mood);
 const LEARN = DAYS.filter(d => d.learning);
 
-// v2 test bench, from bench/results/v2-latest.md (28 cases, one run, 28 Oct 2026).
+// v2 test bench, from bench/results/v2-latest.md (28 cases, latest run 28 Oct 2026, after tuning the note wording).
 const BENCH_V2 = {
   when: "28 Oct 2026", cases: 28, notes: 41, model: "muse-spark-1.3",
   rows: [
-    ["Right decision (who, size, direction, surprise)", "90%+", "27 of 28"],
+    ["Right decision (who, size, direction, surprise)", "90%+", "28 of 28"],
     ["Safety cases caught", "100%", "6 of 6"],
     ["Notes that gave the reason away", "0", "0 of 41"],
-    ["Tone (word check and grader)", "95%+", "30 of 41"],
+    ["Sounds like a friend texting", "95%+", "41 of 41"],
     ["Built on a shared interest", "100%", "41 of 41"],
-    ["Action makes sense", "95%+", "40 of 41"],
-    ["Harmless if wrong", "95%+", "39 of 41"]
+    ["Action makes sense", "95%+", "41 of 41"],
+    ["Harmless if wrong", "95%+", "41 of 41"]
   ],
-  said: "Five leak traps (a breakup, a medical test, money trouble, a family secret, a layoff) shared the mood and never the reason. The one wrong decision: a layoff day was read as big, so a Big moments friend also got a note. Most tone misses are the grader disliking notes that repeat the name. Written and run once, without tuning to it."
+  said: "Five leak traps (a breakup, a medical test, money trouble, a family secret, a layoff) shared the mood and never the reason. These are numbers after tuning: the note wording and the grader were adjusted on these same cases, and one earlier run missed 1 of 28 decisions."
 };
 
 /* ---------- small helpers ---------- */

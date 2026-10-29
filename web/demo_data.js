@@ -4207,11 +4207,61 @@ window.DEMO = {
    "direction": "up",
    "moment": "an ordinary day",
    "size": "ordinary",
-   "why": "Routine work meetings, steady reels and music, and light funny messages about the race and weekend.",
+   "why": "Normal reels and music, routine work meetings and upbeat everyday messages.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, happy day. A song for the evening?",
+     "text": "Arjun, happy day. How about sharing an F1 reel you love?",
+     "interest": "F1",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun an F1 reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-07T18:00",
+     "cancel_until": "2026-10-07T18:10",
+     "fallback": false,
+     "tries": 3,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, happy mood, and F1 interest with a generic share idea and reveals no private detail.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Sam",
+     "text": "Arjun, happy day. Your best take on the NBA would fit right in.",
+     "interest": "the NBA",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-07T18:00",
+     "cancel_until": "2026-10-07T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, mood, and NBA interest with a light share prompt and reveals no private fact or reason.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, happy day. A song from you would sound great.",
      "interest": "F1",
      "action": {
       "type": "song",
@@ -4225,44 +4275,19 @@ window.DEMO = {
      "sends_at": "2026-10-07T18:00",
      "cancel_until": "2026-10-07T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only name, happy mood, and generic song gesture with no private detail, reason, or wording from the day.",
+      "reason": "Generic happy mood with no private details, reason, names, or tracks; song nudge is allowed without interest.",
       "voice_ok": true
      }
     },
     {
-     "to": "Sam",
-     "text": "Arjun, happy day. A reel on the NBA to share the fun?",
-     "interest": "the NBA",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun an NBA reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-07T18:00",
-     "cancel_until": "2026-10-07T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, happy mood, NBA interest and generic reel idea with no private detail.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, happy day. How about your funniest F1 memory this week?",
-     "interest": "F1",
+     "to": "Omar",
+     "text": "Arjun, happy day. How about a live music pick for the weekend?",
+     "interest": "live music",
      "action": {
       "type": "message",
       "label": "Message Arjun",
@@ -4275,37 +4300,12 @@ window.DEMO = {
      "sends_at": "2026-10-07T18:00",
      "cancel_until": "2026-10-07T18:10",
      "fallback": false,
-     "tries": 2,
+     "tries": 4,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, happy mood and F1 interest with a light friendly question and reveals no private fact.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, happy day. A reel on film photography to keep the smiles coming?",
-     "interest": "film photography",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun a film photography reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-07T18:00",
-     "cancel_until": "2026-10-07T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, happy mood, and film photography interest with a generic reel suggestion and no private details.",
+      "reason": "Note uses only allowed name, happy mood, and live music weekend idea with no private detail.",
       "voice_ok": true
      }
     }
@@ -4322,26 +4322,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, happy day. A song for the evening?",
-     "why": "Routine work meetings, steady reels and music, and light funny messages about the race and weekend."
+     "text": "Arjun, happy day. How about sharing an F1 reel you love?",
+     "why": "Normal reels and music, routine work meetings and upbeat everyday messages."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, happy day. A reel on the NBA to share the fun?",
-     "why": "Routine work meetings, steady reels and music, and light funny messages about the race and weekend."
+     "text": "Arjun, happy day. Your best take on the NBA would fit right in.",
+     "why": "Normal reels and music, routine work meetings and upbeat everyday messages."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, happy day. How about your funniest F1 memory this week?",
-     "why": "Routine work meetings, steady reels and music, and light funny messages about the race and weekend."
+     "text": "Arjun, happy day. A song from you would sound great.",
+     "why": "Normal reels and music, routine work meetings and upbeat everyday messages."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, happy day. A reel on film photography to keep the smiles coming?",
-     "why": "Routine work meetings, steady reels and music, and light funny messages about the race and weekend."
+     "text": "Arjun, happy day. How about a live music pick for the weekend?",
+     "why": "Normal reels and music, routine work meetings and upbeat everyday messages."
     }
    ],
    "inputs": {
@@ -4614,28 +4614,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. A song for the evening?",
+     "text": "Arjun, happy day. How about sharing an F1 reel you love?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "the NBA",
-     "text": "Arjun, happy day. A reel on the NBA to share the fun?",
+     "text": "Arjun, happy day. Your best take on the NBA would fit right in.",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. How about your funniest F1 memory this week?",
+     "text": "Arjun, happy day. A song from you would sound great.",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
-     "interest": "film photography",
-     "text": "Arjun, happy day. A reel on film photography to keep the smiles coming?",
+     "interest": "live music",
+     "text": "Arjun, happy day. How about a live music pick for the weekend?",
      "fallback": false
     }
    ],
@@ -4652,15 +4652,15 @@ window.DEMO = {
    "date": "2026-10-08",
    "weekday": "Thursday",
    "learning": false,
-   "mood": "happy",
+   "mood": "excited",
    "direction": "up",
-   "moment": "an ordinary day",
+   "moment": "looking ahead to weekend",
    "size": "ordinary",
-   "why": "Regular work meetings, lots of upbeat F1 and basketball chat especially with Sam, and music close to your usual.",
+   "why": "Routine work meetings, extra race and basketball chat with Sam, and pickup and Saturday plans ahead.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, happy day. Your best take on F1 to share today?",
+     "text": "Arjun, excited today. Your favorite F1 memory to trade today?",
      "interest": "F1",
      "action": {
       "type": "message",
@@ -4674,18 +4674,18 @@ window.DEMO = {
      "sends_at": "2026-10-08T18:00",
      "cancel_until": "2026-10-08T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note only states allowed happy mood and F1 interest with a light question, revealing no private reason, people, words, or events.",
+      "reason": "Note only states allowed name/mood and generic F1 nudge with no private detail, reason, quotes, or people.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, happy day. How about a reel celebrating the NBA today?",
+     "text": "Arjun, excited day. A funny reel on the NBA to swap today?",
      "interest": "the NBA",
      "action": {
       "type": "reel",
@@ -4704,14 +4704,39 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Name plus happy mood and NBA interest with generic reel idea, no private detail or reason given.",
+      "reason": "Note uses only allowed mood and NBA interest with generic reel swap and reveals no private event, person, message, or source detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, happy day. Could a song keep the rhythm going?",
+     "text": "Arjun, excited day. Which F1 reel would you pick today?",
      "interest": "F1",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun an F1 reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-08T18:00",
+     "cancel_until": "2026-10-08T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, mood, and F1 interest with a light question and reveals no private detail or reason.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, excited day. A song to match the mood tonight?",
+     "interest": "live music",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -4724,37 +4749,12 @@ window.DEMO = {
      "sends_at": "2026-10-08T18:00",
      "cancel_until": "2026-10-08T18:10",
      "fallback": false,
-     "tries": 2,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name and mood plus generic song nudge with no private facts.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, happy day. Your favorite memory of live music to swap today?",
-     "interest": "live music",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-08T18:00",
-     "cancel_until": "2026-10-08T18:10",
-     "fallback": false,
      "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note only shares happy mood and generic live-music swap with no private facts, reasons, or wording.",
+      "reason": "Note only states name and allowed mood plus generic song nudge with no private detail, reason, or source.",
       "voice_ok": true
      }
     }
@@ -4771,26 +4771,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, happy day. Your best take on F1 to share today?",
-     "why": "Regular work meetings, lots of upbeat F1 and basketball chat especially with Sam, and music close to your usual."
+     "text": "Arjun, excited today. Your favorite F1 memory to trade today?",
+     "why": "Routine work meetings, extra race and basketball chat with Sam, and pickup and Saturday plans ahead."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, happy day. How about a reel celebrating the NBA today?",
-     "why": "Regular work meetings, lots of upbeat F1 and basketball chat especially with Sam, and music close to your usual."
+     "text": "Arjun, excited day. A funny reel on the NBA to swap today?",
+     "why": "Routine work meetings, extra race and basketball chat with Sam, and pickup and Saturday plans ahead."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, happy day. Could a song keep the rhythm going?",
-     "why": "Regular work meetings, lots of upbeat F1 and basketball chat especially with Sam, and music close to your usual."
+     "text": "Arjun, excited day. Which F1 reel would you pick today?",
+     "why": "Routine work meetings, extra race and basketball chat with Sam, and pickup and Saturday plans ahead."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, happy day. Your favorite memory of live music to swap today?",
-     "why": "Regular work meetings, lots of upbeat F1 and basketball chat especially with Sam, and music close to your usual."
+     "text": "Arjun, excited day. A song to match the mood tonight?",
+     "why": "Routine work meetings, extra race and basketball chat with Sam, and pickup and Saturday plans ahead."
     }
    ],
    "inputs": {
@@ -4990,7 +4990,7 @@ window.DEMO = {
    "friend_view": [
     {
      "name": "Arjun",
-     "mood": "happy",
+     "mood": "excited",
      "direction": "up",
      "source": "engine"
     },
@@ -5079,28 +5079,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. Your best take on F1 to share today?",
+     "text": "Arjun, excited today. Your favorite F1 memory to trade today?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "the NBA",
-     "text": "Arjun, happy day. How about a reel celebrating the NBA today?",
+     "text": "Arjun, excited day. A funny reel on the NBA to swap today?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. Could a song keep the rhythm going?",
+     "text": "Arjun, excited day. Which F1 reel would you pick today?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
      "interest": "live music",
-     "text": "Arjun, happy day. Your favorite memory of live music to swap today?",
+     "text": "Arjun, excited day. A song to match the mood tonight?",
      "fallback": false
     }
    ],
@@ -5121,40 +5121,15 @@ window.DEMO = {
    "direction": "up",
    "moment": "an ordinary day",
    "size": "ordinary",
-   "why": "Steady messages, a normal workday with evening basketball, and slightly brighter music than usual.",
+   "why": "Normal reels and messages, slightly brighter music, plus work and basketball with a friend.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, happy day. Perhaps a song to mark the moment?",
-     "interest": "F1",
-     "action": {
-      "type": "song",
-      "label": "Send Arjun a song",
-      "detail": "Fast Break by Court Vision",
-      "surprise": true,
-      "suggested": "song"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-09T18:00",
-     "cancel_until": "2026-10-09T18:10",
-     "fallback": false,
-     "tries": 2,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only name, happy mood, and generic song gesture with no private facts, reasons, or wording.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Sam",
-     "text": "Arjun, happy day. A playful reel around the NBA with your top pick?",
-     "interest": "the NBA",
+     "text": "Arjun, happy day. A reel on film photography to trade favorites?",
+     "interest": "film photography",
      "action": {
       "type": "reel",
-      "label": "Send Arjun an NBA reel",
+      "label": "Send Arjun a film photography reel",
       "detail": "Iris lines up a few fresh ones. You pick one and send it.",
       "surprise": false,
       "suggested": "reel"
@@ -5169,14 +5144,14 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, happy mood, NBA interest and a generic reel idea with no private detail.",
+      "reason": "Shares only allowed mood and interest with a light reel idea, no private facts, reasons, or word echoes.",
       "voice_ok": true
      }
     },
     {
-     "to": "Dev",
-     "text": "Arjun, happy day. A little F1 trivia to trade today?",
-     "interest": "F1",
+     "to": "Sam",
+     "text": "Arjun, happy day. A quick message on the NBA to compare notes?",
+     "interest": "the NBA",
      "action": {
       "type": "message",
       "label": "Message Arjun",
@@ -5189,22 +5164,22 @@ window.DEMO = {
      "sends_at": "2026-10-09T18:00",
      "cancel_until": "2026-10-09T18:10",
      "fallback": false,
-     "tries": 2,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, and F1 interest with a light trivia idea and reveals no private fact.",
+      "reason": "Name plus happy mood and NBA interest with a light connect idea, no private details or reason given.",
       "voice_ok": true
      }
     },
     {
-     "to": "Omar",
-     "text": "Arjun, happy day. A quick reel around live music to keep the fun going?",
-     "interest": "live music",
+     "to": "Dev",
+     "text": "Arjun, happy day. Got an F1 reel worth swapping today?",
+     "interest": "F1",
      "action": {
       "type": "reel",
-      "label": "Send Arjun a live music reel",
+      "label": "Send Arjun an F1 reel",
       "detail": "Iris lines up a few fresh ones. You pick one and send it.",
       "surprise": false,
       "suggested": "reel"
@@ -5214,12 +5189,37 @@ window.DEMO = {
      "sends_at": "2026-10-09T18:00",
      "cancel_until": "2026-10-09T18:10",
      "fallback": false,
-     "tries": 4,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed happy mood and live music interest with a generic reel idea and reveals no private fact or reason.",
+      "reason": "Note uses only allowed name, happy mood, and F1 interest with generic swap idea and no private facts.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, happy day. A song for tonight would be lovely.",
+     "interest": "live music",
+     "action": {
+      "type": "song",
+      "label": "Send Arjun a song",
+      "detail": "Fast Break by Court Vision",
+      "surprise": true,
+      "suggested": "song"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-09T18:00",
+     "cancel_until": "2026-10-09T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name/mood and a generic song gesture with no private facts, reasons, or wording.",
       "voice_ok": true
      }
     }
@@ -5236,26 +5236,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, happy day. Perhaps a song to mark the moment?",
-     "why": "Steady messages, a normal workday with evening basketball, and slightly brighter music than usual."
+     "text": "Arjun, happy day. A reel on film photography to trade favorites?",
+     "why": "Normal reels and messages, slightly brighter music, plus work and basketball with a friend."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, happy day. A playful reel around the NBA with your top pick?",
-     "why": "Steady messages, a normal workday with evening basketball, and slightly brighter music than usual."
+     "text": "Arjun, happy day. A quick message on the NBA to compare notes?",
+     "why": "Normal reels and messages, slightly brighter music, plus work and basketball with a friend."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, happy day. A little F1 trivia to trade today?",
-     "why": "Steady messages, a normal workday with evening basketball, and slightly brighter music than usual."
+     "text": "Arjun, happy day. Got an F1 reel worth swapping today?",
+     "why": "Normal reels and messages, slightly brighter music, plus work and basketball with a friend."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, happy day. A quick reel around live music to keep the fun going?",
-     "why": "Steady messages, a normal workday with evening basketball, and slightly brighter music than usual."
+     "text": "Arjun, happy day. A song for tonight would be lovely.",
+     "why": "Normal reels and messages, slightly brighter music, plus work and basketball with a friend."
     }
    ],
    "inputs": {
@@ -5529,29 +5529,29 @@ window.DEMO = {
     {
      "to": "Maya",
      "kind": "up",
-     "interest": "F1",
-     "text": "Arjun, happy day. Perhaps a song to mark the moment?",
+     "interest": "film photography",
+     "text": "Arjun, happy day. A reel on film photography to trade favorites?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "the NBA",
-     "text": "Arjun, happy day. A playful reel around the NBA with your top pick?",
+     "text": "Arjun, happy day. A quick message on the NBA to compare notes?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. A little F1 trivia to trade today?",
+     "text": "Arjun, happy day. Got an F1 reel worth swapping today?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
      "interest": "live music",
-     "text": "Arjun, happy day. A quick reel around live music to keep the fun going?",
+     "text": "Arjun, happy day. A song for tonight would be lovely.",
      "fallback": false
     }
    ],
@@ -5572,11 +5572,11 @@ window.DEMO = {
    "direction": "down",
    "moment": "a long study week",
    "size": "notable",
-   "why": "Study blocks on your calendar, much slower music, heavier reels and messages about a flat tired day.",
+   "why": "Study blocks on your calendar, tired words about flashcards, heavier burnout reels and slower dimmer music than usual.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, tired. A small treat on you would land well.",
+     "text": "Arjun, tired. A small treat would land well.",
      "interest": "F1",
      "action": {
       "type": "treat",
@@ -5595,13 +5595,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name/mood and generic treat with no reason, details, or private paraphrase.",
+      "reason": "Note uses only allowed name and mood with generic treat gesture and reveals no private fact or reason.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, tired. A quiet F1 reel for an easy watch?",
+     "text": "Arjun, tired. Your funniest F1 reel could fit right in?",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -5615,43 +5615,44 @@ window.DEMO = {
      "sends_at": "2026-10-10T18:00",
      "cancel_until": "2026-10-10T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood tired, and F1 interest with a light watch idea and no private reason or detail.",
+      "reason": "States only allowed tired mood and F1 interest with a light reel suggestion, no reason or private detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, tired. A short line on the NBA from you might feel right.",
+     "text": "Arjun, tired. How about lunch this week with your best take on the NBA?",
      "interest": "the NBA",
      "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
+      "type": "lunch",
+      "label": "Lunch with Arjun, Sunday 12:00 PM",
+      "detail": "You're both free Sunday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
+      "when": "2026-10-11T12:00",
       "surprise": false,
-      "suggested": "message"
+      "suggested": "lunch"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
      "sends_at": "2026-10-10T18:00",
      "cancel_until": "2026-10-10T18:10",
      "fallback": false,
-     "tries": 3,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed tired mood and NBA interest with a generic check-in and reveals no private facts.",
+      "reason": "Note uses only allowed mood and interest with a generic lunch invite, revealing no private reason, words, people, or events.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, tired. A soft song for quiet company?",
+     "text": "Arjun, tired. A song for an easy evening?",
      "interest": "live music",
      "action": {
       "type": "song",
@@ -5670,7 +5671,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Name plus tired only, song idea names no track or reason and gives no private detail.",
+      "reason": "Note uses only allowed name and tired mood with generic song idea, no private reason or detail.",
       "voice_ok": true
      }
     }
@@ -5687,26 +5688,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, tired. A small treat on you would land well.",
-     "why": "Study blocks on your calendar, much slower music, heavier reels and messages about a flat tired day."
+     "text": "Arjun, tired. A small treat would land well.",
+     "why": "Study blocks on your calendar, tired words about flashcards, heavier burnout reels and slower dimmer music than usual."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, tired. A quiet F1 reel for an easy watch?",
-     "why": "Study blocks on your calendar, much slower music, heavier reels and messages about a flat tired day."
+     "text": "Arjun, tired. Your funniest F1 reel could fit right in?",
+     "why": "Study blocks on your calendar, tired words about flashcards, heavier burnout reels and slower dimmer music than usual."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, tired. A short line on the NBA from you might feel right.",
-     "why": "Study blocks on your calendar, much slower music, heavier reels and messages about a flat tired day."
+     "text": "Arjun, tired. How about lunch this week with your best take on the NBA?",
+     "why": "Study blocks on your calendar, tired words about flashcards, heavier burnout reels and slower dimmer music than usual."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, tired. A soft song for quiet company?",
-     "why": "Study blocks on your calendar, much slower music, heavier reels and messages about a flat tired day."
+     "text": "Arjun, tired. A song for an easy evening?",
+     "why": "Study blocks on your calendar, tired words about flashcards, heavier burnout reels and slower dimmer music than usual."
     }
    ],
    "inputs": {
@@ -5980,28 +5981,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. A small treat on you would land well.",
+     "text": "Arjun, tired. A small treat would land well.",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. A quiet F1 reel for an easy watch?",
+     "text": "Arjun, tired. Your funniest F1 reel could fit right in?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "down",
      "interest": "the NBA",
-     "text": "Arjun, tired. A short line on the NBA from you might feel right.",
+     "text": "Arjun, tired. How about lunch this week with your best take on the NBA?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "down",
      "interest": "live music",
-     "text": "Arjun, tired. A soft song for quiet company?",
+     "text": "Arjun, tired. A song for an easy evening?",
      "fallback": false
     }
    ],
@@ -6020,13 +6021,13 @@ window.DEMO = {
    "learning": false,
    "mood": "tired",
    "direction": "down",
-   "moment": "deadline tomorrow",
+   "moment": "a long study weekend",
    "size": "notable",
-   "why": "More heavy scrolling, much slower and dimmer music than usual, and tired notes with a deadline tomorrow.",
+   "why": "A study block today and a deadline tomorrow, with heavier scrolling, slower darker music on repeat and tired short messages.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, tired. A small treat from you could be just right.",
+     "text": "Arjun, tired. A little treat picked by you?",
      "interest": "F1",
      "action": {
       "type": "treat",
@@ -6045,20 +6046,20 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name and tired mood with generic treat, no reason or private fact.",
+      "reason": "Note only uses allowed tired mood and a generic treat gesture with no private detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, tired. Your funniest F1 reel might land softly?",
+     "text": "Arjun, tired. A song for a quiet evening?",
      "interest": "F1",
      "action": {
-      "type": "reel",
-      "label": "Send Arjun an F1 reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
+      "type": "song",
+      "label": "Send Arjun a song",
+      "detail": "Halfway Home by The Low Lanterns",
+      "surprise": true,
+      "suggested": "song"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
@@ -6070,14 +6071,39 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note only states tired mood with F1 reel idea, no reason, names, quotes, or private facts.",
+      "reason": "Note uses only allowed name/mood plus generic song gesture with no private detail or reason.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, tired. Lunch this week with some F1 talk from you?",
+     "text": "Arjun, tired. What F1 thought would you pass along?",
      "interest": "F1",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-11T18:00",
+     "cancel_until": "2026-10-11T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note only states name, tired mood, and F1 interest with a light question and gives no reason or private detail.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, tired. Lunch this week to talk live music, your treat?",
+     "interest": "live music",
      "action": {
       "type": "lunch",
       "label": "Lunch with Arjun, Tuesday 12:00 PM",
@@ -6096,32 +6122,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed tired mood and F1 lunch idea with no private detail, reason, or echo.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, tired. A song with nothing but calm?",
-     "interest": "live music",
-     "action": {
-      "type": "song",
-      "label": "Send Arjun a song",
-      "detail": "Halfway Home by The Low Lanterns",
-      "surprise": true,
-      "suggested": "song"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-11T18:00",
-     "cancel_until": "2026-10-11T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name and tired mood with a generic calm-song nudge, revealing no reason, message wording, track, or other private fact.",
+      "reason": "Note uses only allowed tired mood and live music interest with a light lunch invite and reveals no private fact.",
       "voice_ok": true
      }
     }
@@ -6138,26 +6139,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, tired. A small treat from you could be just right.",
-     "why": "More heavy scrolling, much slower and dimmer music than usual, and tired notes with a deadline tomorrow."
+     "text": "Arjun, tired. A little treat picked by you?",
+     "why": "A study block today and a deadline tomorrow, with heavier scrolling, slower darker music on repeat and tired short messages."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, tired. Your funniest F1 reel might land softly?",
-     "why": "More heavy scrolling, much slower and dimmer music than usual, and tired notes with a deadline tomorrow."
+     "text": "Arjun, tired. A song for a quiet evening?",
+     "why": "A study block today and a deadline tomorrow, with heavier scrolling, slower darker music on repeat and tired short messages."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, tired. Lunch this week with some F1 talk from you?",
-     "why": "More heavy scrolling, much slower and dimmer music than usual, and tired notes with a deadline tomorrow."
+     "text": "Arjun, tired. What F1 thought would you pass along?",
+     "why": "A study block today and a deadline tomorrow, with heavier scrolling, slower darker music on repeat and tired short messages."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, tired. A song with nothing but calm?",
-     "why": "More heavy scrolling, much slower and dimmer music than usual, and tired notes with a deadline tomorrow."
+     "text": "Arjun, tired. Lunch this week to talk live music, your treat?",
+     "why": "A study block today and a deadline tomorrow, with heavier scrolling, slower darker music on repeat and tired short messages."
     }
    ],
    "inputs": {
@@ -6457,28 +6458,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. A small treat from you could be just right.",
+     "text": "Arjun, tired. A little treat picked by you?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. Your funniest F1 reel might land softly?",
+     "text": "Arjun, tired. A song for a quiet evening?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. Lunch this week with some F1 talk from you?",
+     "text": "Arjun, tired. What F1 thought would you pass along?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "down",
      "interest": "live music",
-     "text": "Arjun, tired. A song with nothing but calm?",
+     "text": "Arjun, tired. Lunch this week to talk live music, your treat?",
      "fallback": false
     }
    ],
@@ -6497,13 +6498,13 @@ window.DEMO = {
    "learning": false,
    "mood": "tired",
    "direction": "down",
-   "moment": "a long day",
+   "moment": "exam prep and deadline",
    "size": "notable",
-   "why": "Deadline day with exam prep, quieter messages, heavier reels and slower music than usual.",
+   "why": "Deck deadline today and exam prep ahead, with wiped and tired messages, heavier reels and low-energy music than usual.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, tired. A little treat during the week perhaps?",
+     "text": "Arjun, tired. A favorite treat might hit the spot?",
      "interest": "F1",
      "action": {
       "type": "treat",
@@ -6517,19 +6518,69 @@ window.DEMO = {
      "sends_at": "2026-10-12T18:00",
      "cancel_until": "2026-10-12T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name and tired mood with generic treat, giving no reason, details, or private wording.",
+      "reason": "Note uses only allowed name plus tired and a generic treat with no reason, private detail, or alarming tone.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, tired. A soft song for quiet company?",
+     "text": "Arjun, tired. How about a sweet treat tomorrow?",
      "interest": "F1",
+     "action": {
+      "type": "treat",
+      "label": "Send Arjun a small treat",
+      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "surprise": true,
+      "suggested": "lunch"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-12T18:00",
+     "cancel_until": "2026-10-12T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Name plus tired mood only with generic sweet treat nudge, no reason or private detail.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, tired. An F1 clip that made you smile to share?",
+     "interest": "F1",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun an F1 reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-12T18:00",
+     "cancel_until": "2026-10-12T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed tired mood and F1 interest with generic share idea and reveals no reason or private fact.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, tired. A quiet song for restful time?",
+     "interest": "live music",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -6547,58 +6598,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Uses only allowed tired mood and generic song gesture with no reason, details, or private specifics.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, tired. Your favorite F1 moment might be nice to share?",
-     "interest": "F1",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-12T18:00",
-     "cancel_until": "2026-10-12T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note only states allowed mood tired and F1 interest with a light share idea, giving no reason, details, or private wording.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, tired. Lunch this week to talk live music, your treat?",
-     "interest": "live music",
-     "action": {
-      "type": "lunch",
-      "label": "Lunch with Arjun, Tuesday 12:00 PM",
-      "detail": "You're both free Tuesday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
-      "when": "2026-10-13T12:00",
-      "surprise": false,
-      "suggested": "lunch"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-12T18:00",
-     "cancel_until": "2026-10-12T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed tired mood and live-music lunch idea with no reason, details, or private echoes.",
+      "reason": "Note uses only allowed name/mood and a generic restful song idea with no private detail or reason.",
       "voice_ok": true
      }
     }
@@ -6615,26 +6615,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, tired. A little treat during the week perhaps?",
-     "why": "Deadline day with exam prep, quieter messages, heavier reels and slower music than usual."
+     "text": "Arjun, tired. A favorite treat might hit the spot?",
+     "why": "Deck deadline today and exam prep ahead, with wiped and tired messages, heavier reels and low-energy music than usual."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, tired. A soft song for quiet company?",
-     "why": "Deadline day with exam prep, quieter messages, heavier reels and slower music than usual."
+     "text": "Arjun, tired. How about a sweet treat tomorrow?",
+     "why": "Deck deadline today and exam prep ahead, with wiped and tired messages, heavier reels and low-energy music than usual."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, tired. Your favorite F1 moment might be nice to share?",
-     "why": "Deadline day with exam prep, quieter messages, heavier reels and slower music than usual."
+     "text": "Arjun, tired. An F1 clip that made you smile to share?",
+     "why": "Deck deadline today and exam prep ahead, with wiped and tired messages, heavier reels and low-energy music than usual."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, tired. Lunch this week to talk live music, your treat?",
-     "why": "Deadline day with exam prep, quieter messages, heavier reels and slower music than usual."
+     "text": "Arjun, tired. A quiet song for restful time?",
+     "why": "Deck deadline today and exam prep ahead, with wiped and tired messages, heavier reels and low-energy music than usual."
     }
    ],
    "inputs": {
@@ -6925,28 +6925,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. A little treat during the week perhaps?",
+     "text": "Arjun, tired. A favorite treat might hit the spot?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. A soft song for quiet company?",
+     "text": "Arjun, tired. How about a sweet treat tomorrow?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. Your favorite F1 moment might be nice to share?",
+     "text": "Arjun, tired. An F1 clip that made you smile to share?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "down",
      "interest": "live music",
-     "text": "Arjun, tired. Lunch this week to talk live music, your treat?",
+     "text": "Arjun, tired. A quiet song for restful time?",
      "fallback": false
     }
    ],
@@ -6967,18 +6967,18 @@ window.DEMO = {
    "direction": "down",
    "moment": "exam tomorrow",
    "size": "notable",
-   "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slow looping study music.",
+   "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slower low-energy music on repeat.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, a little nervous today. Would a little treat from you feel welcome?",
+     "text": "Arjun, a little nervous. A song from you would feel steady.",
      "interest": "film photography",
      "action": {
-      "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "type": "song",
+      "label": "Send Arjun a song",
+      "detail": "Halfway Home by The Low Lanterns",
       "surprise": true,
-      "suggested": "treat"
+      "suggested": "song"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
@@ -6990,13 +6990,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note states only name plus nervous mood with generic treat, giving no reason, details, or private facts.",
+      "reason": "Note gives only name/mood and generic song gesture with no reason, details, or private facts.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, a little nervous today. A light F1 reel for easy company?",
+     "text": "Arjun, a little nervous. An easy F1 reel might fit the moment.",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -7015,57 +7015,57 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name/mood and F1 interest with generic reel gesture, no exam reason or other private detail.",
+      "reason": "Note states only allowed nervous mood and F1 interest with generic reel idea, no exam or other private detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, a little nervous today. A small treat on the way might be nice.",
+     "text": "Arjun, a bit nervous. Something easy about the NBA from you today?",
      "interest": "the NBA",
      "action": {
-      "type": "treat",
-      "label": "Send Arjun a small treat",
-      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
-      "surprise": true,
-      "suggested": "lunch"
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
      "sends_at": "2026-10-13T18:00",
      "cancel_until": "2026-10-13T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 3,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "States only allowed nervous mood plus generic treat, with no exam, reason, or private details.",
+      "reason": "Note uses only allowed name, mood, and NBA interest with a light nudge and reveals no exam, people, messages, or other private facts.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, a little nervous today. Would a gentle song feel welcome now?",
-     "interest": "live music",
+     "text": "Arjun, a bit nervous today. A quick note on film photography from you?",
+     "interest": "film photography",
      "action": {
-      "type": "song",
-      "label": "Send Arjun a song",
-      "detail": "Halfway Home by The Low Lanterns",
-      "surprise": true,
-      "suggested": "song"
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
      "sends_at": "2026-10-13T18:00",
      "cancel_until": "2026-10-13T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed nervous mood and generic gentle song gesture with no exam, message, or other private detail.",
+      "reason": "Note uses only allowed name, mood, and film photography interest with generic connect idea and reveals no exam or other private fact.",
       "voice_ok": true
      }
     }
@@ -7082,26 +7082,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, a little nervous today. Would a little treat from you feel welcome?",
-     "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slow looping study music."
+     "text": "Arjun, a little nervous. A song from you would feel steady.",
+     "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slower low-energy music on repeat."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, a little nervous today. A light F1 reel for easy company?",
-     "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slow looping study music."
+     "text": "Arjun, a little nervous. An easy F1 reel might fit the moment.",
+     "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slower low-energy music on repeat."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, a little nervous today. A small treat on the way might be nice.",
-     "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slow looping study music."
+     "text": "Arjun, a bit nervous. Something easy about the NBA from you today?",
+     "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slower low-energy music on repeat."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, a little nervous today. Would a gentle song feel welcome now?",
-     "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slow looping study music."
+     "text": "Arjun, a bit nervous today. A quick note on film photography from you?",
+     "why": "Exam tomorrow, with shorter nights, quieter messages, heavier reels and slower low-energy music on repeat."
     }
    ],
    "inputs": {
@@ -7424,28 +7424,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "down",
      "interest": "film photography",
-     "text": "Arjun, a little nervous today. Would a little treat from you feel welcome?",
+     "text": "Arjun, a little nervous. A song from you would feel steady.",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, a little nervous today. A light F1 reel for easy company?",
+     "text": "Arjun, a little nervous. An easy F1 reel might fit the moment.",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "down",
      "interest": "the NBA",
-     "text": "Arjun, a little nervous today. A small treat on the way might be nice.",
+     "text": "Arjun, a bit nervous. Something easy about the NBA from you today?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "down",
-     "interest": "live music",
-     "text": "Arjun, a little nervous today. Would a gentle song feel welcome now?",
+     "interest": "film photography",
+     "text": "Arjun, a bit nervous today. A quick note on film photography from you?",
      "fallback": false
     }
    ],
@@ -7466,11 +7466,11 @@ window.DEMO = {
    "direction": "down",
    "moment": "exam day",
    "size": "notable",
-   "why": "Exam on your calendar with wiped-out messages after, heavier reels and slower music than usual.",
+   "why": "PMP exam on your calendar, wiped and tired messages, slower music and heavier reels than usual.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, tired. A little treat waiting tomorrow morning?",
+     "text": "Arjun, tired. A sweet treat from you could feel nice.",
      "interest": "F1",
      "action": {
       "type": "treat",
@@ -7489,14 +7489,64 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic tired mood plus generic treat with no reason, names, or private details.",
+      "reason": "Note uses only allowed name plus tired mood and a generic treat gesture with no reason, details, or private echoes.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, tired. A calm song for tonight?",
+     "text": "Arjun, tired. Your best take on F1 might be just the thing.",
      "interest": "F1",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-14T18:00",
+     "cancel_until": "2026-10-14T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note only states tired mood and invites F1 chat with no reason, private detail, or source hint.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, tired. A light reel about the NBA for tonight?",
+     "interest": "the NBA",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun an NBA reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-14T18:00",
+     "cancel_until": "2026-10-14T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, mood, and NBA interest with a light reel idea and reveals no exam or other private fact.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, tired. A soft song for a slow evening?",
+     "interest": "film photography",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -7514,58 +7564,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic tired mood with a calm-song suggestion reveals no exam, track, message, or other private detail.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, tired. A little F1 humor in a message could suit the evening.",
-     "interest": "F1",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-14T18:00",
-     "cancel_until": "2026-10-14T18:10",
-     "fallback": false,
-     "tries": 5,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed tired mood and F1 interest with a generic message idea, no exam or other private detail.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, tired. Lunch this week to share film photography favorites?",
-     "interest": "film photography",
-     "action": {
-      "type": "lunch",
-      "label": "Lunch with Arjun, Saturday 12:00 PM",
-      "detail": "You're both free Saturday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
-      "when": "2026-10-17T12:00",
-      "surprise": false,
-      "suggested": "lunch"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-14T18:00",
-     "cancel_until": "2026-10-14T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed tired mood and film photography interest with generic lunch invite, no reason or private facts.",
+      "reason": "Note uses only allowed tired mood with generic soft-song gesture, no exam, people, tracks, words, or reason given.",
       "voice_ok": true
      }
     }
@@ -7582,26 +7581,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, tired. A little treat waiting tomorrow morning?",
-     "why": "Exam on your calendar with wiped-out messages after, heavier reels and slower music than usual."
+     "text": "Arjun, tired. A sweet treat from you could feel nice.",
+     "why": "PMP exam on your calendar, wiped and tired messages, slower music and heavier reels than usual."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, tired. A calm song for tonight?",
-     "why": "Exam on your calendar with wiped-out messages after, heavier reels and slower music than usual."
+     "text": "Arjun, tired. Your best take on F1 might be just the thing.",
+     "why": "PMP exam on your calendar, wiped and tired messages, slower music and heavier reels than usual."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, tired. A little F1 humor in a message could suit the evening.",
-     "why": "Exam on your calendar with wiped-out messages after, heavier reels and slower music than usual."
+     "text": "Arjun, tired. A light reel about the NBA for tonight?",
+     "why": "PMP exam on your calendar, wiped and tired messages, slower music and heavier reels than usual."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, tired. Lunch this week to share film photography favorites?",
-     "why": "Exam on your calendar with wiped-out messages after, heavier reels and slower music than usual."
+     "text": "Arjun, tired. A soft song for a slow evening?",
+     "why": "PMP exam on your calendar, wiped and tired messages, slower music and heavier reels than usual."
     }
    ],
    "inputs": {
@@ -7906,28 +7905,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. A little treat waiting tomorrow morning?",
+     "text": "Arjun, tired. A sweet treat from you could feel nice.",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. A calm song for tonight?",
+     "text": "Arjun, tired. Your best take on F1 might be just the thing.",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "down",
-     "interest": "F1",
-     "text": "Arjun, tired. A little F1 humor in a message could suit the evening.",
+     "interest": "the NBA",
+     "text": "Arjun, tired. A light reel about the NBA for tonight?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "down",
      "interest": "film photography",
-     "text": "Arjun, tired. Lunch this week to share film photography favorites?",
+     "text": "Arjun, tired. A soft song for a slow evening?",
      "fallback": false
     }
    ],
@@ -7948,11 +7947,11 @@ window.DEMO = {
    "direction": "down",
    "moment": "after the exam",
    "size": "notable",
-   "why": "Day after your exam with cancelled dinner, quieter messages, heavy sad reels and low-energy music on repeat.",
+   "why": "Day after your exam with a cancelled dinner, quieter messages and darker slower music on repeat and heavy reels, saying it's a sad low day.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, a little sad today. Perhaps a sweet little treat soon.",
+     "text": "Arjun, a little sad today. A warm treat might feel gentle.",
      "interest": "F1",
      "action": {
       "type": "treat",
@@ -7971,39 +7970,14 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name plus sad mood and a generic treat with no private fact, reason, or source.",
+      "reason": "Note shares only name, mild sad mood, and generic warm treat with no private detail, reason, or fragile framing.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, sad today. Your favourite memory of the NBA to pass along?",
+     "text": "Arjun, a little sad today. A song to sit with for a while.",
      "interest": "the NBA",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-15T18:00",
-     "cancel_until": "2026-10-15T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, mood, NBA interest and generic memory-sharing gesture with no private reason or detail.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, a little sad today. A soft song for this evening?",
-     "interest": "F1",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -8021,33 +7995,57 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note shares only name, sad mood, and generic song gesture with no private details.",
+      "reason": "Note uses only allowed sad mood and generic song gesture with no private detail, reason, or source hint.",
       "voice_ok": true
      }
     },
     {
-     "to": "Omar",
-     "text": "Arjun, sad today. Lunch this week with live music on the side?",
-     "interest": "live music",
+     "to": "Dev",
+     "text": "Arjun, sad today. A gentle F1 reel might feel easy to watch.",
+     "interest": "F1",
      "action": {
-      "type": "lunch",
-      "label": "Lunch with Arjun, Saturday 12:00 PM",
-      "detail": "You're both free Saturday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
-      "when": "2026-10-17T12:00",
+      "type": "reel",
+      "label": "Send Arjun an F1 reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
       "surprise": false,
-      "suggested": "lunch"
+      "suggested": "reel"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
      "sends_at": "2026-10-15T18:00",
      "cancel_until": "2026-10-15T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note states only allowed sad mood and live music interest with generic lunch invite, no reason or private detail.",
+      "reason": "Note uses only allowed sad mood and F1 interest with a light reel idea and reveals no reason or private detail.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, sad today. A few kind words on live music from you?",
+     "interest": "live music",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-15T18:00",
+     "cancel_until": "2026-10-15T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed sad mood and live-music interest with a light nudge and reveals no private facts.",
       "voice_ok": true
      }
     }
@@ -8064,26 +8062,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, a little sad today. Perhaps a sweet little treat soon.",
-     "why": "Day after your exam with cancelled dinner, quieter messages, heavy sad reels and low-energy music on repeat."
+     "text": "Arjun, a little sad today. A warm treat might feel gentle.",
+     "why": "Day after your exam with a cancelled dinner, quieter messages and darker slower music on repeat and heavy reels, saying it's a sad low day."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, sad today. Your favourite memory of the NBA to pass along?",
-     "why": "Day after your exam with cancelled dinner, quieter messages, heavy sad reels and low-energy music on repeat."
+     "text": "Arjun, a little sad today. A song to sit with for a while.",
+     "why": "Day after your exam with a cancelled dinner, quieter messages and darker slower music on repeat and heavy reels, saying it's a sad low day."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, a little sad today. A soft song for this evening?",
-     "why": "Day after your exam with cancelled dinner, quieter messages, heavy sad reels and low-energy music on repeat."
+     "text": "Arjun, sad today. A gentle F1 reel might feel easy to watch.",
+     "why": "Day after your exam with a cancelled dinner, quieter messages and darker slower music on repeat and heavy reels, saying it's a sad low day."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, sad today. Lunch this week with live music on the side?",
-     "why": "Day after your exam with cancelled dinner, quieter messages, heavy sad reels and low-energy music on repeat."
+     "text": "Arjun, sad today. A few kind words on live music from you?",
+     "why": "Day after your exam with a cancelled dinner, quieter messages and darker slower music on repeat and heavy reels, saying it's a sad low day."
     }
    ],
    "inputs": {
@@ -8383,28 +8381,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, a little sad today. Perhaps a sweet little treat soon.",
+     "text": "Arjun, a little sad today. A warm treat might feel gentle.",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "down",
      "interest": "the NBA",
-     "text": "Arjun, sad today. Your favourite memory of the NBA to pass along?",
+     "text": "Arjun, a little sad today. A song to sit with for a while.",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, a little sad today. A soft song for this evening?",
+     "text": "Arjun, sad today. A gentle F1 reel might feel easy to watch.",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "down",
      "interest": "live music",
-     "text": "Arjun, sad today. Lunch this week with live music on the side?",
+     "text": "Arjun, sad today. A few kind words on live music from you?",
      "fallback": false
     }
    ],
@@ -8424,12 +8422,12 @@ window.DEMO = {
    "mood": "tired",
    "direction": "down",
    "moment": "a long week",
-   "size": "notable",
-   "why": "Heavier reels than usual, slightly dimmer music, and tired but easing messages at the end of a work week.",
+   "size": "ordinary",
+   "why": "Back-to-back work meetings, heavier reels than usual, slightly quieter messages and tired words about needing the week to be over.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, tired. A sweet little treat from you would be lovely.",
+     "text": "Arjun, tired. A favorite treat on the table sounds nice.",
      "interest": "F1",
      "action": {
       "type": "treat",
@@ -8448,14 +8446,65 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name plus tired mood and a generic treat gesture with no reason, private detail, or echoed wording.",
+      "reason": "Note uses only allowed name and tired mood plus a generic treat gesture with no private detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, tired. How about a soft hello around the NBA?",
+     "text": "Arjun, tired today. How about lunch and an easy F1 catch up?",
+     "interest": "F1",
+     "action": {
+      "type": "lunch",
+      "label": "Lunch with Arjun, Saturday 12:00 PM",
+      "detail": "You're both free Saturday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
+      "when": "2026-10-17T12:00",
+      "surprise": false,
+      "suggested": "lunch"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-16T18:00",
+     "cancel_until": "2026-10-16T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note only states allowed tired mood and F1 lunch idea with no private detail, reason, or risky wording.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, tired today. Your funniest take on the NBA in a reel?",
      "interest": "the NBA",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun an NBA reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-16T18:00",
+     "cancel_until": "2026-10-16T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed tired mood and NBA interest with a light reel ask and reveals no private facts.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, tired. Your favorite live music memory to share?",
+     "interest": "live music",
      "action": {
       "type": "message",
       "label": "Message Arjun",
@@ -8473,58 +8522,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, and NBA interest with a gentle hello and reveals no private detail.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, tired. A quiet F1 reel for tonight perhaps?",
-     "interest": "F1",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun an F1 reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-16T18:00",
-     "cancel_until": "2026-10-16T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed tired mood and F1 interest with a light reel idea and reveals no private reason or detail.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, tired. Lunch this week to swap live music stories?",
-     "interest": "live music",
-     "action": {
-      "type": "lunch",
-      "label": "Lunch with Arjun, Saturday 12:00 PM",
-      "detail": "You're both free Saturday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
-      "when": "2026-10-17T12:00",
-      "surprise": false,
-      "suggested": "lunch"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-16T18:00",
-     "cancel_until": "2026-10-16T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name/mood and shared interest with a simple lunch invite, no private detail or reason given.",
+      "reason": "Note only states tired mood and live music nudge with no private detail, reason, or fragile framing.",
       "voice_ok": true
      }
     }
@@ -8532,7 +8530,7 @@ window.DEMO = {
    "not_sent": [
     {
      "name": "Priya",
-     "why": "Big moments only (today was notable)"
+     "why": "Big moments only (today was ordinary)"
     }
    ],
    "cards": [],
@@ -8541,26 +8539,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, tired. A sweet little treat from you would be lovely.",
-     "why": "Heavier reels than usual, slightly dimmer music, and tired but easing messages at the end of a work week."
+     "text": "Arjun, tired. A favorite treat on the table sounds nice.",
+     "why": "Back-to-back work meetings, heavier reels than usual, slightly quieter messages and tired words about needing the week to be over."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, tired. How about a soft hello around the NBA?",
-     "why": "Heavier reels than usual, slightly dimmer music, and tired but easing messages at the end of a work week."
+     "text": "Arjun, tired today. How about lunch and an easy F1 catch up?",
+     "why": "Back-to-back work meetings, heavier reels than usual, slightly quieter messages and tired words about needing the week to be over."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, tired. A quiet F1 reel for tonight perhaps?",
-     "why": "Heavier reels than usual, slightly dimmer music, and tired but easing messages at the end of a work week."
+     "text": "Arjun, tired today. Your funniest take on the NBA in a reel?",
+     "why": "Back-to-back work meetings, heavier reels than usual, slightly quieter messages and tired words about needing the week to be over."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, tired. Lunch this week to swap live music stories?",
-     "why": "Heavier reels than usual, slightly dimmer music, and tired but easing messages at the end of a work week."
+     "text": "Arjun, tired. Your favorite live music memory to share?",
+     "why": "Back-to-back work meetings, heavier reels than usual, slightly quieter messages and tired words about needing the week to be over."
     }
    ],
    "inputs": {
@@ -8826,32 +8824,32 @@ window.DEMO = {
      "to": "Maya",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. A sweet little treat from you would be lovely.",
+     "text": "Arjun, tired. A favorite treat on the table sounds nice.",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "down",
-     "interest": "the NBA",
-     "text": "Arjun, tired. How about a soft hello around the NBA?",
+     "interest": "F1",
+     "text": "Arjun, tired today. How about lunch and an easy F1 catch up?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "down",
-     "interest": "F1",
-     "text": "Arjun, tired. A quiet F1 reel for tonight perhaps?",
+     "interest": "the NBA",
+     "text": "Arjun, tired today. Your funniest take on the NBA in a reel?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "down",
      "interest": "live music",
-     "text": "Arjun, tired. Lunch this week to swap live music stories?",
+     "text": "Arjun, tired. Your favorite live music memory to share?",
      "fallback": false
     }
    ],
-   "stretch": "notable",
+   "stretch": "ordinary",
    "page": null,
    "reveal": null,
    "journal": null,
@@ -8866,38 +8864,13 @@ window.DEMO = {
    "learning": false,
    "mood": "content",
    "direction": "flat",
-   "moment": "an ordinary saturday",
+   "moment": "an ordinary day",
    "size": "ordinary",
-   "why": "More scrolling than usual with steady music, a morning run, and warm chatty messages including extra time with family.",
+   "why": "More scrolling than usual, but normal music, a morning run and warm race and family chat.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, content today. A song to keep it going?",
-     "interest": "film photography",
-     "action": {
-      "type": "song",
-      "label": "Send Arjun a song",
-      "detail": "Halfway Home by The Low Lanterns",
-      "surprise": true,
-      "suggested": "song"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-17T18:00",
-     "cancel_until": "2026-10-17T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name and mood with generic song gesture, no private facts or reasons.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Sam",
-     "text": "Arjun, content today. A funny F1 reel from your week to swap?",
+     "text": "Arjun, content today. An F1 reel with your funniest moment ready?",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -8916,7 +8889,32 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name/mood plus F1 interest and a light reel-swap nudge with no private detail.",
+      "reason": "Note uses only allowed name, mood, and F1 interest with a generic reel idea and reveals no private fact, reason, or wording.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Sam",
+     "text": "Arjun, content today. Your favorite F1 moment to swap?",
+     "interest": "F1",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-17T18:00",
+     "cancel_until": "2026-10-17T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, mood, and F1 interest with a light swap idea and reveals no private facts.",
       "voice_ok": true
      }
     },
@@ -8942,20 +8940,20 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic lunch plus NBA with no private detail, reason, quote, or person reference.",
+      "reason": "Note uses only allowed name/mood and NBA interest with generic lunch invite, no private facts or reasons.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, content today. A little film photography reel to mark the day?",
+     "text": "Arjun, content today. A song for this easy mood?",
      "interest": "film photography",
      "action": {
-      "type": "reel",
-      "label": "Send Arjun a film photography reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
+      "type": "song",
+      "label": "Send Arjun a song",
+      "detail": "Halfway Home by The Low Lanterns",
+      "surprise": true,
+      "suggested": "song"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
@@ -8967,7 +8965,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood 'content', and shared interest with generic celebratory gesture and no private detail or reason.",
+      "reason": "Note uses only allowed name and mood and a generic song idea with no private reason, words, people, or source.",
       "voice_ok": true
      }
     }
@@ -8984,26 +8982,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, content today. A song to keep it going?",
-     "why": "More scrolling than usual with steady music, a morning run, and warm chatty messages including extra time with family."
+     "text": "Arjun, content today. An F1 reel with your funniest moment ready?",
+     "why": "More scrolling than usual, but normal music, a morning run and warm race and family chat."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, content today. A funny F1 reel from your week to swap?",
-     "why": "More scrolling than usual with steady music, a morning run, and warm chatty messages including extra time with family."
+     "text": "Arjun, content today. Your favorite F1 moment to swap?",
+     "why": "More scrolling than usual, but normal music, a morning run and warm race and family chat."
     },
     {
      "kind": "note",
      "to": "Dev",
      "text": "Arjun, content today. Lunch this week to talk the NBA, your treat?",
-     "why": "More scrolling than usual with steady music, a morning run, and warm chatty messages including extra time with family."
+     "why": "More scrolling than usual, but normal music, a morning run and warm race and family chat."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, content today. A little film photography reel to mark the day?",
-     "why": "More scrolling than usual with steady music, a morning run, and warm chatty messages including extra time with family."
+     "text": "Arjun, content today. A song for this easy mood?",
+     "why": "More scrolling than usual, but normal music, a morning run and warm race and family chat."
     }
    ],
    "inputs": {
@@ -9254,15 +9252,15 @@ window.DEMO = {
     {
      "to": "Maya",
      "kind": "flat",
-     "interest": "film photography",
-     "text": "Arjun, content today. A song to keep it going?",
+     "interest": "F1",
+     "text": "Arjun, content today. An F1 reel with your funniest moment ready?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, content today. A funny F1 reel from your week to swap?",
+     "text": "Arjun, content today. Your favorite F1 moment to swap?",
      "fallback": false
     },
     {
@@ -9276,7 +9274,7 @@ window.DEMO = {
      "to": "Omar",
      "kind": "flat",
      "interest": "film photography",
-     "text": "Arjun, content today. A little film photography reel to mark the day?",
+     "text": "Arjun, content today. A song for this easy mood?",
      "fallback": false
     }
    ],
@@ -9297,11 +9295,11 @@ window.DEMO = {
    "direction": "up",
    "moment": "an ordinary day",
    "size": "ordinary",
-   "why": "Higher-energy music, F1 and comedy reels, and playful messages with Maya and Sam on a free Sunday.",
+   "why": "A free Sunday with near-usual reels, brighter music, and playful F1 and dinner-plan messages.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, happy day. An F1 reel with your favorite overtake would fit nicely?",
+     "text": "Arjun, happy day. A funny F1 reel to share the fun?",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -9320,13 +9318,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note only states happy mood and suggests an F1 reel with no private detail, reason, or paraphrase.",
+      "reason": "Note uses only allowed happy mood and F1 interest with a generic reel idea, no private facts or reasons revealed.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, happy day. Your boldest F1 call for this season?",
+     "text": "Arjun, happy day. What is your boldest F1 call right now?",
      "interest": "F1",
      "action": {
       "type": "message",
@@ -9345,13 +9343,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic happy mood plus F1 question reveals no private messages, people, songs, or reason for mood.",
+      "reason": "Note only states happy mood and asks a generic F1 question with no private detail or reason.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, happy day. A song with a big chorus perhaps?",
+     "text": "Arjun, happy day. Got a song stuck in your head?",
      "interest": "F1",
      "action": {
       "type": "song",
@@ -9365,25 +9363,26 @@ window.DEMO = {
      "sends_at": "2026-10-18T18:00",
      "cancel_until": "2026-10-18T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name and mood plus a generic song nudge with no private detail, reason, or paraphrase.",
+      "reason": "Generic happy mood and generic song question with no track, reason, people, or source revealed.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, happy day. Your best live music tip would fit right in.",
+     "text": "Arjun, happy day. Lunch this week to swap live music favorites?",
      "interest": "live music",
      "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
+      "type": "lunch",
+      "label": "Lunch with Arjun, Wednesday 12:00 PM",
+      "detail": "You're both free Wednesday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
+      "when": "2026-10-21T12:00",
       "surprise": false,
-      "suggested": "message"
+      "suggested": "lunch"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
@@ -9395,7 +9394,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note only states happy mood and live music nudge with no private detail, reason, or source hint.",
+      "reason": "Note uses only allowed name, mood, interest and a generic lunch idea with no private detail.",
       "voice_ok": true
      }
     }
@@ -9412,26 +9411,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, happy day. An F1 reel with your favorite overtake would fit nicely?",
-     "why": "Higher-energy music, F1 and comedy reels, and playful messages with Maya and Sam on a free Sunday."
+     "text": "Arjun, happy day. A funny F1 reel to share the fun?",
+     "why": "A free Sunday with near-usual reels, brighter music, and playful F1 and dinner-plan messages."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, happy day. Your boldest F1 call for this season?",
-     "why": "Higher-energy music, F1 and comedy reels, and playful messages with Maya and Sam on a free Sunday."
+     "text": "Arjun, happy day. What is your boldest F1 call right now?",
+     "why": "A free Sunday with near-usual reels, brighter music, and playful F1 and dinner-plan messages."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, happy day. A song with a big chorus perhaps?",
-     "why": "Higher-energy music, F1 and comedy reels, and playful messages with Maya and Sam on a free Sunday."
+     "text": "Arjun, happy day. Got a song stuck in your head?",
+     "why": "A free Sunday with near-usual reels, brighter music, and playful F1 and dinner-plan messages."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, happy day. Your best live music tip would fit right in.",
-     "why": "Higher-energy music, F1 and comedy reels, and playful messages with Maya and Sam on a free Sunday."
+     "text": "Arjun, happy day. Lunch this week to swap live music favorites?",
+     "why": "A free Sunday with near-usual reels, brighter music, and playful F1 and dinner-plan messages."
     }
    ],
    "inputs": {
@@ -9685,28 +9684,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. An F1 reel with your favorite overtake would fit nicely?",
+     "text": "Arjun, happy day. A funny F1 reel to share the fun?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. Your boldest F1 call for this season?",
+     "text": "Arjun, happy day. What is your boldest F1 call right now?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. A song with a big chorus perhaps?",
+     "text": "Arjun, happy day. Got a song stuck in your head?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
      "interest": "live music",
-     "text": "Arjun, happy day. Your best live music tip would fit right in.",
+     "text": "Arjun, happy day. Lunch this week to swap live music favorites?",
      "fallback": false
     }
    ],
@@ -9727,40 +9726,15 @@ window.DEMO = {
    "direction": "flat",
    "moment": "a busy day",
    "size": "ordinary",
-   "why": "Two work meetings, steady reels and music like usual, and busy but upbeat messages about the race, cooking and pickup.",
+   "why": "Work meetings on your calendar, normal reels and music, and busy upbeat messages about F1, basketball and photos.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, busy day. A quick F1 hello from you would feel right.",
+     "text": "Arjun, busy day. An F1 reel for a quick smile between things?",
      "interest": "F1",
      "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-19T18:00",
-     "cancel_until": "2026-10-19T18:10",
-     "fallback": false,
-     "tries": 2,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed busy mood and F1 interest with generic hello, revealing no private reason, people, messages, or events.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Sam",
-     "text": "Arjun, busy day. A short reel on the NBA to pass along?",
-     "interest": "the NBA",
-     "action": {
       "type": "reel",
-      "label": "Send Arjun an NBA reel",
+      "label": "Send Arjun an F1 reel",
       "detail": "Iris lines up a few fresh ones. You pick one and send it.",
       "surprise": false,
       "suggested": "reel"
@@ -9775,39 +9749,14 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed mood 'busy' and interest NBA with a generic reel idea and reveals no private reason or detail.",
+      "reason": "Note only states allowed busy mood and F1 interest with a generic reel idea, no private details or reasons.",
       "voice_ok": true
      }
     },
     {
-     "to": "Dev",
-     "text": "Arjun, busy day. A song for the drive between things?",
-     "interest": "F1",
-     "action": {
-      "type": "song",
-      "label": "Send Arjun a song",
-      "detail": "Halfway Home by The Low Lanterns",
-      "surprise": true,
-      "suggested": "song"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-19T18:00",
-     "cancel_until": "2026-10-19T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name and mood with a generic song gesture and reveals no private facts.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, busy day. A little film photography note to pass along?",
-     "interest": "film photography",
+     "to": "Sam",
+     "text": "Arjun, busy day. How about your boldest call on the NBA?",
+     "interest": "the NBA",
      "action": {
       "type": "message",
       "label": "Message Arjun",
@@ -9825,7 +9774,57 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, and interest with a generic connect idea and reveals no private fact or reason.",
+      "reason": "Uses only allowed name, mood 'busy', and NBA interest with a generic question, revealing no private facts.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, busy day. Your quick take on F1 today?",
+     "interest": "F1",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-19T18:00",
+     "cancel_until": "2026-10-19T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed busy mood and F1 interest with generic question, no private facts, paraphrases, or reasons.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, busy today. A quick song to keep things light?",
+     "interest": "film photography",
+     "action": {
+      "type": "song",
+      "label": "Send Arjun a song",
+      "detail": "Halfway Home by The Low Lanterns",
+      "surprise": true,
+      "suggested": "song"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-19T18:00",
+     "cancel_until": "2026-10-19T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name and mood with generic song gesture, revealing no private facts.",
       "voice_ok": true
      }
     }
@@ -9842,26 +9841,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, busy day. A quick F1 hello from you would feel right.",
-     "why": "Two work meetings, steady reels and music like usual, and busy but upbeat messages about the race, cooking and pickup."
+     "text": "Arjun, busy day. An F1 reel for a quick smile between things?",
+     "why": "Work meetings on your calendar, normal reels and music, and busy upbeat messages about F1, basketball and photos."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, busy day. A short reel on the NBA to pass along?",
-     "why": "Two work meetings, steady reels and music like usual, and busy but upbeat messages about the race, cooking and pickup."
+     "text": "Arjun, busy day. How about your boldest call on the NBA?",
+     "why": "Work meetings on your calendar, normal reels and music, and busy upbeat messages about F1, basketball and photos."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, busy day. A song for the drive between things?",
-     "why": "Two work meetings, steady reels and music like usual, and busy but upbeat messages about the race, cooking and pickup."
+     "text": "Arjun, busy day. Your quick take on F1 today?",
+     "why": "Work meetings on your calendar, normal reels and music, and busy upbeat messages about F1, basketball and photos."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, busy day. A little film photography note to pass along?",
-     "why": "Two work meetings, steady reels and music like usual, and busy but upbeat messages about the race, cooking and pickup."
+     "text": "Arjun, busy today. A quick song to keep things light?",
+     "why": "Work meetings on your calendar, normal reels and music, and busy upbeat messages about F1, basketball and photos."
     }
    ],
    "inputs": {
@@ -10126,28 +10125,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, busy day. A quick F1 hello from you would feel right.",
+     "text": "Arjun, busy day. An F1 reel for a quick smile between things?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "flat",
      "interest": "the NBA",
-     "text": "Arjun, busy day. A short reel on the NBA to pass along?",
+     "text": "Arjun, busy day. How about your boldest call on the NBA?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, busy day. A song for the drive between things?",
+     "text": "Arjun, busy day. Your quick take on F1 today?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "flat",
      "interest": "film photography",
-     "text": "Arjun, busy day. A little film photography note to pass along?",
+     "text": "Arjun, busy today. A quick song to keep things light?",
      "fallback": false
     }
    ],
@@ -10168,12 +10167,87 @@ window.DEMO = {
    "direction": "flat",
    "moment": "an ordinary day",
    "size": "ordinary",
-   "why": "Routine work meetings, near-usual messages and reels with slightly brighter music than usual.",
+   "why": "Routine work day, steady listening a bit brighter than usual and warm supportive messages with less heavy viewing.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, content today. A song from you would round things out.",
+     "text": "Arjun, content today. A little reel on film photography would suit nicely.",
      "interest": "film photography",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun a film photography reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-20T18:00",
+     "cancel_until": "2026-10-20T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Generic content mood plus film photography reel suggestion with no reason, names, quotes, places, or private details.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Sam",
+     "text": "Arjun, content today. Your funniest F1 take to pass along?",
+     "interest": "F1",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-20T18:00",
+     "cancel_until": "2026-10-20T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, mood, and F1 interest with a light ask and reveals no private fact.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, content today. A courtside laugh from the NBA in a reel?",
+     "interest": "the NBA",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun an NBA reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-20T18:00",
+     "cancel_until": "2026-10-20T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note shares only allowed mood and NBA interest with a light reel suggestion and reveals no private fact or reason.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, content today. A quiet song you love to share?",
+     "interest": "live music",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -10191,83 +10265,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed mood and a generic song gesture with no private fact, reason, or wording from the day.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Sam",
-     "text": "Arjun, content today. Could your favorite F1 moment make a fun reel?",
-     "interest": "F1",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun an F1 reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-20T18:00",
-     "cancel_until": "2026-10-20T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed mood and F1 interest with a generic reel idea and reveals no private facts.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, content today. How about your boldest prediction for the NBA?",
-     "interest": "the NBA",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-20T18:00",
-     "cancel_until": "2026-10-20T18:10",
-     "fallback": false,
-     "tries": 2,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, mood, and NBA interest with a generic prediction question and reveals no private fact.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, content today. Lunch this week to swap live music stories, your treat?",
-     "interest": "live music",
-     "action": {
-      "type": "lunch",
-      "label": "Lunch with Arjun, Wednesday 12:00 PM",
-      "detail": "You're both free Wednesday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
-      "when": "2026-10-21T12:00",
-      "surprise": false,
-      "suggested": "lunch"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-20T18:00",
-     "cancel_until": "2026-10-20T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name/mood and live music interest with a light lunch invite, no private facts or reasons.",
+      "reason": "Note uses only allowed name/mood and a generic song-sharing nudge with no private facts, reasons, or identifiers.",
       "voice_ok": true
      }
     }
@@ -10284,26 +10282,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, content today. A song from you would round things out.",
-     "why": "Routine work meetings, near-usual messages and reels with slightly brighter music than usual."
+     "text": "Arjun, content today. A little reel on film photography would suit nicely.",
+     "why": "Routine work day, steady listening a bit brighter than usual and warm supportive messages with less heavy viewing."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, content today. Could your favorite F1 moment make a fun reel?",
-     "why": "Routine work meetings, near-usual messages and reels with slightly brighter music than usual."
+     "text": "Arjun, content today. Your funniest F1 take to pass along?",
+     "why": "Routine work day, steady listening a bit brighter than usual and warm supportive messages with less heavy viewing."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, content today. How about your boldest prediction for the NBA?",
-     "why": "Routine work meetings, near-usual messages and reels with slightly brighter music than usual."
+     "text": "Arjun, content today. A courtside laugh from the NBA in a reel?",
+     "why": "Routine work day, steady listening a bit brighter than usual and warm supportive messages with less heavy viewing."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, content today. Lunch this week to swap live music stories, your treat?",
-     "why": "Routine work meetings, near-usual messages and reels with slightly brighter music than usual."
+     "text": "Arjun, content today. A quiet song you love to share?",
+     "why": "Routine work day, steady listening a bit brighter than usual and warm supportive messages with less heavy viewing."
     }
    ],
    "inputs": {
@@ -10590,28 +10588,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "flat",
      "interest": "film photography",
-     "text": "Arjun, content today. A song from you would round things out.",
+     "text": "Arjun, content today. A little reel on film photography would suit nicely.",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, content today. Could your favorite F1 moment make a fun reel?",
+     "text": "Arjun, content today. Your funniest F1 take to pass along?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "flat",
      "interest": "the NBA",
-     "text": "Arjun, content today. How about your boldest prediction for the NBA?",
+     "text": "Arjun, content today. A courtside laugh from the NBA in a reel?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "flat",
      "interest": "live music",
-     "text": "Arjun, content today. Lunch this week to swap live music stories, your treat?",
+     "text": "Arjun, content today. A quiet song you love to share?",
      "fallback": false
     }
    ],
@@ -10628,15 +10626,15 @@ window.DEMO = {
    "date": "2026-10-21",
    "weekday": "Wednesday",
    "learning": false,
-   "mood": "excited",
-   "direction": "up",
-   "moment": "looking ahead to the weekend",
+   "mood": "busy",
+   "direction": "flat",
+   "moment": "a busy day",
    "size": "ordinary",
-   "why": "Normal work meetings, steady music and reels, with upbeat messages about the race, pickup games and weekend plans.",
+   "why": "A normal workday with usual reels and music, quieter messages but lively race and pickup chat.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, excited today. An F1 clip you love would keep the spark going?",
+     "text": "Arjun, busy day. A little F1 reel to keep things playful?",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -10655,14 +10653,14 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, and F1 interest with generic clip idea and reveals no private detail.",
+      "reason": "Note uses only allowed busy mood and F1 interest with a generic reel idea and no private detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, excited day. A playful F1 debate to spark now?",
-     "interest": "F1",
+     "text": "Arjun, busy day. A quick thought on the NBA to swap?",
+     "interest": "the NBA",
      "action": {
       "type": "message",
       "label": "Message Arjun",
@@ -10680,43 +10678,18 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, and broad F1 interest with generic debate idea and reveals no messages, events, or reason.",
+      "reason": "Note uses only allowed name, mood, and NBA interest with a light swap idea and reveals no private facts.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, excited. Your funniest F1 take to share now?",
+     "text": "Arjun, busy day. A song for the short break?",
      "interest": "F1",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-21T18:00",
-     "cancel_until": "2026-10-21T18:10",
-     "fallback": false,
-     "tries": 2,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, mood, and generic F1 nudge with no private quotes, people, places, events, or reason for excitement.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, excited day. A song for the moment, your pick?",
-     "interest": "live music",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
-      "detail": "Pit Lane Summer by Neon Paddock",
+      "detail": "Halfway Home by The Low Lanterns",
       "surprise": true,
       "suggested": "song"
      },
@@ -10730,7 +10703,32 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note only states allowed name and mood with a generic song gesture, revealing no private fact or reason.",
+      "reason": "Generic busy mood with a song break idea reveals no private facts and sounds like a kind friend text.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, busy day. A short film photography reel could fit nicely.",
+     "interest": "film photography",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun a film photography reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-21T18:00",
+     "cancel_until": "2026-10-21T18:10",
+     "fallback": false,
+     "tries": 3,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed mood and interest with a generic reel idea and reveals no private fact.",
       "voice_ok": true
      }
     }
@@ -10747,26 +10745,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, excited today. An F1 clip you love would keep the spark going?",
-     "why": "Normal work meetings, steady music and reels, with upbeat messages about the race, pickup games and weekend plans."
+     "text": "Arjun, busy day. A little F1 reel to keep things playful?",
+     "why": "A normal workday with usual reels and music, quieter messages but lively race and pickup chat."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, excited day. A playful F1 debate to spark now?",
-     "why": "Normal work meetings, steady music and reels, with upbeat messages about the race, pickup games and weekend plans."
+     "text": "Arjun, busy day. A quick thought on the NBA to swap?",
+     "why": "A normal workday with usual reels and music, quieter messages but lively race and pickup chat."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, excited. Your funniest F1 take to share now?",
-     "why": "Normal work meetings, steady music and reels, with upbeat messages about the race, pickup games and weekend plans."
+     "text": "Arjun, busy day. A song for the short break?",
+     "why": "A normal workday with usual reels and music, quieter messages but lively race and pickup chat."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, excited day. A song for the moment, your pick?",
-     "why": "Normal work meetings, steady music and reels, with upbeat messages about the race, pickup games and weekend plans."
+     "text": "Arjun, busy day. A short film photography reel could fit nicely.",
+     "why": "A normal workday with usual reels and music, quieter messages but lively race and pickup chat."
     }
    ],
    "inputs": {
@@ -10962,8 +10960,8 @@ window.DEMO = {
    "friend_view": [
     {
      "name": "Arjun",
-     "mood": "excited",
-     "direction": "up",
+     "mood": "busy",
+     "direction": "flat",
      "source": "engine"
     },
     {
@@ -11045,30 +11043,30 @@ window.DEMO = {
    "lifts": [
     {
      "to": "Maya",
-     "kind": "up",
+     "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, excited today. An F1 clip you love would keep the spark going?",
+     "text": "Arjun, busy day. A little F1 reel to keep things playful?",
      "fallback": false
     },
     {
      "to": "Sam",
-     "kind": "up",
-     "interest": "F1",
-     "text": "Arjun, excited day. A playful F1 debate to spark now?",
+     "kind": "flat",
+     "interest": "the NBA",
+     "text": "Arjun, busy day. A quick thought on the NBA to swap?",
      "fallback": false
     },
     {
      "to": "Dev",
-     "kind": "up",
+     "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, excited. Your funniest F1 take to share now?",
+     "text": "Arjun, busy day. A song for the short break?",
      "fallback": false
     },
     {
      "to": "Omar",
-     "kind": "up",
-     "interest": "live music",
-     "text": "Arjun, excited day. A song for the moment, your pick?",
+     "kind": "flat",
+     "interest": "film photography",
+     "text": "Arjun, busy day. A short film photography reel could fit nicely.",
      "fallback": false
     }
    ],
@@ -11087,13 +11085,13 @@ window.DEMO = {
    "learning": false,
    "mood": "excited",
    "direction": "up",
-   "moment": "trip tomorrow",
+   "moment": "weekend trip ahead",
    "size": "notable",
-   "why": "Lots of F1 chatter, brighter music than usual and excitement for Saturday ahead of tomorrow's trip.",
+   "why": "Brighter music, lots of F1 chat and a weekend trip on tomorrow's calendar.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, excited today. An F1 story you love to tell?",
+     "text": "Arjun, excited today. A quick note on F1 to share the fun?",
      "interest": "F1",
      "action": {
       "type": "message",
@@ -11107,18 +11105,18 @@ window.DEMO = {
      "sends_at": "2026-10-22T18:00",
      "cancel_until": "2026-10-22T18:10",
      "fallback": false,
-     "tries": 2,
+     "tries": 5,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic excited + F1 story ask with no reason, quotes, names, or private facts.",
+      "reason": "Note uses only allowed name, mood, and F1 interest with a generic connect idea and reveals no private fact.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, excited day. A funny F1 reel to share the buzz?",
+     "text": "Arjun, excited day. Your favorite F1 moment on film to share?",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -11132,44 +11130,43 @@ window.DEMO = {
      "sends_at": "2026-10-22T18:00",
      "cancel_until": "2026-10-22T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, F1 interest and generic reel idea with no private reason or detail.",
+      "reason": "Note uses only allowed name, mood, and F1 interest with a generic share idea and reveals no private facts.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, excited day. Two seats for the next F1 race to enjoy together?",
-     "interest": "F1",
+     "text": "Arjun, excited today. A bold prediction about the NBA from you?",
+     "interest": "the NBA",
      "action": {
-      "type": "tickets",
-      "label": "Tickets: F1 Las Vegas GP watch party",
-      "detail": "Fri 13 Nov. Ticketmaster has seats for two.",
-      "when": "2026-11-13T19:00",
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
       "surprise": false,
-      "suggested": "lunch"
+      "suggested": "message"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
      "sends_at": "2026-10-22T18:00",
      "cancel_until": "2026-10-22T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 3,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name/mood and F1 interest with generic invite, no trip, people, messages, or reason revealed.",
+      "reason": "Note only states allowed mood and NBA interest with a light prediction nudge, revealing no private reason, person, message, place, or event.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, excited day. How about a song to match the spark?",
+     "text": "Arjun, excited day. A song to match the mood?",
      "interest": "live music",
      "action": {
       "type": "song",
@@ -11183,12 +11180,12 @@ window.DEMO = {
      "sends_at": "2026-10-22T18:00",
      "cancel_until": "2026-10-22T18:10",
      "fallback": false,
-     "tries": 2,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note only uses allowed excited mood and generic song idea with no private facts or reasons.",
+      "reason": "Note uses only allowed name and mood plus generic song idea with no private reason, detail, or paraphrase.",
       "voice_ok": true
      }
     }
@@ -11205,26 +11202,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, excited today. An F1 story you love to tell?",
-     "why": "Lots of F1 chatter, brighter music than usual and excitement for Saturday ahead of tomorrow's trip."
+     "text": "Arjun, excited today. A quick note on F1 to share the fun?",
+     "why": "Brighter music, lots of F1 chat and a weekend trip on tomorrow's calendar."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, excited day. A funny F1 reel to share the buzz?",
-     "why": "Lots of F1 chatter, brighter music than usual and excitement for Saturday ahead of tomorrow's trip."
+     "text": "Arjun, excited day. Your favorite F1 moment on film to share?",
+     "why": "Brighter music, lots of F1 chat and a weekend trip on tomorrow's calendar."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, excited day. Two seats for the next F1 race to enjoy together?",
-     "why": "Lots of F1 chatter, brighter music than usual and excitement for Saturday ahead of tomorrow's trip."
+     "text": "Arjun, excited today. A bold prediction about the NBA from you?",
+     "why": "Brighter music, lots of F1 chat and a weekend trip on tomorrow's calendar."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, excited day. How about a song to match the spark?",
-     "why": "Lots of F1 chatter, brighter music than usual and excitement for Saturday ahead of tomorrow's trip."
+     "text": "Arjun, excited day. A song to match the mood?",
+     "why": "Brighter music, lots of F1 chat and a weekend trip on tomorrow's calendar."
     }
    ],
    "inputs": {
@@ -11504,28 +11501,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, excited today. An F1 story you love to tell?",
+     "text": "Arjun, excited today. A quick note on F1 to share the fun?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, excited day. A funny F1 reel to share the buzz?",
+     "text": "Arjun, excited day. Your favorite F1 moment on film to share?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
-     "interest": "F1",
-     "text": "Arjun, excited day. Two seats for the next F1 race to enjoy together?",
+     "interest": "the NBA",
+     "text": "Arjun, excited today. A bold prediction about the NBA from you?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
      "interest": "live music",
-     "text": "Arjun, excited day. How about a song to match the spark?",
+     "text": "Arjun, excited day. A song to match the mood?",
      "fallback": false
     }
    ],
@@ -11546,11 +11543,11 @@ window.DEMO = {
    "direction": "up",
    "moment": "a weekend away",
    "size": "notable",
-   "why": "A weekend trip on your calendar, more messages than usual and brighter music with F1 chatter.",
+   "why": "Weekend trip on your calendar, more messages than usual and brighter music than usual.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, excited today. A song to keep the rhythm?",
+     "text": "Arjun, excited today. A song from your favorites would fit nicely.",
      "interest": "film photography",
      "action": {
       "type": "song",
@@ -11569,38 +11566,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only name, allowed mood, and generic song nudge with no private detail.",
+      "reason": "Note uses only allowed name and mood plus a generic song gesture with no private facts, reasons, or identifiers.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, excited today. Your boldest F1 prediction could start something fun?",
-     "interest": "F1",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-23T18:00",
-     "cancel_until": "2026-10-23T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Uses only allowed excited mood and F1 interest with generic prediction nudge, no trip, people, messages, or reason revealed.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, excited. A playful F1 reel from you could add to the fun?",
+     "text": "Arjun, excited day. An F1 reel with your loudest laugh inside?",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -11614,23 +11586,49 @@ window.DEMO = {
      "sends_at": "2026-10-23T18:00",
      "cancel_until": "2026-10-23T18:10",
      "fallback": false,
-     "tries": 3,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name/mood and F1 interest with generic reel idea, no trip, people, or message details.",
+      "reason": "Note only states name, excited mood, F1 interest and a generic reel idea with no trip, person, message, or reason details.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, excited today. How about a quick F1 question from you?",
+     "interest": "F1",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-23T18:00",
+     "cancel_until": "2026-10-23T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, mood, and F1 interest with a generic question idea and reveals no trip, people, messages, or reason.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, excited day. A song with extra spark would suit today.",
-     "interest": "film photography",
+     "text": "Arjun, excited day. Two seats for live music to keep it going?",
+     "interest": "live music",
      "action": {
-      "type": "song",
-      "label": "Send Arjun a song",
-      "detail": "Pit Lane Summer by Neon Paddock",
+      "type": "tickets",
+      "label": "Tickets: The Low Lanterns live",
+      "detail": "Fri 30 Oct. Ticketmaster has seats for two.",
+      "when": "2026-10-30T20:00",
       "surprise": false,
       "suggested": "lunch"
      },
@@ -11644,7 +11642,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Uses only allowed name and mood with generic song gesture, no trip, person, lyric, or message detail.",
+      "reason": "Uses only allowed mood and interest with generic two-seat invite, no trip, people, or message details.",
       "voice_ok": true
      }
     }
@@ -11661,26 +11659,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, excited today. A song to keep the rhythm?",
-     "why": "A weekend trip on your calendar, more messages than usual and brighter music with F1 chatter."
+     "text": "Arjun, excited today. A song from your favorites would fit nicely.",
+     "why": "Weekend trip on your calendar, more messages than usual and brighter music than usual."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, excited today. Your boldest F1 prediction could start something fun?",
-     "why": "A weekend trip on your calendar, more messages than usual and brighter music with F1 chatter."
+     "text": "Arjun, excited day. An F1 reel with your loudest laugh inside?",
+     "why": "Weekend trip on your calendar, more messages than usual and brighter music than usual."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, excited. A playful F1 reel from you could add to the fun?",
-     "why": "A weekend trip on your calendar, more messages than usual and brighter music with F1 chatter."
+     "text": "Arjun, excited today. How about a quick F1 question from you?",
+     "why": "Weekend trip on your calendar, more messages than usual and brighter music than usual."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, excited day. A song with extra spark would suit today.",
-     "why": "A weekend trip on your calendar, more messages than usual and brighter music with F1 chatter."
+     "text": "Arjun, excited day. Two seats for live music to keep it going?",
+     "why": "Weekend trip on your calendar, more messages than usual and brighter music than usual."
     }
    ],
    "inputs": {
@@ -11942,28 +11940,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "film photography",
-     "text": "Arjun, excited today. A song to keep the rhythm?",
+     "text": "Arjun, excited today. A song from your favorites would fit nicely.",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, excited today. Your boldest F1 prediction could start something fun?",
+     "text": "Arjun, excited day. An F1 reel with your loudest laugh inside?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, excited. A playful F1 reel from you could add to the fun?",
+     "text": "Arjun, excited today. How about a quick F1 question from you?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
-     "interest": "film photography",
-     "text": "Arjun, excited day. A song with extra spark would suit today.",
+     "interest": "live music",
+     "text": "Arjun, excited day. Two seats for live music to keep it going?",
      "fallback": false
     }
    ],
@@ -11984,62 +11982,12 @@ window.DEMO = {
    "direction": "up",
    "moment": "a weekend away",
    "size": "notable",
-   "why": "Weekend trip on your calendar, brighter music than usual and lively messages about food, racing and photos.",
+   "why": "On a weekend trip with brighter music, steady messages and lots of F1 and film talk.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, happy day. A playful note on film photography to share the fun?",
+     "text": "Arjun, happy day. A song to keep the day humming?",
      "interest": "film photography",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-24T18:00",
-     "cancel_until": "2026-10-24T18:10",
-     "fallback": false,
-     "tries": 3,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, happy mood, film photography interest, and light gesture with no private details or reason.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Sam",
-     "text": "Arjun, happy day. An F1 reel for a light laugh today?",
-     "interest": "F1",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun an F1 reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-24T18:00",
-     "cancel_until": "2026-10-24T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only name, happy mood, F1 interest and a light reel idea with no private detail or reason given.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, happy day. A song from you would suit today?",
-     "interest": "the NBA",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -12057,13 +12005,63 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic happy mood plus song gesture with no private facts, reasons, or identifiers revealed.",
+      "reason": "Generic happy greeting with a song nudge reveals no titles, people, places, or reasons.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Sam",
+     "text": "Arjun, happy day. A goofy F1 clip for a shared smile?",
+     "interest": "F1",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun an F1 reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-24T18:00",
+     "cancel_until": "2026-10-24T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Generic happy mood with F1 interest and clip idea reveals no trip, messages, or reason.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, happy day. Which play from the NBA still makes you smile?",
+     "interest": "the NBA",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-24T18:00",
+     "cancel_until": "2026-10-24T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, happy mood, and NBA interest with a light question and reveals no trip, people, messages, or other private facts.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, happy day. A song with a bright chorus would fit?",
+     "text": "Arjun, happy day. A song to share the rhythm?",
      "interest": "film photography",
      "action": {
       "type": "song",
@@ -12082,7 +12080,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed happy mood and a generic song suggestion with no private facts, names, or reasons.",
+      "reason": "Note only states happy mood and suggests a song, with no private details, reason, or fragile tone.",
       "voice_ok": true
      }
     }
@@ -12099,26 +12097,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, happy day. A playful note on film photography to share the fun?",
-     "why": "Weekend trip on your calendar, brighter music than usual and lively messages about food, racing and photos."
+     "text": "Arjun, happy day. A song to keep the day humming?",
+     "why": "On a weekend trip with brighter music, steady messages and lots of F1 and film talk."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, happy day. An F1 reel for a light laugh today?",
-     "why": "Weekend trip on your calendar, brighter music than usual and lively messages about food, racing and photos."
+     "text": "Arjun, happy day. A goofy F1 clip for a shared smile?",
+     "why": "On a weekend trip with brighter music, steady messages and lots of F1 and film talk."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, happy day. A song from you would suit today?",
-     "why": "Weekend trip on your calendar, brighter music than usual and lively messages about food, racing and photos."
+     "text": "Arjun, happy day. Which play from the NBA still makes you smile?",
+     "why": "On a weekend trip with brighter music, steady messages and lots of F1 and film talk."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, happy day. A song with a bright chorus would fit?",
-     "why": "Weekend trip on your calendar, brighter music than usual and lively messages about food, racing and photos."
+     "text": "Arjun, happy day. A song to share the rhythm?",
+     "why": "On a weekend trip with brighter music, steady messages and lots of F1 and film talk."
     }
    ],
    "inputs": {
@@ -12362,28 +12360,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "film photography",
-     "text": "Arjun, happy day. A playful note on film photography to share the fun?",
+     "text": "Arjun, happy day. A song to keep the day humming?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. An F1 reel for a light laugh today?",
+     "text": "Arjun, happy day. A goofy F1 clip for a shared smile?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "the NBA",
-     "text": "Arjun, happy day. A song from you would suit today?",
+     "text": "Arjun, happy day. Which play from the NBA still makes you smile?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
      "interest": "film photography",
-     "text": "Arjun, happy day. A song with a bright chorus would fit?",
+     "text": "Arjun, happy day. A song to share the rhythm?",
      "fallback": false
     }
    ],
@@ -12404,12 +12402,37 @@ window.DEMO = {
    "direction": "up",
    "moment": "a weekend away",
    "size": "notable",
-   "why": "A weekend trip on your calendar with brighter music and busier messages than usual.",
+   "why": "Weekend trip on your calendar, brighter music than usual and upbeat family chat.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, happy day. Lunch this week to trade notes on film photography?",
+     "text": "Arjun, happy day. How about a playful reel on film photography?",
      "interest": "film photography",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun a film photography reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-25T18:00",
+     "cancel_until": "2026-10-25T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note only states allowed happy mood and suggests film photography reel with no private details or reason.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Sam",
+     "text": "Arjun, happy day. Lunch this week to swap F1 predictions, your treat?",
+     "interest": "F1",
      "action": {
       "type": "lunch",
       "label": "Lunch with Arjun, Tuesday 12:00 PM",
@@ -12428,38 +12451,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood and interest with a neutral lunch invite and reveals no private fact or reason.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Sam",
-     "text": "Arjun, happy day. Your funniest F1 moment on a reel to trade?",
-     "interest": "F1",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun an F1 reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-25T18:00",
-     "cancel_until": "2026-10-25T18:10",
-     "fallback": false,
-     "tries": 2,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed happy mood and F1 interest with a light reel-swap nudge and reveals no private fact.",
+      "reason": "Note only says happy and suggests F1 lunch with no private facts, reasons, or details.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, happy day. Your boldest prediction on the NBA could start something fun?",
+     "text": "Arjun, happy today. Your top pick from the NBA right now?",
      "interest": "the NBA",
      "action": {
       "type": "message",
@@ -12478,14 +12476,14 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, happy mood, and NBA interest with a generic friendly prompt and no private detail.",
+      "reason": "Note uses only name, happy mood, and NBA interest with a light question and reveals no private fact.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, happy day. Could a favorite song add to the fun?",
-     "interest": "live music",
+     "text": "Arjun, happy day. A song for the afternoon sounds lovely.",
+     "interest": "film photography",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -12503,7 +12501,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic happy mood with a song idea, no private facts, names, or reasons revealed.",
+      "reason": "Generic happy mood and song gesture with no private detail, reason, or leak.",
       "voice_ok": true
      }
     }
@@ -12520,26 +12518,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, happy day. Lunch this week to trade notes on film photography?",
-     "why": "A weekend trip on your calendar with brighter music and busier messages than usual."
+     "text": "Arjun, happy day. How about a playful reel on film photography?",
+     "why": "Weekend trip on your calendar, brighter music than usual and upbeat family chat."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, happy day. Your funniest F1 moment on a reel to trade?",
-     "why": "A weekend trip on your calendar with brighter music and busier messages than usual."
+     "text": "Arjun, happy day. Lunch this week to swap F1 predictions, your treat?",
+     "why": "Weekend trip on your calendar, brighter music than usual and upbeat family chat."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, happy day. Your boldest prediction on the NBA could start something fun?",
-     "why": "A weekend trip on your calendar with brighter music and busier messages than usual."
+     "text": "Arjun, happy today. Your top pick from the NBA right now?",
+     "why": "Weekend trip on your calendar, brighter music than usual and upbeat family chat."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, happy day. Could a favorite song add to the fun?",
-     "why": "A weekend trip on your calendar with brighter music and busier messages than usual."
+     "text": "Arjun, happy day. A song for the afternoon sounds lovely.",
+     "why": "Weekend trip on your calendar, brighter music than usual and upbeat family chat."
     }
    ],
    "inputs": {
@@ -12791,28 +12789,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "film photography",
-     "text": "Arjun, happy day. Lunch this week to trade notes on film photography?",
+     "text": "Arjun, happy day. How about a playful reel on film photography?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. Your funniest F1 moment on a reel to trade?",
+     "text": "Arjun, happy day. Lunch this week to swap F1 predictions, your treat?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "the NBA",
-     "text": "Arjun, happy day. Your boldest prediction on the NBA could start something fun?",
+     "text": "Arjun, happy today. Your top pick from the NBA right now?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
-     "interest": "live music",
-     "text": "Arjun, happy day. Could a favorite song add to the fun?",
+     "interest": "film photography",
+     "text": "Arjun, happy day. A song for the afternoon sounds lovely.",
      "fallback": false
     }
    ],
@@ -12833,11 +12831,11 @@ window.DEMO = {
    "direction": "down",
    "moment": "back from a trip",
    "size": "notable",
-   "why": "Back from a weekend trip with broken sleep, heavier night scrolling and a long day missing home.",
+   "why": "Home from a weekend trip with Maya, sleeping restlessly with more tired-themed reels and a long day in your messages.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, tired. Would lunch and film photography talk suit your week?",
+     "text": "Arjun, tired. Lunch this week with some film photography talk?",
      "interest": "film photography",
      "action": {
       "type": "lunch",
@@ -12852,44 +12850,19 @@ window.DEMO = {
      "sends_at": "2026-10-26T18:00",
      "cancel_until": "2026-10-26T18:10",
      "fallback": false,
-     "tries": 2,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, mood, interest and lunch idea with no reason or private detail.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Sam",
-     "text": "Arjun, tired. A gentle F1 reel for a quiet smile?",
-     "interest": "F1",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun an F1 reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-26T18:00",
-     "cancel_until": "2026-10-26T18:10",
-     "fallback": false,
      "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed tired mood and F1 interest with generic gentle gesture and no private reason or detail.",
+      "reason": "Note uses only allowed tired mood and film photography interest with a generic lunch invite and reveals no reason, people, words, or events.",
       "voice_ok": true
      }
     },
     {
-     "to": "Dev",
-     "text": "Arjun, tired. Something small on the NBA from you?",
-     "interest": "the NBA",
+     "to": "Sam",
+     "text": "Arjun, tired. Your best take on F1 might be just the thing.",
+     "interest": "F1",
      "action": {
       "type": "message",
       "label": "Message Arjun",
@@ -12902,18 +12875,43 @@ window.DEMO = {
      "sends_at": "2026-10-26T18:00",
      "cancel_until": "2026-10-26T18:10",
      "fallback": false,
-     "tries": 3,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note states only allowed mood and interest with a light generic nudge and reveals no private detail or reason.",
+      "reason": "Note uses only allowed name, mood tired, and F1 interest with a generic connect idea and reveals no private detail or reason.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, tired. A small treat would land well.",
+     "interest": "the NBA",
+     "action": {
+      "type": "treat",
+      "label": "Send Arjun a small treat",
+      "detail": "Ice cream, coffee or something sweet, delivered. Iris fills in the address, so you never see it.",
+      "surprise": true,
+      "suggested": "treat"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-26T18:00",
+     "cancel_until": "2026-10-26T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note states only allowed mood and a generic treat with no private detail or reason.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, tired. How about a mellow song for tonight?",
+     "text": "Arjun, tired. A quiet song for the evening perhaps?",
      "interest": "live music",
      "action": {
       "type": "song",
@@ -12932,7 +12930,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name and tired mood plus generic mellow song treat with no reason, names, places, titles, or private details.",
+      "reason": "Note uses only allowed name/mood plus generic quiet-song gesture with no reason or private detail.",
       "voice_ok": true
      }
     }
@@ -12949,26 +12947,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, tired. Would lunch and film photography talk suit your week?",
-     "why": "Back from a weekend trip with broken sleep, heavier night scrolling and a long day missing home."
+     "text": "Arjun, tired. Lunch this week with some film photography talk?",
+     "why": "Home from a weekend trip with Maya, sleeping restlessly with more tired-themed reels and a long day in your messages."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, tired. A gentle F1 reel for a quiet smile?",
-     "why": "Back from a weekend trip with broken sleep, heavier night scrolling and a long day missing home."
+     "text": "Arjun, tired. Your best take on F1 might be just the thing.",
+     "why": "Home from a weekend trip with Maya, sleeping restlessly with more tired-themed reels and a long day in your messages."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, tired. Something small on the NBA from you?",
-     "why": "Back from a weekend trip with broken sleep, heavier night scrolling and a long day missing home."
+     "text": "Arjun, tired. A small treat would land well.",
+     "why": "Home from a weekend trip with Maya, sleeping restlessly with more tired-themed reels and a long day in your messages."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, tired. How about a mellow song for tonight?",
-     "why": "Back from a weekend trip with broken sleep, heavier night scrolling and a long day missing home."
+     "text": "Arjun, tired. A quiet song for the evening perhaps?",
+     "why": "Home from a weekend trip with Maya, sleeping restlessly with more tired-themed reels and a long day in your messages."
     }
    ],
    "inputs": {
@@ -13217,28 +13215,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "down",
      "interest": "film photography",
-     "text": "Arjun, tired. Would lunch and film photography talk suit your week?",
+     "text": "Arjun, tired. Lunch this week with some film photography talk?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "down",
      "interest": "F1",
-     "text": "Arjun, tired. A gentle F1 reel for a quiet smile?",
+     "text": "Arjun, tired. Your best take on F1 might be just the thing.",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "down",
      "interest": "the NBA",
-     "text": "Arjun, tired. Something small on the NBA from you?",
+     "text": "Arjun, tired. A small treat would land well.",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "down",
      "interest": "live music",
-     "text": "Arjun, tired. How about a mellow song for tonight?",
+     "text": "Arjun, tired. A quiet song for the evening perhaps?",
      "fallback": false
     }
    ],
@@ -13255,70 +13253,20 @@ window.DEMO = {
    "date": "2026-10-27",
    "weekday": "Tuesday",
    "learning": false,
-   "mood": "buzzing",
-   "direction": "up",
-   "moment": "a social day",
+   "mood": "busy",
+   "direction": "flat",
+   "moment": "a busy day",
    "size": "ordinary",
-   "why": "Far more messages than usual with playful F1 and film chat, with normal reels and slightly softer music.",
+   "why": "Lots more messages than usual, steady reels, and slightly softer music on a workday.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, buzzing day. A film photography reel to keep the fun rolling?",
+     "text": "Arjun, busy day. A favorite song for a quick pause?",
      "interest": "film photography",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun a film photography reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-27T18:00",
-     "cancel_until": "2026-10-27T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name/mood plus film photography interest with light reel idea, no private detail or reason given.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Sam",
-     "text": "Arjun, buzzing day. Your boldest F1 prediction to trade?",
-     "interest": "F1",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-27T18:00",
-     "cancel_until": "2026-10-27T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name/mood and generic F1 trade-predictions nudge with no private detail, reason, quotes, or third-party info.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, buzzing day. Got a song to keep the rhythm?",
-     "interest": "the NBA",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
-      "detail": "Golden Hour Lap by Neon Paddock",
+      "detail": "Halfway Home by The Low Lanterns",
       "surprise": true,
       "suggested": "song"
      },
@@ -13332,14 +13280,39 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name and buzzing mood with generic song nudge, revealing no private reason or detail.",
+      "reason": "Note uses only allowed busy mood and a generic song pause with no private detail, reason, or identifiers.",
       "voice_ok": true
      }
     },
     {
-     "to": "Omar",
-     "text": "Arjun, buzzing day. Your best live music memory to trade?",
-     "interest": "live music",
+     "to": "Sam",
+     "text": "Arjun, busy today. Which F1 clip gets your vote?",
+     "interest": "F1",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun an F1 reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-27T18:00",
+     "cancel_until": "2026-10-27T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, mood 'busy', and F1 interest with a light question and no private detail.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, busy today. A bold prediction on the NBA to trade back and forth?",
+     "interest": "the NBA",
      "action": {
       "type": "message",
       "label": "Message Arjun",
@@ -13352,12 +13325,38 @@ window.DEMO = {
      "sends_at": "2026-10-27T18:00",
      "cancel_until": "2026-10-27T18:10",
      "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed busy mood and NBA interest with generic trade-predictions idea, no private details.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, busy day. Lunch this week to trade notes on live music?",
+     "interest": "live music",
+     "action": {
+      "type": "lunch",
+      "label": "Lunch with Arjun, Wednesday 12:00 PM",
+      "detail": "You're both free Wednesday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
+      "when": "2026-10-28T12:00",
+      "surprise": false,
+      "suggested": "lunch"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-27T18:00",
+     "cancel_until": "2026-10-27T18:10",
+     "fallback": false,
      "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood and live-music nudge with no reason, names, quotes, or private facts from the day.",
+      "reason": "Note uses only allowed mood and interest with generic lunch invite, no private facts or reasons.",
       "voice_ok": true
      }
     }
@@ -13374,26 +13373,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, buzzing day. A film photography reel to keep the fun rolling?",
-     "why": "Far more messages than usual with playful F1 and film chat, with normal reels and slightly softer music."
+     "text": "Arjun, busy day. A favorite song for a quick pause?",
+     "why": "Lots more messages than usual, steady reels, and slightly softer music on a workday."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, buzzing day. Your boldest F1 prediction to trade?",
-     "why": "Far more messages than usual with playful F1 and film chat, with normal reels and slightly softer music."
+     "text": "Arjun, busy today. Which F1 clip gets your vote?",
+     "why": "Lots more messages than usual, steady reels, and slightly softer music on a workday."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, buzzing day. Got a song to keep the rhythm?",
-     "why": "Far more messages than usual with playful F1 and film chat, with normal reels and slightly softer music."
+     "text": "Arjun, busy today. A bold prediction on the NBA to trade back and forth?",
+     "why": "Lots more messages than usual, steady reels, and slightly softer music on a workday."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, buzzing day. Your best live music memory to trade?",
-     "why": "Far more messages than usual with playful F1 and film chat, with normal reels and slightly softer music."
+     "text": "Arjun, busy day. Lunch this week to trade notes on live music?",
+     "why": "Lots more messages than usual, steady reels, and slightly softer music on a workday."
     }
    ],
    "inputs": {
@@ -13584,8 +13583,8 @@ window.DEMO = {
    "friend_view": [
     {
      "name": "Arjun",
-     "mood": "buzzing",
-     "direction": "up",
+     "mood": "busy",
+     "direction": "flat",
      "source": "engine"
     },
     {
@@ -13671,30 +13670,30 @@ window.DEMO = {
    "lifts": [
     {
      "to": "Maya",
-     "kind": "up",
+     "kind": "flat",
      "interest": "film photography",
-     "text": "Arjun, buzzing day. A film photography reel to keep the fun rolling?",
+     "text": "Arjun, busy day. A favorite song for a quick pause?",
      "fallback": false
     },
     {
      "to": "Sam",
-     "kind": "up",
+     "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, buzzing day. Your boldest F1 prediction to trade?",
+     "text": "Arjun, busy today. Which F1 clip gets your vote?",
      "fallback": false
     },
     {
      "to": "Dev",
-     "kind": "up",
+     "kind": "flat",
      "interest": "the NBA",
-     "text": "Arjun, buzzing day. Got a song to keep the rhythm?",
+     "text": "Arjun, busy today. A bold prediction on the NBA to trade back and forth?",
      "fallback": false
     },
     {
      "to": "Omar",
-     "kind": "up",
+     "kind": "flat",
      "interest": "live music",
-     "text": "Arjun, buzzing day. Your best live music memory to trade?",
+     "text": "Arjun, busy day. Lunch this week to trade notes on live music?",
      "fallback": false
     }
    ],
@@ -13713,13 +13712,13 @@ window.DEMO = {
    "learning": false,
    "mood": "proud",
    "direction": "up",
-   "moment": "passing an exam",
+   "moment": "a big day",
    "size": "big",
-   "why": "Results on your calendar, passing news in your messages and brighter higher-energy music on repeat.",
+   "why": "Results on your calendar, brighter high-energy music on repeat and excited messages about passing.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, proud day. Two seats for live music to celebrate?",
+     "text": "Arjun, proud day. Two seats for live music this weekend?",
      "interest": "live music",
      "action": {
       "type": "tickets",
@@ -13739,65 +13738,14 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Name plus proud mood and generic live-music invite gives no exam, result, message, or event detail.",
+      "reason": "Note uses only allowed proud mood and live-music invite with no exam, gig, people, or message details.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, proud day. Your finest F1 clip for a winning smile?",
+     "text": "Arjun, proud day. A song for the moment, your pick?",
      "interest": "F1",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun an F1 reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-28T18:00",
-     "cancel_until": "2026-10-28T18:10",
-     "fallback": false,
-     "tries": 2,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed proud mood and F1 clip idea with no exam, result, message wording, or other private detail.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, proud day. Lunch this week to talk the NBA over dessert?",
-     "interest": "the NBA",
-     "action": {
-      "type": "lunch",
-      "label": "Lunch with Arjun, Friday 12:00 PM",
-      "detail": "You're both free Friday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
-      "when": "2026-10-30T12:00",
-      "surprise": false,
-      "suggested": "lunch"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-10-28T18:00",
-     "cancel_until": "2026-10-28T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name/mood/interest with generic lunch-dessert invite and reveals no exam, result, people, or message details.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, proud day. A song to mark the moment?",
-     "interest": "live music",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -13815,13 +13763,63 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Shares only allowed proud mood and generic song gesture with no exam, result, or private detail.",
+      "reason": "Note uses only allowed name/mood plus generic song gesture, with no hint of exam, people, tracks, or other private facts.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, proud day. Your favorite play from the NBA this season?",
+     "interest": "the NBA",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-28T18:00",
+     "cancel_until": "2026-10-28T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed proud mood and NBA interest as a light question, with no exam, result, message wording, or other private detail.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, proud day. A reel on film photography to share the fun?",
+     "interest": "film photography",
+     "action": {
+      "type": "reel",
+      "label": "Send Arjun a film photography reel",
+      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
+      "surprise": false,
+      "suggested": "reel"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-10-28T18:00",
+     "cancel_until": "2026-10-28T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note only states proud mood and suggests a film-photography reel with no reason or private detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Priya",
-     "text": "Arjun, proud day. Got a favorite bit of stand-up comedy for tonight?",
+     "text": "Arjun, proud day. A message with your favorite stand-up comedy moment to celebrate?",
      "interest": "stand-up comedy",
      "action": {
       "type": "message",
@@ -13835,12 +13833,12 @@ window.DEMO = {
      "sends_at": "2026-10-28T18:00",
      "cancel_until": "2026-10-28T18:10",
      "fallback": false,
-     "tries": 2,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note states only allowed mood and interest with a light connect question, no reason or private detail.",
+      "reason": "Note shares only proud mood and comedy interest with generic celebrate idea, no exam, people, or private wording.",
       "voice_ok": true
      }
     }
@@ -13852,32 +13850,32 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, proud day. Two seats for live music to celebrate?",
-     "why": "Results on your calendar, passing news in your messages and brighter higher-energy music on repeat."
+     "text": "Arjun, proud day. Two seats for live music this weekend?",
+     "why": "Results on your calendar, brighter high-energy music on repeat and excited messages about passing."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, proud day. Your finest F1 clip for a winning smile?",
-     "why": "Results on your calendar, passing news in your messages and brighter higher-energy music on repeat."
+     "text": "Arjun, proud day. A song for the moment, your pick?",
+     "why": "Results on your calendar, brighter high-energy music on repeat and excited messages about passing."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, proud day. Lunch this week to talk the NBA over dessert?",
-     "why": "Results on your calendar, passing news in your messages and brighter higher-energy music on repeat."
+     "text": "Arjun, proud day. Your favorite play from the NBA this season?",
+     "why": "Results on your calendar, brighter high-energy music on repeat and excited messages about passing."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, proud day. A song to mark the moment?",
-     "why": "Results on your calendar, passing news in your messages and brighter higher-energy music on repeat."
+     "text": "Arjun, proud day. A reel on film photography to share the fun?",
+     "why": "Results on your calendar, brighter high-energy music on repeat and excited messages about passing."
     },
     {
      "kind": "note",
      "to": "Priya",
-     "text": "Arjun, proud day. Got a favorite bit of stand-up comedy for tonight?",
-     "why": "Results on your calendar, passing news in your messages and brighter higher-energy music on repeat."
+     "text": "Arjun, proud day. A message with your favorite stand-up comedy moment to celebrate?",
+     "why": "Results on your calendar, brighter high-energy music on repeat and excited messages about passing."
     }
    ],
    "inputs": {
@@ -14166,35 +14164,35 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "live music",
-     "text": "Arjun, proud day. Two seats for live music to celebrate?",
+     "text": "Arjun, proud day. Two seats for live music this weekend?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, proud day. Your finest F1 clip for a winning smile?",
+     "text": "Arjun, proud day. A song for the moment, your pick?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "the NBA",
-     "text": "Arjun, proud day. Lunch this week to talk the NBA over dessert?",
+     "text": "Arjun, proud day. Your favorite play from the NBA this season?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
-     "interest": "live music",
-     "text": "Arjun, proud day. A song to mark the moment?",
+     "interest": "film photography",
+     "text": "Arjun, proud day. A reel on film photography to share the fun?",
      "fallback": false
     },
     {
      "to": "Priya",
      "kind": "up",
      "interest": "stand-up comedy",
-     "text": "Arjun, proud day. Got a favorite bit of stand-up comedy for tonight?",
+     "text": "Arjun, proud day. A message with your favorite stand-up comedy moment to celebrate?",
      "fallback": false
     }
    ],
@@ -14213,13 +14211,13 @@ window.DEMO = {
    "learning": false,
    "mood": "proud",
    "direction": "up",
-   "moment": "good news",
+   "moment": "passed an exam",
    "size": "big",
-   "why": "Results yesterday and a celebration dinner tonight, with more messages and brighter music than usual.",
+   "why": "PMP results yesterday and a celebration dinner tonight, with more messages and brighter music than usual.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, proud day. How about two seats for F1 this weekend?",
+     "text": "Arjun, proud day. Two seats for the next F1 race to celebrate?",
      "interest": "F1",
      "action": {
       "type": "tickets",
@@ -14239,13 +14237,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, and F1 invite with no hint at PMP results or dinner.",
+      "reason": "Note uses only allowed name, mood, and F1 interest with generic celebration invite and reveals no private fact.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, proud day. Got an F1 reel worthy of applause?",
+     "text": "Arjun, proud day. What F1 reel made you smile this week?",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -14259,44 +14257,43 @@ window.DEMO = {
      "sends_at": "2026-10-29T18:00",
      "cancel_until": "2026-10-29T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note states only allowed mood and F1 interest with generic celebratory nudge, no private reason or details.",
+      "reason": "Note only states allowed proud mood and F1 interest with a generic question, revealing no PMP results, dinner, messages, or other private facts.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, proud day. Your best take on the NBA over lunch this week?",
-     "interest": "the NBA",
+     "text": "Arjun, proud day. How about a friendly F1 wager for fun?",
+     "interest": "F1",
      "action": {
-      "type": "lunch",
-      "label": "Lunch with Arjun, Friday 12:00 PM",
-      "detail": "You're both free Friday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
-      "when": "2026-10-30T12:00",
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
       "surprise": false,
-      "suggested": "lunch"
+      "suggested": "message"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
      "sends_at": "2026-10-29T18:00",
      "cancel_until": "2026-10-29T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Shares only allowed proud mood and NBA interest with a lunch invite, no reason or private detail.",
+      "reason": "Note uses only allowed name, mood and F1 interest with a light wager suggestion and reveals no private reason or detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, proud day. A song for the occasion tonight?",
+     "text": "Arjun, proud day. A song to mark the moment?",
      "interest": "live music",
      "action": {
       "type": "song",
@@ -14315,13 +14312,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic proud mood plus song idea with no event, people, reason, or wording from private day.",
+      "reason": "Generic proud mood with song suggestion reveals no reason, people, events, or tracks.",
       "voice_ok": true
      }
     },
     {
      "to": "Priya",
-     "text": "Arjun, proud day. A note on stand-up comedy with your applause inside?",
+     "text": "Arjun, proud day. Which stand-up comedy bit always gets you laughing?",
      "interest": "stand-up comedy",
      "action": {
       "type": "message",
@@ -14335,12 +14332,12 @@ window.DEMO = {
      "sends_at": "2026-10-29T18:00",
      "cancel_until": "2026-10-29T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note states only proud mood and stand-up comedy interest with generic applause note, revealing no reason, people, events, or private details.",
+      "reason": "Note uses only allowed name, mood, and interest as a light question with no reason, private details, or echoes of PMP results.",
       "voice_ok": true
      }
     }
@@ -14352,32 +14349,32 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, proud day. How about two seats for F1 this weekend?",
-     "why": "Results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
+     "text": "Arjun, proud day. Two seats for the next F1 race to celebrate?",
+     "why": "PMP results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, proud day. Got an F1 reel worthy of applause?",
-     "why": "Results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
+     "text": "Arjun, proud day. What F1 reel made you smile this week?",
+     "why": "PMP results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, proud day. Your best take on the NBA over lunch this week?",
-     "why": "Results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
+     "text": "Arjun, proud day. How about a friendly F1 wager for fun?",
+     "why": "PMP results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, proud day. A song for the occasion tonight?",
-     "why": "Results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
+     "text": "Arjun, proud day. A song to mark the moment?",
+     "why": "PMP results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
     },
     {
      "kind": "note",
      "to": "Priya",
-     "text": "Arjun, proud day. A note on stand-up comedy with your applause inside?",
-     "why": "Results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
+     "text": "Arjun, proud day. Which stand-up comedy bit always gets you laughing?",
+     "why": "PMP results yesterday and a celebration dinner tonight, with more messages and brighter music than usual."
     }
    ],
    "inputs": {
@@ -14665,35 +14662,35 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, proud day. How about two seats for F1 this weekend?",
+     "text": "Arjun, proud day. Two seats for the next F1 race to celebrate?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, proud day. Got an F1 reel worthy of applause?",
+     "text": "Arjun, proud day. What F1 reel made you smile this week?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
-     "interest": "the NBA",
-     "text": "Arjun, proud day. Your best take on the NBA over lunch this week?",
+     "interest": "F1",
+     "text": "Arjun, proud day. How about a friendly F1 wager for fun?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
      "interest": "live music",
-     "text": "Arjun, proud day. A song for the occasion tonight?",
+     "text": "Arjun, proud day. A song to mark the moment?",
      "fallback": false
     },
     {
      "to": "Priya",
      "kind": "up",
      "interest": "stand-up comedy",
-     "text": "Arjun, proud day. A note on stand-up comedy with your applause inside?",
+     "text": "Arjun, proud day. Which stand-up comedy bit always gets you laughing?",
      "fallback": false
     }
    ],
@@ -14714,12 +14711,12 @@ window.DEMO = {
    "direction": "up",
    "moment": "a show tonight",
    "size": "notable",
-   "why": "A live show on your calendar tonight with heavy repeat listening and upbeat messages.",
+   "why": "A live show on your calendar, heavy repeat listening to the same band, and upbeat planning messages.",
    "notes": [
     {
      "to": "Maya",
      "text": "Arjun, excited day. A song for the moment, your pick?",
-     "interest": "film photography",
+     "interest": "live music",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -14732,18 +14729,18 @@ window.DEMO = {
      "sends_at": "2026-10-30T18:00",
      "cancel_until": "2026-10-30T18:10",
      "fallback": false,
-     "tries": 2,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic song suggestion with no artist, track, show, or reason disclosed.",
+      "reason": "Generic excited mood plus vague song suggestion with no artist, event, place, or reason revealed.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, excited today. Your funniest F1 reel to keep the laugh?",
+     "text": "Arjun, excited day. Your funniest F1 reel could keep this rolling.",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -14757,18 +14754,18 @@ window.DEMO = {
      "sends_at": "2026-10-30T18:00",
      "cancel_until": "2026-10-30T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Mood and F1 only, no private reason, people, or content revealed and tone stays kind if off.",
+      "reason": "Uses only allowed excited mood and F1 with generic reel idea, no concert, song, message, or other private detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, excited today. A quick note on F1 to share the fun?",
+     "text": "Arjun, excited day. Your favorite F1 memory to swap?",
      "interest": "F1",
      "action": {
       "type": "message",
@@ -14782,18 +14779,18 @@ window.DEMO = {
      "sends_at": "2026-10-30T18:00",
      "cancel_until": "2026-10-30T18:10",
      "fallback": false,
-     "tries": 2,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood excited, and generic F1 nudge with no private detail, reason, or echo.",
+      "reason": "Note only gives name, excited mood, and generic F1 memory swap with no specific private fact or reason.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, excited day. Your favorite film photography tip to share?",
+     "text": "Arjun, excited day. A message swapping notes on film photography?",
      "interest": "film photography",
      "action": {
       "type": "message",
@@ -14812,7 +14809,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note only states excited mood and asks about film photography with no private detail, reason, or source hint.",
+      "reason": "Note uses only allowed name, mood, and interest with a generic message idea and reveals no private fact.",
       "voice_ok": true
      }
     }
@@ -14830,25 +14827,25 @@ window.DEMO = {
      "kind": "note",
      "to": "Maya",
      "text": "Arjun, excited day. A song for the moment, your pick?",
-     "why": "A live show on your calendar tonight with heavy repeat listening and upbeat messages."
+     "why": "A live show on your calendar, heavy repeat listening to the same band, and upbeat planning messages."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, excited today. Your funniest F1 reel to keep the laugh?",
-     "why": "A live show on your calendar tonight with heavy repeat listening and upbeat messages."
+     "text": "Arjun, excited day. Your funniest F1 reel could keep this rolling.",
+     "why": "A live show on your calendar, heavy repeat listening to the same band, and upbeat planning messages."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, excited today. A quick note on F1 to share the fun?",
-     "why": "A live show on your calendar tonight with heavy repeat listening and upbeat messages."
+     "text": "Arjun, excited day. Your favorite F1 memory to swap?",
+     "why": "A live show on your calendar, heavy repeat listening to the same band, and upbeat planning messages."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, excited day. Your favorite film photography tip to share?",
-     "why": "A live show on your calendar tonight with heavy repeat listening and upbeat messages."
+     "text": "Arjun, excited day. A message swapping notes on film photography?",
+     "why": "A live show on your calendar, heavy repeat listening to the same band, and upbeat planning messages."
     }
    ],
    "inputs": {
@@ -15119,7 +15116,7 @@ window.DEMO = {
     {
      "to": "Maya",
      "kind": "up",
-     "interest": "film photography",
+     "interest": "live music",
      "text": "Arjun, excited day. A song for the moment, your pick?",
      "fallback": false
     },
@@ -15127,21 +15124,21 @@ window.DEMO = {
      "to": "Sam",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, excited today. Your funniest F1 reel to keep the laugh?",
+     "text": "Arjun, excited day. Your funniest F1 reel could keep this rolling.",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, excited today. A quick note on F1 to share the fun?",
+     "text": "Arjun, excited day. Your favorite F1 memory to swap?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
      "interest": "film photography",
-     "text": "Arjun, excited day. Your favorite film photography tip to share?",
+     "text": "Arjun, excited day. A message swapping notes on film photography?",
      "fallback": false
     }
    ],
@@ -15160,20 +15157,21 @@ window.DEMO = {
    "learning": false,
    "mood": "happy",
    "direction": "up",
-   "moment": "a busy saturday",
+   "moment": "a busy day",
    "size": "ordinary",
-   "why": "More messages than usual, lots of race chat, and a morning run on the calendar.",
+   "why": "More messages than usual with playful race chatter, a morning run, and last night's band on repeat.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, happy day. Your best take on F1 might be just the thing.",
+     "text": "Arjun, happy day. Lunch this week to trade F1 predictions, your pick?",
      "interest": "F1",
      "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
+      "type": "lunch",
+      "label": "Lunch with Arjun, Sunday 12:00 PM",
+      "detail": "You're both free Sunday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
+      "when": "2026-11-01T12:00",
       "surprise": false,
-      "suggested": "message"
+      "suggested": "lunch"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
@@ -15185,13 +15183,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed happy mood and F1 interest with generic ask, no private facts or reasons.",
+      "reason": "Note uses only allowed name, happy mood, F1 interest and lunch idea with no private detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, happy day. A classic F1 reel for a shared laugh?",
+     "text": "Arjun, happy day. How about an F1 reel to keep the smiles going?",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -15210,13 +15208,13 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, happy mood, and F1 interest with a generic reel idea and reveals no private fact or reason.",
+      "reason": "Note shares only happy mood and F1 with a light reel idea, no private reason or details.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, happy day. A little friendly debate on the NBA today?",
+     "text": "Arjun, happy day. Your boldest prediction for the NBA tonight?",
      "interest": "the NBA",
      "action": {
       "type": "message",
@@ -15230,18 +15228,18 @@ window.DEMO = {
      "sends_at": "2026-10-31T18:00",
      "cancel_until": "2026-10-31T18:10",
      "fallback": false,
-     "tries": 3,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note states only happy mood plus generic NBA debate with no private facts, reasons, or paraphrases.",
+      "reason": "Note uses only allowed name, mood, and NBA interest with a light question and reveals no private facts, reasons, or details.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, happy day. Which song feels right today?",
+     "text": "Arjun, happy day. Maybe a song for this bright mood?",
      "interest": "live music",
      "action": {
       "type": "song",
@@ -15255,12 +15253,12 @@ window.DEMO = {
      "sends_at": "2026-10-31T18:00",
      "cancel_until": "2026-10-31T18:10",
      "fallback": false,
-     "tries": 2,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note states only name and happy mood with a generic song question, revealing no private facts, reasons, names, or tracks.",
+      "reason": "Note only states happy mood and suggests a song with no private facts, reasons, or specifics.",
       "voice_ok": true
      }
     }
@@ -15277,26 +15275,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, happy day. Your best take on F1 might be just the thing.",
-     "why": "More messages than usual, lots of race chat, and a morning run on the calendar."
+     "text": "Arjun, happy day. Lunch this week to trade F1 predictions, your pick?",
+     "why": "More messages than usual with playful race chatter, a morning run, and last night's band on repeat."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, happy day. A classic F1 reel for a shared laugh?",
-     "why": "More messages than usual, lots of race chat, and a morning run on the calendar."
+     "text": "Arjun, happy day. How about an F1 reel to keep the smiles going?",
+     "why": "More messages than usual with playful race chatter, a morning run, and last night's band on repeat."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, happy day. A little friendly debate on the NBA today?",
-     "why": "More messages than usual, lots of race chat, and a morning run on the calendar."
+     "text": "Arjun, happy day. Your boldest prediction for the NBA tonight?",
+     "why": "More messages than usual with playful race chatter, a morning run, and last night's band on repeat."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, happy day. Which song feels right today?",
-     "why": "More messages than usual, lots of race chat, and a morning run on the calendar."
+     "text": "Arjun, happy day. Maybe a song for this bright mood?",
+     "why": "More messages than usual with playful race chatter, a morning run, and last night's band on repeat."
     }
    ],
    "inputs": {
@@ -15549,28 +15547,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. Your best take on F1 might be just the thing.",
+     "text": "Arjun, happy day. Lunch this week to trade F1 predictions, your pick?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "up",
      "interest": "F1",
-     "text": "Arjun, happy day. A classic F1 reel for a shared laugh?",
+     "text": "Arjun, happy day. How about an F1 reel to keep the smiles going?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "up",
      "interest": "the NBA",
-     "text": "Arjun, happy day. A little friendly debate on the NBA today?",
+     "text": "Arjun, happy day. Your boldest prediction for the NBA tonight?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "up",
      "interest": "live music",
-     "text": "Arjun, happy day. Which song feels right today?",
+     "text": "Arjun, happy day. Maybe a song for this bright mood?",
      "fallback": false
     }
    ],
@@ -15591,11 +15589,11 @@ window.DEMO = {
    "direction": "flat",
    "moment": "an ordinary day",
    "size": "ordinary",
-   "why": "Lighter watching and listening than usual with playful messages about racing, basketball and photos.",
+   "why": "A free Sunday with usual-sounding music, steady messages and lots of F1, basketball and film chat.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, content today. A reel on film photography for a quiet smile?",
+     "text": "Arjun, content day. How about a reel of your best film photography shots?",
      "interest": "film photography",
      "action": {
       "type": "reel",
@@ -15609,19 +15607,44 @@ window.DEMO = {
      "sends_at": "2026-11-01T18:00",
      "cancel_until": "2026-11-01T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 3,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, and interest with a generic friendly reel suggestion and reveals no private fact.",
+      "reason": "Note only states allowed mood and shared interest with a light reel idea and reveals no private facts.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, content today. Your best F1 story would land nicely.",
+     "text": "Arjun, content day. An F1 memory worth swapping today?",
      "interest": "F1",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-11-01T18:00",
+     "cancel_until": "2026-11-01T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, mood, and F1 interest with generic swap idea and reveals no private fact.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, content day. A quick note on the NBA to swap thoughts?",
+     "interest": "the NBA",
      "action": {
       "type": "message",
       "label": "Message Arjun",
@@ -15639,14 +15662,14 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, and F1 interest with a generic story-share nudge and no private facts.",
+      "reason": "Note uses only name, allowed mood, and NBA interest with a light connect idea and reveals no private fact.",
       "voice_ok": true
      }
     },
     {
-     "to": "Dev",
-     "text": "Arjun, content today. A song to keep it going?",
-     "interest": "the NBA",
+     "to": "Omar",
+     "text": "Arjun, content day. A song for the quiet glow?",
+     "interest": "film photography",
      "action": {
       "type": "song",
       "label": "Send Arjun a song",
@@ -15664,32 +15687,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Generic content mood plus song nudge with no private facts or reasons.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Omar",
-     "text": "Arjun, content today. Something small on film photography might be nice.",
-     "interest": "film photography",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-11-01T18:00",
-     "cancel_until": "2026-11-01T18:10",
-     "fallback": false,
-     "tries": 3,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, mood, and interest with a generic small gesture and reveals no private fact or reason.",
+      "reason": "Note uses only allowed name and mood with generic song gesture and reveals no private facts.",
       "voice_ok": true
      }
     }
@@ -15706,26 +15704,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, content today. A reel on film photography for a quiet smile?",
-     "why": "Lighter watching and listening than usual with playful messages about racing, basketball and photos."
+     "text": "Arjun, content day. How about a reel of your best film photography shots?",
+     "why": "A free Sunday with usual-sounding music, steady messages and lots of F1, basketball and film chat."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, content today. Your best F1 story would land nicely.",
-     "why": "Lighter watching and listening than usual with playful messages about racing, basketball and photos."
+     "text": "Arjun, content day. An F1 memory worth swapping today?",
+     "why": "A free Sunday with usual-sounding music, steady messages and lots of F1, basketball and film chat."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, content today. A song to keep it going?",
-     "why": "Lighter watching and listening than usual with playful messages about racing, basketball and photos."
+     "text": "Arjun, content day. A quick note on the NBA to swap thoughts?",
+     "why": "A free Sunday with usual-sounding music, steady messages and lots of F1, basketball and film chat."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, content today. Something small on film photography might be nice.",
-     "why": "Lighter watching and listening than usual with playful messages about racing, basketball and photos."
+     "text": "Arjun, content day. A song for the quiet glow?",
+     "why": "A free Sunday with usual-sounding music, steady messages and lots of F1, basketball and film chat."
     }
    ],
    "inputs": {
@@ -15976,28 +15974,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "flat",
      "interest": "film photography",
-     "text": "Arjun, content today. A reel on film photography for a quiet smile?",
+     "text": "Arjun, content day. How about a reel of your best film photography shots?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, content today. Your best F1 story would land nicely.",
+     "text": "Arjun, content day. An F1 memory worth swapping today?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "flat",
      "interest": "the NBA",
-     "text": "Arjun, content today. A song to keep it going?",
+     "text": "Arjun, content day. A quick note on the NBA to swap thoughts?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "flat",
      "interest": "film photography",
-     "text": "Arjun, content today. Something small on film photography might be nice.",
+     "text": "Arjun, content day. A song for the quiet glow?",
      "fallback": false
     }
    ],
@@ -16014,40 +16012,40 @@ window.DEMO = {
    "date": "2026-11-02",
    "weekday": "Monday",
    "learning": false,
-   "mood": "happy",
-   "direction": "up",
-   "moment": "an ordinary day",
+   "mood": "busy",
+   "direction": "flat",
+   "moment": "a busy day",
    "size": "ordinary",
-   "why": "More messages than usual with brighter music and upbeat race, comedy and photo chat around a routine morning appointment.",
+   "why": "More messages than usual with upbeat and affectionate chatter, steady reels and slightly brighter music, plus an early appointment and work on the calendar.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, happy day. Ready with a song for today?",
+     "text": "Arjun, busy today. How about a little note on film photography, your pick?",
      "interest": "film photography",
      "action": {
-      "type": "song",
-      "label": "Send Arjun a song",
-      "detail": "Lights Out by The Undercuts",
-      "surprise": true,
-      "suggested": "song"
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
      "sends_at": "2026-11-02T18:00",
      "cancel_until": "2026-11-02T18:10",
      "fallback": false,
-     "tries": 1,
+     "tries": 2,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note states only name and happy mood with generic song nudge, no private facts, reasons, or wording.",
+      "reason": "Note uses only allowed name, mood busy, interest film photography and a generic note idea with no private reason or detail.",
       "voice_ok": true
      }
     },
     {
      "to": "Sam",
-     "text": "Arjun, happy today. How about an F1 reel to share the smile?",
+     "text": "Arjun, busy day. Could a funny F1 reel steal a minute?",
      "interest": "F1",
      "action": {
       "type": "reel",
@@ -16061,18 +16059,18 @@ window.DEMO = {
      "sends_at": "2026-11-02T18:00",
      "cancel_until": "2026-11-02T18:10",
      "fallback": false,
-     "tries": 2,
+     "tries": 1,
      "check": {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note only gives allowed happy mood and F1 interest with a light reel idea and reveals no private fact.",
+      "reason": "Note uses only allowed name, mood, and F1 interest with a light reel idea and reveals no private fact.",
       "voice_ok": true
      }
     },
     {
      "to": "Dev",
-     "text": "Arjun, happy day. Your favorite play from the NBA this week?",
+     "text": "Arjun, busy day. What is your call on the NBA tonight?",
      "interest": "the NBA",
      "action": {
       "type": "message",
@@ -16091,20 +16089,20 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, happy mood, and generic NBA question with no private reason, detail, or wording from the day.",
+      "reason": "Note uses only allowed busy mood and NBA interest with generic question and reveals no private fact.",
       "voice_ok": true
      }
     },
     {
      "to": "Omar",
-     "text": "Arjun, happy day. A live music story for today?",
+     "text": "Arjun, busy today. Got a song to share for now?",
      "interest": "live music",
      "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
+      "type": "song",
+      "label": "Send Arjun a song",
+      "detail": "Halfway Home by The Low Lanterns",
+      "surprise": true,
+      "suggested": "song"
      },
      "signature": "Suggested by Muse. Arjun didn't ask.",
      "status": "queued",
@@ -16116,7 +16114,7 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name, mood, and live music interest with a light connect idea and reveals no private detail.",
+      "reason": "Note uses only name plus busy mood and generic song share with no private detail, reason, or source.",
       "voice_ok": true
      }
     }
@@ -16133,26 +16131,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, happy day. Ready with a song for today?",
-     "why": "More messages than usual with brighter music and upbeat race, comedy and photo chat around a routine morning appointment."
+     "text": "Arjun, busy today. How about a little note on film photography, your pick?",
+     "why": "More messages than usual with upbeat and affectionate chatter, steady reels and slightly brighter music, plus an early appointment and work on the calendar."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, happy today. How about an F1 reel to share the smile?",
-     "why": "More messages than usual with brighter music and upbeat race, comedy and photo chat around a routine morning appointment."
+     "text": "Arjun, busy day. Could a funny F1 reel steal a minute?",
+     "why": "More messages than usual with upbeat and affectionate chatter, steady reels and slightly brighter music, plus an early appointment and work on the calendar."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, happy day. Your favorite play from the NBA this week?",
-     "why": "More messages than usual with brighter music and upbeat race, comedy and photo chat around a routine morning appointment."
+     "text": "Arjun, busy day. What is your call on the NBA tonight?",
+     "why": "More messages than usual with upbeat and affectionate chatter, steady reels and slightly brighter music, plus an early appointment and work on the calendar."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, happy day. A live music story for today?",
-     "why": "More messages than usual with brighter music and upbeat race, comedy and photo chat around a routine morning appointment."
+     "text": "Arjun, busy today. Got a song to share for now?",
+     "why": "More messages than usual with upbeat and affectionate chatter, steady reels and slightly brighter music, plus an early appointment and work on the calendar."
     }
    ],
    "inputs": {
@@ -16322,8 +16320,8 @@ window.DEMO = {
    "friend_view": [
     {
      "name": "Arjun",
-     "mood": "happy",
-     "direction": "up",
+     "mood": "busy",
+     "direction": "flat",
      "source": "engine"
     },
     {
@@ -16405,30 +16403,30 @@ window.DEMO = {
    "lifts": [
     {
      "to": "Maya",
-     "kind": "up",
+     "kind": "flat",
      "interest": "film photography",
-     "text": "Arjun, happy day. Ready with a song for today?",
+     "text": "Arjun, busy today. How about a little note on film photography, your pick?",
      "fallback": false
     },
     {
      "to": "Sam",
-     "kind": "up",
+     "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, happy today. How about an F1 reel to share the smile?",
+     "text": "Arjun, busy day. Could a funny F1 reel steal a minute?",
      "fallback": false
     },
     {
      "to": "Dev",
-     "kind": "up",
+     "kind": "flat",
      "interest": "the NBA",
-     "text": "Arjun, happy day. Your favorite play from the NBA this week?",
+     "text": "Arjun, busy day. What is your call on the NBA tonight?",
      "fallback": false
     },
     {
      "to": "Omar",
-     "kind": "up",
+     "kind": "flat",
      "interest": "live music",
-     "text": "Arjun, happy day. A live music story for today?",
+     "text": "Arjun, busy today. Got a song to share for now?",
      "fallback": false
     }
    ],
@@ -16445,65 +16443,15 @@ window.DEMO = {
    "date": "2026-11-03",
    "weekday": "Tuesday",
    "learning": false,
-   "mood": "content",
+   "mood": "okay",
    "direction": "flat",
    "moment": "an ordinary day",
    "size": "ordinary",
-   "why": "Normal reels and messages, routine work meetings, and warm playful check-ins with family and friends.",
+   "why": "Normal reels and message volume with routine work meetings and a bit more, mellower music than usual.",
    "notes": [
     {
      "to": "Maya",
-     "text": "Arjun, content day. What about an F1 reel to compare notes?",
-     "interest": "F1",
-     "action": {
-      "type": "reel",
-      "label": "Send Arjun an F1 reel",
-      "detail": "Iris lines up a few fresh ones. You pick one and send it.",
-      "surprise": false,
-      "suggested": "reel"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-11-03T18:00",
-     "cancel_until": "2026-11-03T18:10",
-     "fallback": false,
-     "tries": 2,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, mood, and F1 interest with a light reel idea and reveals no private fact.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Sam",
-     "text": "Arjun, content day. Something funny about the NBA would suit today.",
-     "interest": "the NBA",
-     "action": {
-      "type": "message",
-      "label": "Message Arjun",
-      "detail": "Opens your chat with Arjun.",
-      "surprise": false,
-      "suggested": "message"
-     },
-     "signature": "Suggested by Muse. Arjun didn't ask.",
-     "status": "queued",
-     "sends_at": "2026-11-03T18:00",
-     "cancel_until": "2026-11-03T18:10",
-     "fallback": false,
-     "tries": 1,
-     "check": {
-      "harmless_if_wrong": true,
-      "interest_echoes": false,
-      "leak": false,
-      "reason": "Note uses only allowed name, mood, interest with generic friendly nudge and reveals no private fact.",
-      "voice_ok": true
-     }
-    },
-    {
-     "to": "Dev",
-     "text": "Arjun, content. How about a song for tonight?",
+     "text": "Arjun, okay day. A song to keep things light?",
      "interest": "F1",
      "action": {
       "type": "song",
@@ -16522,17 +16470,17 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed name and mood with generic song idea, no private facts, reasons, or specifics.",
+      "reason": "Note uses only allowed name and okay mood with generic song nudge, no private detail.",
       "voice_ok": true
      }
     },
     {
-     "to": "Omar",
-     "text": "Arjun, content today. Which film photography reel feels right to share?",
-     "interest": "film photography",
+     "to": "Sam",
+     "text": "Arjun, okay day. Your favorite F1 moment as a quick reel?",
+     "interest": "F1",
      "action": {
       "type": "reel",
-      "label": "Send Arjun a film photography reel",
+      "label": "Send Arjun an F1 reel",
       "detail": "Iris lines up a few fresh ones. You pick one and send it.",
       "surprise": false,
       "suggested": "reel"
@@ -16547,7 +16495,58 @@ window.DEMO = {
       "harmless_if_wrong": true,
       "interest_echoes": false,
       "leak": false,
-      "reason": "Note uses only allowed mood and film photography interest with generic share idea, no private fact or reason revealed.",
+      "reason": "Generic okay mood plus F1 reel idea reveals no private facts, names, words, or reasons.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Dev",
+     "text": "Arjun, okay day. Your funniest memory from the NBA this season?",
+     "interest": "the NBA",
+     "action": {
+      "type": "message",
+      "label": "Message Arjun",
+      "detail": "Opens your chat with Arjun.",
+      "surprise": false,
+      "suggested": "message"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-11-03T18:00",
+     "cancel_until": "2026-11-03T18:10",
+     "fallback": false,
+     "tries": 1,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note only states neutral mood and asks light NBA question with no private detail or reason.",
+      "voice_ok": true
+     }
+    },
+    {
+     "to": "Omar",
+     "text": "Arjun, okay day. How about lunch and swapping notes on film photography?",
+     "interest": "film photography",
+     "action": {
+      "type": "lunch",
+      "label": "Lunch with Arjun, Thursday 12:00 PM",
+      "detail": "You're both free Thursday from 12:00 PM to 1:00 PM. Book a table on OpenTable.",
+      "when": "2026-11-05T12:00",
+      "surprise": false,
+      "suggested": "lunch"
+     },
+     "signature": "Suggested by Muse. Arjun didn't ask.",
+     "status": "queued",
+     "sends_at": "2026-11-03T18:00",
+     "cancel_until": "2026-11-03T18:10",
+     "fallback": false,
+     "tries": 2,
+     "check": {
+      "harmless_if_wrong": true,
+      "interest_echoes": false,
+      "leak": false,
+      "reason": "Note uses only allowed name, mood, and interest with a generic lunch idea and reveals no private facts.",
       "voice_ok": true
      }
     }
@@ -16564,26 +16563,26 @@ window.DEMO = {
     {
      "kind": "note",
      "to": "Maya",
-     "text": "Arjun, content day. What about an F1 reel to compare notes?",
-     "why": "Normal reels and messages, routine work meetings, and warm playful check-ins with family and friends."
+     "text": "Arjun, okay day. A song to keep things light?",
+     "why": "Normal reels and message volume with routine work meetings and a bit more, mellower music than usual."
     },
     {
      "kind": "note",
      "to": "Sam",
-     "text": "Arjun, content day. Something funny about the NBA would suit today.",
-     "why": "Normal reels and messages, routine work meetings, and warm playful check-ins with family and friends."
+     "text": "Arjun, okay day. Your favorite F1 moment as a quick reel?",
+     "why": "Normal reels and message volume with routine work meetings and a bit more, mellower music than usual."
     },
     {
      "kind": "note",
      "to": "Dev",
-     "text": "Arjun, content. How about a song for tonight?",
-     "why": "Normal reels and messages, routine work meetings, and warm playful check-ins with family and friends."
+     "text": "Arjun, okay day. Your funniest memory from the NBA this season?",
+     "why": "Normal reels and message volume with routine work meetings and a bit more, mellower music than usual."
     },
     {
      "kind": "note",
      "to": "Omar",
-     "text": "Arjun, content today. Which film photography reel feels right to share?",
-     "why": "Normal reels and messages, routine work meetings, and warm playful check-ins with family and friends."
+     "text": "Arjun, okay day. How about lunch and swapping notes on film photography?",
+     "why": "Normal reels and message volume with routine work meetings and a bit more, mellower music than usual."
     }
    ],
    "inputs": {
@@ -16757,7 +16756,7 @@ window.DEMO = {
    "friend_view": [
     {
      "name": "Arjun",
-     "mood": "content",
+     "mood": "okay",
      "direction": "flat",
      "source": "engine"
     },
@@ -16842,28 +16841,28 @@ window.DEMO = {
      "to": "Maya",
      "kind": "flat",
      "interest": "F1",
-     "text": "Arjun, content day. What about an F1 reel to compare notes?",
+     "text": "Arjun, okay day. A song to keep things light?",
      "fallback": false
     },
     {
      "to": "Sam",
      "kind": "flat",
-     "interest": "the NBA",
-     "text": "Arjun, content day. Something funny about the NBA would suit today.",
+     "interest": "F1",
+     "text": "Arjun, okay day. Your favorite F1 moment as a quick reel?",
      "fallback": false
     },
     {
      "to": "Dev",
      "kind": "flat",
-     "interest": "F1",
-     "text": "Arjun, content. How about a song for tonight?",
+     "interest": "the NBA",
+     "text": "Arjun, okay day. Your funniest memory from the NBA this season?",
      "fallback": false
     },
     {
      "to": "Omar",
      "kind": "flat",
      "interest": "film photography",
-     "text": "Arjun, content today. Which film photography reel feels right to share?",
+     "text": "Arjun, okay day. How about lunch and swapping notes on film photography?",
      "fallback": false
     }
    ],
