@@ -14,8 +14,8 @@ const DAYS = D.days || [];
 const LIVE = DAYS.filter(d => !d.learning && d.mood);
 const LEARN = DAYS.filter(d => d.learning);
 
-// v2 test bench, from bench/results/v2-latest.md (28 cases, latest run 28 Oct 2026, after tuning the note wording).
-const BENCH_V2 = {
+// Test bench, from bench/results/v2-latest.md (28 cases, latest run 28 Oct 2026, after tuning the note wording).
+const BENCH = {
   when: "28 Oct 2026", cases: 28, notes: 41, model: "muse-spark-1.3",
   rows: [
     ["Right decision (who, size, direction, surprise)", "90%+", "28 of 28"],
@@ -554,11 +554,11 @@ function demoStats() {
   ]);
 }
 function benchBlock() {
-  return [el("h3", { text: "Test bench (v2)" }),
-    el("p", { class: "note", text: BENCH_V2.cases + " fictional cases, " + BENCH_V2.notes + " notes, one run on " + BENCH_V2.when + ". Model: " + BENCH_V2.model + "." }),
+  return [el("h3", { text: "Test bench" }),
+    el("p", { class: "note", text: BENCH.cases + " fictional cases, " + BENCH.notes + " notes, one run on " + BENCH.when + ". Model: " + BENCH.model + "." }),
     el("table", {}, el("tr", {}, el("th", { text: "Checked" }), el("th", { text: "Target" }), el("th", { text: "Result" })),
-      BENCH_V2.rows.map(r => el("tr", {}, r.map(c => el("td", { text: c }))))),
-    el("p", { class: "note", style: "margin-top:8px", text: BENCH_V2.said }),
+      BENCH.rows.map(r => el("tr", {}, r.map(c => el("td", { text: c }))))),
+    el("p", { class: "note", style: "margin-top:8px", text: BENCH.said }),
     el("h3", { text: "The whole demo month" }), demoStats()];
 }
 function builtBlock() {
