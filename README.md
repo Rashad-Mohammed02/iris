@@ -1,5 +1,7 @@
 # Iris
 
+> **Note (28 Oct 2026):** the engine in this repo is now Iris v2, the everyday version: a daily note to your 5 in any mood, with a ready action. Most of this README still describes v1 (lifts when you're off your normal) and is being rewritten. The v1 engine and bench are kept for history (`engine/decide_v1.py`, `bench/run_bench_v1.py`). What changed and the new numbers: [README-V2-NOTES.md](README-V2-NOTES.md).
+
 **When you're running low, the people closest to you find out, without you having to ask.**
 
 Iris is a concept app in the Meta family that works with Muse, Meta's AI agent. I built it for the Meta Global AI Developer Hackathon (Indie track). It notices from your own Instagram when you're off your normal, and quietly gives one of your closest people a small idea of something nice to do with you:
@@ -12,7 +14,7 @@ That line is all your friend sees. No feelings, no reasons, nothing you wrote, n
 
 Everything in this repo runs on Meta's Muse Spark 1.3 through the Meta Model API. It's a hackathon concept, not a Meta product. The demo person, Arjun, and his friends are fictional. I also tested the rule on real Instagram downloads from 11 research test accounts (more below).
 
-**Try it:** open `web/index.html`. It shows only Iris, on a phone, the way it would really look. Go through setup, switch between Arjun's phone and his friend Sam's, step through the story with Next, or open "Under the hood" to see every decision.
+**Try it:** https://rashad-mohammed02.github.io/iris/ (or open `web/index.html`). It shows only Iris, on a phone, the way it would really look. Go through setup, switch between Arjun's phone and his friend Sam's, step through the story with Next, or open "Under the hood" to see every decision.
 
 ---
 
@@ -145,17 +147,19 @@ You need Python 3.10 or newer (standard library only) and a Meta Model API key.
 
 ```
 cp .env.example .env               # put your MODEL_API_KEY in .env
-python3 data/generate_demo.py      # build Arjun's fictional download
+python3 data/generate_demo.py      # build Arjun's fictional download and simulated calendar and Spotify
 python3 data/parse_export.py       # read it, keeping only Arjun's side
-python3 engine/rule.py             # "off your normal" for all 30 days (no AI)
+python3 engine/rule.py             # "off your normal" for all 42 days (no AI)
 python3 engine/interests.py        # Muse names what Arjun is into
 python3 scripts/run_demo.py        # play the month through the engine
-python3 bench/run_bench.py --runs 3 && python3 bench/export_web.py
+python3 bench/run_bench.py         # the v2 bench (v1: bench/run_bench_v1.py --runs 3 && bench/export_web.py)
 python3 scripts/fetch_real_exports.py && python3 bench/real_rhythms.py   # the real-data test
 open web/index.html                # the app, offline
 ```
 
 Tests: `for t in tests/test_*.py; do python3 $t; done`
+
+`python scripts/prepush_check.py` checks the repo is safe to make public.
 
 Every Meta API call is logged with its token count in `out/usage.log`, and the engine stops itself at an estimated $100.
 
