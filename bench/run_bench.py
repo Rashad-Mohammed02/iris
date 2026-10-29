@@ -3,8 +3,6 @@
 Usage:
   python3 bench/run_bench.py              # one run
   python3 bench/run_bench.py --only V2-01 V2-22
-
-The v1 bench (lifts) is bench/run_bench_v1.py, kept for history.
 """
 
 import argparse
@@ -137,7 +135,7 @@ def summarize(results):
 def report(run, path, spend):
     s = run["summary"]
     n = s["notes"]
-    lines = ["# Iris v2 test bench results", "",
+    lines = ["# Iris test bench results", "",
              f"{s['cases']} cases, {time.strftime('%Y-%m-%d %H:%M')}. Model: {muse.DEFAULT_MODEL}. "
              f"Bench cost about ${spend:.2f} (list prices).", "",
              "| Metric | Target | Result |", "|---|---|---|",

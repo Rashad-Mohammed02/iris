@@ -26,4 +26,4 @@ Bench mix: 9 mood cases in every direction (big good news, happy, calm, tired, s
 
 ## Reporting
 
-`python3 bench/run_bench.py` writes `bench/results/v2-latest.md` and a raw `v2-run-<time>.json` with every engine output next to its scores. The v1 bench (the "lift" engine: `cases.json`, `heldout_cases.json`, `run_bench_v1.py`, `RUBRIC_v1.md`, `grader_v1.txt` and the older results) is kept unchanged for history.
+`python3 bench/run_bench.py` writes `bench/results/v2-latest.md` and a raw `v2-run-<time>.json` with every engine output next to its scores.
