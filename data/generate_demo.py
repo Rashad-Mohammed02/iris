@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Iris demo data: a synthetic 42-day Instagram history for "Arjun", plus his
-simulated calendar and Spotify feeds (Iris v2, the everyday version).
+simulated calendar and Spotify feeds.
 
 EVERYTHING THIS SCRIPT PRODUCES IS FICTIONAL. Arjun, his circle, every
 handle, every creator account, every caption and every message are invented
@@ -66,10 +66,10 @@ RECOVERY = range(24, 26)              # easing afterwards
 # Useful as a false-positive guard: late is not the same as heavy.
 UPBEAT_LATE_DAYS = [13, 31, 32, 36, 37, 38]
 
-# v1 had him go quiet with his brother; v2's month has no quiet stretch.
+# Switched off for this month: no quiet stretch with his brother.
 DEV_QUIET_DAYS = range(0, 0)
 
-# v1 had a lift land on a fixed day; v2 has no scripted receiver side.
+# Switched off for this month (0): no scripted day when a friend reaches out.
 LIFT_DAY = 0
 
 # Sundays are a little heavier in his baseline ("Sundays look heavier for you").
@@ -619,7 +619,7 @@ def generate_watches():
                         w.update(reel=swap, orig_reel=reel)
                     watches.append(w)
                 t += max(4, lognormal(REEL_GAP_SECONDS_MEDIAN, 0.6)) / 60.0
-    # after the lift lands, he watches (and saves) a Las Vegas GP guide
+    # only when LIFT_DAY is set: after a friend reaches out, he watches (and saves) a Las Vegas GP guide
     if 1 <= LIFT_DAY <= NUM_DAYS:
         reel = new_reel("f1")
         reel["caption"] = "Las Vegas GP: what to know before you go"

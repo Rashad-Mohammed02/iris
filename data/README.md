@@ -26,7 +26,7 @@ The script uses only the Python 3 standard library (3.9 or newer, for `zoneinfo`
 
 Outside the circle there are Tasha and Ravi (in the "pit crew" group chat with Sam and Omar), Jess (a coworker) and Chris (from run club). Arjun's real interests, which give a note something to work with, are **F1** (strong), **film photography**, **NBA** and **home espresso**.
 
-## The story, day by day (Iris v2)
+## The story, day by day
 
 The 42 days run from Wednesday 23 Sep to Tuesday 3 Nov 2026. Days 1 to 14 are the two weeks Iris only learns his normal. Days 15 to 42 are his month: mostly ordinary days, with a few that stand out in every direction. "Strain" is the dial the script turns for the Instagram side (0 is his normal). Per-day numbers use an activity day that runs from 05:00 to 05:00.
 
@@ -49,11 +49,11 @@ The 42 days run from Wednesday 23 Sep to Tuesday 3 Nov 2026. Days 1 to 14 are th
 | 41 | Mon 2 Nov | **A routine blood test** on his calendar. Health is never shared. |
 | 42 | Tue 3 Nov | Ordinary. |
 
-Run the script to print the full day-by-day table. The same numbers are in `demo_export/_simulated/story_arc_truth.json`. The v1 story (Maya's hard week and Sam's Vegas lift) was replaced by this month for Iris v2.
+Run the script to print the full day-by-day table. The same numbers are in `demo_export/_simulated/story_arc_truth.json`.
 
 ## Connector feeds (SIMULATED): `demo_connectors/`
 
-Iris v2 reads four kinds of input: what you see and what you talk about (Instagram, above), what happens to you (calendar) and what you hear (Spotify). The last two are simulated here as two small JSON files, written by the same script from its own fixed seed. They are fictional: no real calendar or Spotify account is read. The format is documented in `engine/connectors.py`.
+Iris reads four kinds of input: what you see and what you talk about (Instagram, above), what happens to you (calendar) and what you hear (Spotify). The last two are simulated here as two small JSON files, written by the same script from its own fixed seed. They are fictional: no real calendar or Spotify account is read. The format is documented in `engine/connectors.py`.
 
 - `calendar.json`: `events` (id, title, start, end, all_day, kind, with, location, status, and for public shows `public`, `interest` and `tickets`) plus `free_busy`, the busy times his 5 share (never titles). Work meetings, run club, study blocks, the exam, a cancelled dinner, the trip, the results, the celebration, the gig, the blood test, and three public shows after his month (for tickets).
 - `spotify.json`: `plays`, one per line, using the field names of Spotify's extended streaming history (`ts`, `master_metadata_track_name`, `master_metadata_album_artist_name`, `ms_played`) plus simulated `x_valence` (how bright a song sounds) and `x_energy`. Every song and artist is invented.

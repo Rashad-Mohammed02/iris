@@ -216,7 +216,7 @@ def parse(export, tz="America/New_York"):
                         length=len(text), reply_delay_s=None if reconnect else delay, reconnect=reconnect,
                         creator=share.get("original_content_owner", "") if is_share else None,
                         url=share.get("link", "") if is_share else None,
-                        # v2: his own words only, for the gist of what he talks about. Never anyone else's.
+                        # His own words only, for the gist of what he talks about. Never anyone else's.
                         own_words=text[:200] if text else None)
                     last_other_ts = None
                 else:
