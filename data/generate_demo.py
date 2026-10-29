@@ -45,7 +45,7 @@ LOCAL_TZ = "America/New_York"        # Arjun lives on US Eastern time
 STORY = {
     18: "study_crunch", 19: "study_crunch", 20: "study_crunch", 21: "study_crunch",   # a tired stretch
     22: "exam",                                                                     # the exam itself
-    23: "low",                                                                      # a flat, low day after it
+    23: "low",                                                                      # a sad, low day after it (not tired)
     24: "easing", 25: "easing",
     31: "trip", 32: "trip", 33: "trip",                                             # a weekend away with Maya
     34: "back",
@@ -116,7 +116,7 @@ PEOPLE = {**CIRCLE, **OTHERS}
 # REEL THEMES (creator handles are invented)
 # =============================================================================
 
-HEAVY_THEMES = {"burnout", "exhaustion", "strong_friend", "sad_music", "relationship_support", "wellness"}
+HEAVY_THEMES = {"burnout", "exhaustion", "strong_friend", "sad_music", "relationship_support", "wellness", "feeling_low"}
 INTEREST_THEMES = {"f1", "film_photography", "nba", "coffee"}
 
 THEMES = {
@@ -163,6 +163,9 @@ THEMES = {
     "relationship_support": {"label": "Supporting a partner", "creators": ["how.to.show.up", "love.in.the.hard.parts"],
            "captions": ["how to support your partner when they're going through it", "what to say when there's nothing to say",
                         "showing up is mostly just being there"]},
+    "feeling_low": {"label": "Sad days", "creators": ["quiet.sad.hours", "low.days.club"],
+           "captions": ["for the days you feel down for no reason", "some days are just sad and that's ok",
+                        "a song for a heavy heart", "when you don't feel like yourself"]},
     "wellness": {"label": "Small resets", "creators": ["small.steps.daily", "breathe.with.me"],
            "captions": ["a 60 second reset for a long day", "one small thing to do tonight", "permission to rest"]},
 }
@@ -170,10 +173,12 @@ THEMES = {
 # Share of reels by theme at strain 0 (baseline) and strain 1 (most drifted). Linearly blended.
 THEME_WEIGHTS_BASELINE = {"f1": 22, "film_photography": 7, "nba": 8, "coffee": 5, "comedy": 18, "couple_humor": 6,
                           "food": 6, "fitness": 5, "tech": 6, "music": 5, "travel": 4, "burnout": 2, "exhaustion": 1,
-                          "strong_friend": 1, "sad_music": 2, "relationship_support": 1, "wellness": 1}
+                          "strong_friend": 1, "sad_music": 2, "relationship_support": 1, "wellness": 1,
+                          "feeling_low": 0}
 THEME_WEIGHTS_STRAINED = {"f1": 9, "film_photography": 2, "nba": 3, "coffee": 1, "comedy": 12, "couple_humor": 3,
                           "food": 3, "fitness": 1, "tech": 2, "music": 3, "travel": 1, "burnout": 16, "exhaustion": 12,
-                          "strong_friend": 9, "sad_music": 10, "relationship_support": 9, "wellness": 4}
+                          "strong_friend": 9, "sad_music": 10, "relationship_support": 9, "wellness": 4,
+                          "feeling_low": 0}
 
 # =============================================================================
 # DM RHYTHM PER THREAD (baseline -> strained, blended by strain)
@@ -243,10 +248,16 @@ ARJUN_LINES = {
                      "not my best day tbh", "kind of a flat day", "yeah i'm up", "can't sleep, still thinking about it",
                      "tired but ok", "sorry, long day. i'm here now", "thanks for the snacks, lifesaver",
                      "just need this week to be over"],
+        "low": ["kind of a sad day honestly", "feeling really low today", "not feeling like myself",
+                "can we just stay in tonight?", "i don't know, just down today", "sorry, i'm quiet today",
+                "nothing's wrong exactly, just low", "kind of want to hide under a blanket", "can you come over later?",
+                "no idea how it went, that's the worst part", "not my best day tbh", "just feeling a bit down",
+                "thanks for being sweet to me today", "i'll be ok, just a sad one"],
         "recovery": ["feeling more like myself today", "dinner out this weekend? my treat", "today was easier",
                      "love you", "ok that made me laugh", "pasta night thursday?"],
         "share_note_normal": ["us", "this is so you", "we need to make this", "lmao", "ok this is us on sundays"],
         "share_note_strained": ["this is me today", "felt this", "too real", "same", "tired tired"],
+        "share_note_low": ["this is me today", "felt this", "too real", "same", "sad day"],
     },
     "sam": {
         "normal": ["BOX BOX", "did you see that undercut", "bro this is you", "lmaooo", "pickup friday?",
@@ -258,6 +269,8 @@ ARJUN_LINES = {
                    "ok but hear me out, best overtake of the season was the one in the rain",
                    "pickup at the usual court, 7, bring the good ball this time"],
         "strained": ["sorry man been slammed", "yeah maybe next week", "can't this weekend", "studying, all good tho"],
+        "low": ["sorry man, not really up for much today", "kind of a down day", "maybe next week",
+                "not feeling it today, sorry"],
         "recovery": ["pickup this week?", "race this weekend at mine?"],
         "lift": ["WAIT. are you serious", "dude. vegas?? you're insane", "i owe you big time", "ok i'm actually so hyped"],
         "share_note_normal": ["this is literally you", "LMAO", "watch till the end", "box box"],
@@ -269,6 +282,7 @@ ARJUN_LINES = {
                    "bro what", "haha classic", "fantasy trade? i'll give you my rb", "dad sent the family photo lol",
                    "that's wild", "call this weekend?"],
         "strained": ["yeah", "later"],
+        "low": ["eh, kind of a down day", "later"],
         "recovery": ["call this weekend?", "yeah saw the race, wild", "how's mom doing?"],
         "share_note_normal": ["lmao", "bro", "this is you on race day"],
         "share_note_strained": [],
@@ -281,6 +295,7 @@ ARJUN_LINES = {
                    "mom called me twice today asking if you're eating, please text her back lol",
                    "are you coming home for thanksgiving or doing it with maya's family this year?"],
         "strained": ["sorry busy week", "can't talk rn"],
+        "low": ["not a great day, call tomorrow?", "can't talk rn"],
         "recovery": ["call sunday?"],
         "share_note_normal": ["this is mom", "lol"],
         "share_note_strained": [],
@@ -290,6 +305,7 @@ ARJUN_LINES = {
                    "this song is everything", "we need to shoot downtown soon", "haha yes", "saturday works",
                    "that light though", "you going to the show?"],
         "strained": ["sorry man, later"],
+        "low": ["sorry man, not up for much today"],
         "recovery": ["shoot next weekend?"],
         "share_note_normal": ["need this lens", "look at that grain"],
         "share_note_strained": [],
@@ -315,7 +331,7 @@ SCRIPTED = {
     ("maya", 20): ["deck is finally done. i'm wiped", "exam in two days, why did i sign up for this"],
     ("sam", 20): ["can't do pickup friday, exam sunday. after that i'm all yours"],
     ("maya", 22): ["exam in an hour, wish me luck", "ok it's done. brain is mush"],
-    ("maya", 23): ["kind of a flat day honestly", "can we just stay in tonight", "no idea how it went, that's the worst part"],
+    ("maya", 23): ["honestly just a sad day", "can we just stay in tonight", "no idea how it went, that's the worst part"],
     ("omar", 23): ["sorry man, raincheck on dinner? not up for it today"],
     ("maya", 31): ["packed! train at 6?", "this view though"],
     ("sam", 32): ["sending you the skyline, you'd love it"],
@@ -409,9 +425,9 @@ def weighted_choice(weights):
     return rng.choices(keys, weights=[weights[k] for k in keys], k=1)[0]
 
 
-def shortcode(n=11):
+def shortcode(n=11, r=None):
     alphabet = string.ascii_letters + string.digits + "_-"
-    return "".join(rng.choice(alphabet) for _ in range(n))
+    return "".join((r or rng).choice(alphabet) for _ in range(n))
 
 
 def fbid():
@@ -487,11 +503,12 @@ def phase(d):
 REELS = {}              # url -> reel record (for the SIMULATED theme hints)
 
 
-def new_reel(theme):
+def new_reel(theme, r=None):
+    r = r or rng
     t = THEMES[theme]
-    author = rng.choice(t["creators"])
-    url = "https://www.instagram.com/reel/%s/" % shortcode()
-    reel = {"url": url, "author": author, "theme": theme, "caption": rng.choice(t["captions"])}
+    author = r.choice(t["creators"])
+    url = "https://www.instagram.com/reel/%s/" % shortcode(r=r)
+    reel = {"url": url, "author": author, "theme": theme, "caption": r.choice(t["captions"])}
     REELS[url] = reel
     return reel
 
@@ -559,6 +576,31 @@ def sessions_for_day(d):
     return sorted(out)
 
 
+# The low day (day 23) should read sad, not tired. Its reels are first drawn exactly as on any
+# strained day (so every other day stays byte-identical), then re-themed with their own generator:
+# most tired-themed reels become sad songs or sad-day reels, and some light ones do too.
+# The watch keeps the reel it replaced as `orig_reel`, used only to keep later random draws the same.
+LOW_RNG = random.Random(SEED + 23)
+TIRED_THEMES = {"burnout", "exhaustion", "strong_friend", "relationship_support"}
+
+
+def low_day_swap(reel):
+    if reel["theme"] in TIRED_THEMES:
+        p = 0.85
+    elif reel["theme"] in HEAVY_THEMES:
+        p = 0.0
+    else:
+        p = 0.3
+    if LOW_RNG.random() >= p:
+        return None
+    return new_reel(LOW_RNG.choice(["sad_music", "feeling_low"]), r=LOW_RNG)
+
+
+def orig(w):
+    """The reel a watch first drew (see low_day_swap). Filters that feed random draws use this one."""
+    return w.get("orig_reel", w["reel"])
+
+
 def generate_watches():
     """Returns list of watch events: dict(epoch, day, minute, reel)."""
     watches = []
@@ -571,7 +613,11 @@ def generate_watches():
                 reel = pick_reel(theme)
                 ep = to_epoch(day_date(d), t)
                 if ep <= END_EPOCH:
-                    watches.append({"epoch": ep, "day": d, "minute": t, "reel": reel})
+                    w = {"epoch": ep, "day": d, "minute": t, "reel": reel}
+                    swap = low_day_swap(reel) if d in HARD_WEEK else None
+                    if swap:
+                        w.update(reel=swap, orig_reel=reel)
+                    watches.append(w)
                 t += max(4, lognormal(REEL_GAP_SECONDS_MEDIAN, 0.6)) / 60.0
     # after the lift lands, he watches (and saves) a Las Vegas GP guide
     if 1 <= LIFT_DAY <= NUM_DAYS:
@@ -612,7 +658,7 @@ def arjun_line(thread, d, s, short_p, minute):
     if rng.random() < short_p:
         return rng.choice(SHORT_BANK)
     if s > 0.3 and bank["strained"] and rng.random() < s:
-        return rng.choice(bank["strained"])
+        return rng.choice(bank["low"] if d in HARD_WEEK and bank.get("low") else bank["strained"])
     return rng.choice(bank["normal"])
 
 
@@ -708,20 +754,22 @@ def generate_thread(thread, watches_by_day):
             for _ in range(n_share):
                 pool_themes = strained_themes if (s > 0.4 and rng.random() < s) else normal_themes
                 candidates = [w for w in watches_by_day.get(d, [])
-                              if w["reel"]["theme"] in pool_themes and w["reel"]["url"] not in used]
+                              if orig(w)["theme"] in pool_themes and orig(w)["url"] not in used]
                 if thread == "maya" and s > 0.4:
                     late = [w for w in candidates if w["minute"] >= 23 * 60]
                     candidates = late or candidates
                 if not candidates:
                     continue
                 w = rng.choice(candidates)
-                used.add(w["reel"]["url"])
+                used.add(orig(w)["url"])
                 ep = min(w["epoch"] + rng.randint(5, 50), END_EPOCH)
                 reel = w["reel"]
                 msgs.append(make_msg("arjun", ep, "%s sent an attachment." % OWNER["name"],
                                      share={"link": reel["url"], "share_text": reel["caption"],
                                             "original_content_owner": reel["author"]}))
                 notes = ARJUN_LINES[thread]["share_note_strained" if s > 0.4 else "share_note_normal"]
+                if d in HARD_WEEK and ARJUN_LINES[thread].get("share_note_low"):
+                    notes = ARJUN_LINES[thread]["share_note_low"]
                 if notes and rng.random() < 0.35:
                     msgs.append(make_msg("arjun", min(ep + rng.randint(3, 40), END_EPOCH), rng.choice(notes)))
         # others share reels to Arjun (placeholders, no theme given)
@@ -810,12 +858,12 @@ def generate_feed(watches):
             if w.get("vegas"):
                 saved.append({"timestamp": w["epoch"] + 25, "owner": w["reel"]["author"], "url": w["reel"]["url"]})
         if d == LIFT_DAY or d in RECOVERY:
-            f1 = [w for w in day_w if w["reel"]["theme"] == "f1" and not w.get("vegas")]
+            f1 = [w for w in day_w if orig(w)["theme"] == "f1" and not w.get("vegas")]
             for w in rng.sample(f1, min(2, len(f1))):
                 saved.append({"timestamp": w["epoch"] + rng.randint(3, 20), "owner": w["reel"]["author"], "url": w["reel"]["url"]})
         save_themes = (["burnout", "wellness", "strong_friend", "relationship_support"] if (s > 0.4 and rng.random() < 0.6)
                        else ["f1", "coffee", "film_photography", "food"])
-        cands = [w for w in day_w if w["reel"]["theme"] in save_themes]
+        cands = [w for w in day_w if orig(w)["theme"] in save_themes]
         for w in rng.sample(cands, min(poisson(lerp(0.8, 1.2, s)), len(cands))):
             saved.append({"timestamp": w["epoch"] + rng.randint(3, 20), "owner": w["reel"]["author"], "url": w["reel"]["url"]})
         # story likes on circle members' stories
@@ -1002,7 +1050,8 @@ def summarize(watches, threads, saved):
                 "upbeat_late_days": UPBEAT_LATE_DAYS},
         "expected_signals": [
             "Days 18-21: a tired stretch before the exam: later nights, more heavy reels, shorter replies.",
-            "Day 22: exam day. Day 23: a low day (strain 0.95): the latest night, a wake-up scroll, slow replies.",
+            "Day 22: exam day. Day 23: a low, sad day (strain 0.95): sad songs and sad-day reels, his own words say down"
+            " and low (not tired), the latest night, a wake-up scroll, slow replies.",
             "Days 31-33: a weekend away with Maya, late but upbeat. Day 36: big news, he passed. Day 38: a gig with Omar.",
             "Day 35: his side mentions Priya's private job news (a friend's secret no note may carry).",
             "Day 41: a routine blood test on his calendar (health, never shared).",
@@ -1125,7 +1174,7 @@ def build_calendar(crng):
                                ("Stand-up night at The Cellar", 45, "stand-up comedy")):
         ev(d, 19 * 60, 23 * 60, title, "show", status="tentative", public=True, interest=interest,
            tickets={"seller": "Ticketmaster"})
-    # Friends share free/busy only (never titles). Dev and Priya live out of town, so no lunch with them.
+    # Friends share free/busy only (never titles). Priya lives out of town (nearby is off in demo_settings.json).
     free_busy = {}
     for key in ("maya", "sam", "omar", "dev", "priya"):
         blocks = []

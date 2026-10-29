@@ -39,7 +39,7 @@
       "relation": "brother",
       "setting": "every_day",
       "mutual": true,
-      "nearby": false,
+      "nearby": true,
       "allowed_interests": [
         "the NBA",
         "F1"

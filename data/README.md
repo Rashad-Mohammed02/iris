@@ -36,7 +36,7 @@ The 42 days run from Wednesday 23 Sep to Tuesday 3 Nov 2026. Days 1 to 14 are th
 | 15-17 | 7-9 Oct | Ordinary days. |
 | 18-21 | 10-13 Oct | **A tired stretch.** Study blocks for the PMP exam every evening and a work deck due on day 20. Later nights, more heavy reels, shorter replies, focus music. |
 | 22 | Wed 14 Oct | **Exam day.** |
-| 23 | Thu 15 Oct | **A low day.** He cancels dinner with Omar, plays slow songs on repeat, is up late and wakes in the night: "kind of a flat day honestly". |
+| 23 | Thu 15 Oct | **A low, sad day** (not tired). He cancels dinner with Omar, plays slow sad songs on repeat, watches sad-day reels, is up late and wakes in the night, and his own words say it: "honestly just a sad day", "nothing's wrong exactly, just low". |
 | 24-25 | 16-17 Oct | Easing. |
 | 26-30 | 18-22 Oct | Ordinary days. |
 | 31-33 | 23-25 Oct | **A weekend away** in Chicago with Maya. Late but upbeat; road-trip music. |
