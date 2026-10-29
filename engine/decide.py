@@ -1,160 +1,170 @@
-"""Who gets a lift, if anyone. Muse reads; this file enforces.
+"""Who gets a note today, if anyone. Iris v2: Muse reads; this file enforces.
 
 Every gate below is plain code, in a fixed order, so no model output can talk
-its way past a permission, a pause or a safety stop.
+its way past a setting, a pause or a safety stop.
 
-A "situation" is one person's moment: their name and age, their circle (with
-each member's permission and allowed interests), and their pattern (signal
-conclusions, private writing, settings). The test bench cases use the same
-shape, and engine/demo.py builds one from the Instagram export.
+A "situation" is one person's day:
+  user      {name, age, country, teen_account}
+  settings  {note_time "18:00", send_mode "auto" | "ask", paused, sources {instagram, spotify, calendar}}
+  circle    up to 5 people: {name, relation, setting "every_day" | "big_moments" | "never", mutual, age,
+            teen_account, nearby, allowed_interests, language}
+  day       the day Muse reads (see engine/day.py), with date and use_day (days since Iris started)
+  feeds     an engine.connectors.Feeds for the ready actions (not sent to Muse)
+The bench cases use the same shape, and engine/demo.py builds one per day from the export.
 """
 
-import json
 import sys
+from datetime import datetime, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from engine import lift as lift_writer  # noqa: E402
-from engine import safety  # noqa: E402
-from engine.read import read as muse_read  # noqa: E402
+from engine import actions, note as note_writer, safety  # noqa: E402
+from engine.connectors import Feeds  # noqa: E402
+from engine.day import read_day  # noqa: E402
 
-LEARNING_DAYS = 14  # matches engine/baseline.py: nothing is judged in the first two weeks
-UNDO_MINUTES = 10
-SEND_MODES = ("automatic", "ask_first")  # the person's choice; sending on its own (10 minutes to stop it) is the default
+LEARNING_DAYS = 14   # matches engine/baseline.py: the first two weeks only learn your normal
+CANCEL_MINUTES = 10
+SEND_MODES = ("auto", "ask")   # "auto" (send on its own, 10 minutes to cancel) is the default
+SETTINGS = ("every_day", "big_moments", "never")
+DEFAULT_SETTING = "every_day"   # the norm: your 5 see how you are every day
+DEFAULT_TIME = "18:00"
+SOURCE_PARTS = {"instagram": ("see", "talk"), "spotify": ("hear",), "calendar": ("happens",)}
 
 
-def is_paused(situation):
-    settings = json.dumps(situation["pattern"].get("settings", {})).lower()
-    return bool(situation.get("paused")) or "paused" in settings
+def signature(name, send_mode):
+    return f"Suggested by Muse. {name} didn't ask." if send_mode == "auto" else "Suggested by Muse."
 
 
-def allows(member, stretch, good_broad=True):
-    """What this member's permission allows for this stretch: 'support', 'good' or None."""
-    level = member.get("permission", "Never")
-    if level == "Just this once":
-        level = "Never" if member.get("just_this_once_used") else "Just this once"
-    if stretch == "good":
-        return "good" if level == "Always" and good_broad else None
-    if stretch == "clearly_heavy" and level in ("Always", "When it matters", "Just this once"):
-        return "support"
-    if stretch == "off_normal" and level in ("Always", "Just this once"):
-        return "support"
+def is_adult(person):
+    age = person.get("age")
+    return not person.get("teen_account") and not (isinstance(age, (int, float)) and age < 18)
+
+
+def sources_on(situation):
+    """The day and feeds with any source the person switched off taken out, before Muse sees anything."""
+    src = situation.get("settings", {}).get("sources", {})
+    day = dict(situation["day"])
+    for source, parts in SOURCE_PARTS.items():
+        if src.get(source) is False:
+            for p in parts:
+                day.pop(p, None)
+    feeds = situation.get("feeds") or Feeds()
+    feeds = Feeds(feeds.calendar if src.get("calendar") is not False else None,
+                  feeds.spotify if src.get("spotify") is not False else None)
+    return day, feeds
+
+
+def why_not(member, size):
+    """Why this friend gets nothing today, or None if the setting allows a note."""
+    setting = member.get("setting", DEFAULT_SETTING)
+    if setting not in SETTINGS or setting == "never":
+        return "Set to Never"
+    if not member.get("mutual", False):
+        return "Not mutual yet"
+    if not is_adult(member):
+        return "Adults only"
+    if size is not None and setting == "big_moments" and size != "big":
+        return f"Big moments only (today was {size})"
     return None
 
 
-def decide(situation, reading=None, write_lifts=True):
-    user, pattern, circle = situation["user"], situation["pattern"], situation["circle"]
-    country = user.get("country")  # picks the help line on any card; the demo and bench default to the US
-    out = {"user": user["name"], "lifts": [], "not_sent": [], "cards": [], "prompts": [], "log": [],
-           "state_after": {}, "read": None, "stretch": "none"}
+def decide(situation, reading=None, write_notes=True):
+    user, settings, circle = situation["user"], situation.get("settings", {}), situation["circle"]
+    country = user.get("country")
+    out = {"user": user["name"], "date": situation["day"].get("date"), "notes": [], "not_sent": [],
+           "cards": [], "prompts": [], "log": [], "read": None, "size": None, "mood": None}
 
     def skip_all(why):
         out["not_sent"] += [{"name": m["name"], "why": why} for m in circle]
         return out
 
-    # 1. Adults only: no reading at all.
-    if safety.is_minor(user, pattern):
+    # 1. Adults only: no reading at all. Teen Accounts are never eligible.
+    if not is_adult(user):
         out["cards"].append({"kind": "minor", "text": safety.card("minor", country)})
         return skip_all("Adults only")
 
-    # 1b. Crisis from what they watch: help for them only, no lifts, no model call. Applies even while learning.
-    if safety.watched_crisis(pattern.get("signals", {}).get("crisis_content")):
+    day, feeds = sources_on(situation)
+
+    # 2. Crisis, before any model call: from what they watch, or their own words. Help for them, nothing to anyone.
+    if safety.watched_crisis((day.get("see") or {}).get("crisis_content")):
         out["cards"].append({"kind": "crisis_content", "text": safety.card("crisis_content", country)})
         out["log"].append({"kind": "safety", "text": "Crisis-themed reels: help shown to the person only."})
-        return skip_all("Serious is never automatic")
+        return skip_all("Serious is never shared")
+    flags = safety.scan((day.get("talk") or {}).get("own_words", []))
+    if flags["crisis"] != "none":
+        out["cards"].append({"kind": "crisis", "text": safety.card(flags["crisis"], country)})
+        return skip_all("Serious is never shared")
 
-    # 2. Still learning their normal.
-    if pattern.get("learning_day", 99) <= LEARNING_DAYS:  # days 1 to 14 only learn
-        return skip_all("Still learning their normal")
+    # 3. Still learning their normal.
+    if situation["day"].get("use_day", 99) <= LEARNING_DAYS:
+        return skip_all("Still learning your normal")
 
-    r = reading or muse_read(situation)
-    out["read"] = r
-    stretch = r["stretch"]
-    if r.get("context_explains") and stretch in ("off_normal", "clearly_heavy"):
-        stretch = "none"
-    if situation.get("rule_stretch") and stretch in ("off_normal", "clearly_heavy"):
-        # When the Instagram rule ran (the demo), Muse may soften its verdict but never escalate it.
-        order = ["none", "off_normal", "clearly_heavy"]
-        stretch = order[min(order.index(stretch), order.index(situation["rule_stretch"]))]
-    out["stretch"] = stretch
-
-    # 3. Crisis: no lifts to anyone, help to the person only.
-    if r["crisis"] != "none":
-        out["cards"].append({"kind": "crisis", "text": safety.card(r["crisis"], country)})
-        return skip_all("Serious is never automatic")
-
-    # 4. Fear and pressure. Nothing automatic goes to anyone while either is open.
-    #    Someone you fear is removed quietly; a setting someone pressured you into is held at its old level.
-    if r["fear_flag"] or r["pressure_flag"]:
-        for n in r["pressured_on"]:
-            out["state_after"][n] = {"effective_permission": "Never", "notified": False, "held": True}
-        for n in r["afraid_of"]:
-            if n not in r["pressured_on"]:
-                out["state_after"][n] = {"in_circle": False, "notified": False}
-        if r["pressure_flag"]:
-            out["cards"].append({"kind": "pressure", "text": safety.card("pressure", country), "when": "later, privately"})
-        if r["fear_flag"]:
-            out["cards"].append({"kind": "fear", "text": safety.card("fear", country)})
-        return skip_all("Serious is never automatic")
-
-    # 6. Pause wins over every permission, and nobody nags to unpause.
-    if is_paused(situation):
+    # 4. Pause wins over every setting.
+    if settings.get("paused"):
         return skip_all("Pause is on")
 
-    # 7. Per person.
-    to_write = []
+    # 5. Who could get a note today, before Muse reads: settings, mutual, adults. People set to Never,
+    #    not mutual or under 18 are never named to Muse.
+    friends = [m for m in circle if why_not(m, None) is None]
     for m in circle:
-        kind = allows(m, stretch, r.get("good_broad", False))
-        if not m.get("mutual", True):
-            out["not_sent"].append({"name": m["name"], "why": "Not mutual yet"})
-        elif kind is None:
-            why = f"{m.get('permission', 'Never')} does not cover this" if stretch != "none" else "Nothing to lift"
-            out["not_sent"].append({"name": m["name"], "why": why})
-        elif not lift_writer.pick_interest(m, pattern):
-            # A lift without an allowed interest has nothing safe to say. Ask the person privately instead.
-            out["not_sent"].append({"name": m["name"], "why": "No interest allowed for them yet"})
+        w = why_not(m, None)
+        if w:
+            out["not_sent"].append({"name": m["name"], "why": w})
+    if not friends:
+        return out
+
+    r = reading or read_day(dict(situation, day=day), friends)
+    out["read"], out["size"], out["mood"] = r, r["size"], r["mood"]
+
+    # 6. Crisis from the read: no notes to anyone, help to the person only.
+    if r["crisis"] != "none":
+        out["cards"].append({"kind": "crisis", "text": safety.card(r["crisis"], country)})
+        out["not_sent"] += [{"name": m["name"], "why": "Serious is never shared"} for m in friends]
+        return out
+
+    # 7. Per friend: the size gate, an interest, a ready action, then the note.
+    send_mode = settings.get("send_mode", "auto")
+    send_mode = send_mode if send_mode in SEND_MODES else "auto"
+    when = datetime.fromisoformat(f"{situation['day']['date']}T{settings.get('note_time', DEFAULT_TIME)}")
+    written_today = []
+    for m in friends:
+        w = why_not(m, r["size"])
+        if w:
+            out["not_sent"].append({"name": m["name"], "why": w})
+            continue
+        fit = r["fits"].get(m["name"]) or {"interest": None, "action": "message", "surprise": False}
+        interest = fit["interest"] or next(iter(note_writer.interests_for(m)), None)
+        if not interest:
+            out["not_sent"].append({"name": m["name"], "why": "No shared interest chosen yet"})
             out["prompts"].append({"kind": "choose_interests", "about": m["name"],
-                                   "text": f"Choose what {m['name']} may hear about, so a lift can reach them."})
-        elif m.get("lifts_last_7_days", 0) >= 1:
-            out["not_sent"].append({"name": m["name"], "why": "Already had a lift this week"})
-            out["log"].append({"kind": "held", "text": f"Held a lift to {m['name']}: one per week."})
+                                   "text": f"Choose what you and {m['name']} share, so a note can reach them."})
+            continue
+        args = (user["name"], m["name"])
+        action = actions.choose(fit["action"], *args, interest, r["direction"], situation["day"]["date"], feeds,
+                                nearby=m.get("nearby", True), surprise=fit["surprise"])
+        if not write_notes:
+            out["notes"].append({"to": m["name"], "interest": interest, "action": action})
+            continue
+        recent = situation.get("recent_notes", {}).get(m["name"], []) + written_today
+        n = note_writer.write(dict(situation, day=day), m, dict(r, fits={m["name"]: dict(fit, interest=interest)}),
+                              action, recent)
+        if n is None:
+            out["not_sent"].append({"name": m["name"], "why": "No interest was safe to mention today"})
+            continue
+        if n["interest"] != interest and action["type"] in ("reel", "tickets"):
+            # The note moved to another interest, so the action follows it.
+            action = actions.choose(action["type"], *args, n["interest"], r["direction"],
+                                    situation["day"]["date"], feeds, nearby=m.get("nearby", True),
+                                    surprise=action["surprise"])
+        written_today.append(n["text"])
+        n.update(action=action, mood=r["mood"], signature=signature(user["name"], send_mode),
+                 sends_at=when.isoformat(timespec="minutes"))
+        if send_mode == "auto":
+            n.update(status="queued", cancel_until=(when + timedelta(minutes=CANCEL_MINUTES)).isoformat(timespec="minutes"))
         else:
-            to_write.append((m, kind))
-
-    if write_lifts and to_write:
-        # One at a time, so each friend's line is worded differently from the ones already written today.
-        today = []
-        for m, kind in to_write:
-            recent = situation.get("recent_lines", {}).get(m["name"], []) + today
-            w = lift_writer.write(situation, m, kind, recent)
-            if w is None:
-                # Every allowed interest would hint at something private this week. Send nothing.
-                out["not_sent"].append({"name": m["name"], "why": "No interest was safe to mention this week"})
-                continue
-            today.append(w["text"])
-            if situation.get("send_mode", "automatic") == "automatic":
-                w.update(status="queued", undo_minutes=UNDO_MINUTES)
-            else:
-                w.update(status="waiting_for_ok")  # nothing leaves until the person taps Send
-            out["lifts"].append(w)
-            out["log"].append({"kind": "lift", "to": w["to"], "text": w["text"],
-                               "why": r.get("log_reason", "") if w["kind"] == "support" else "A good stretch."})
-    elif to_write:
-        out["lifts"] = [{"to": m["name"], "kind": k} for m, k in to_write]
-
-    # 8. Private prompts to the person (never auto-sent; permission doesn't matter here).
-    if stretch in ("off_normal", "clearly_heavy") and not to_write:
-        for m in circle:
-            if m.get("permission") == "Just this once" and m.get("just_this_once_used"):
-                out["prompts"].append({"kind": "offer_again", "about": m["name"],
-                                       "text": f"Want {m['name']} to get a lift again? Only if you'd like."})
-    for n in r.get("loop_closed_with", []):
-        out["prompts"].append({"kind": "close_the_loop", "about": n,
-                               "text": f"{n} sent you something. How did that feel?"})
-    if stretch in ("good", "none"):
-        for n in r.get("good_with", []):
-            out["prompts"].append({"kind": "tell_them", "about": n,
-                                   "text": f"You and {n} have been on a good run. Tell them?"})
+            n.update(status="waiting_for_ok")  # nothing leaves until the person taps Send
+        out["notes"].append(n)
+        out["log"].append({"kind": "note", "to": m["name"], "text": n["text"], "why": r.get("why", "")})
     return out

@@ -1,8 +1,10 @@
-"""People outside the circle are never named to Muse. Offline: every Muse call is caught, not sent.
+"""People outside Arjun's 5 are never named to Muse, and the note writer stays blind.
+Offline: every Muse call is caught, not sent.
 
-Arjun also talks to Jess, Chris and two group chats. Their timing can shape his
-own numbers, but their names must never reach the read, the lift writer, the
-privacy check, the journal or the Daily Page.
+Arjun also talks to Jess, Chris and two group chats, and his calendar has a 1:1
+with Jess and run club with Chris. Their timing can shape his own numbers, but
+their names must never reach the day read, the note writer, the privacy check,
+the journal or the Daily Page.
 """
 
 import json
@@ -13,16 +15,16 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from engine import daily_page, journal, lift, muse  # noqa: E402
+from engine import daily_page, journal, muse  # noqa: E402
+from engine.decide import decide  # noqa: E402
 from engine.demo import Demo  # noqa: E402
-from engine.read import read  # noqa: E402
 
 CANNED = {
-    "read": {"families_off": [], "off_10_plus_days": False, "stretch": "none", "good_broad": False,
-             "context_explains": False, "context": "", "crisis": "none", "afraid_of": [], "pressured_on": [],
-             "good_with": [], "loop_closed_with": [], "log_reason": ""},
-    "lift_write": {"options": ["Arjun could use a little lift this week. Maybe watch the next F1 race together?"]},
-    "lift_check": {"leak": False, "harmless_if_wrong": True, "voice_ok": True, "interest_echoes": False, "reason": ""},
+    "day": {"mood": "tired", "moment": "a long week", "size": "big", "crisis": "none", "why": "x",
+            "fits": [{"name": n, "interest": "F1", "action": "song", "surprise": False}
+                     for n in ("Maya", "Sam", "Dev", "Omar", "Priya")]},
+    "note_write": {"options": ["Arjun, tired today. Send Arjun a song tonight?"]},
+    "note_check": {"leak": False, "harmless_if_wrong": True, "voice_ok": True, "interest_echoes": False, "reason": ""},
     "journal": {"reply": "Okay.", "step": "listen", "about": [], "about_chip": "", "connection": "", "chips": [],
                 "feeling_words": [], "tone": "unclear", "safety": "none"},
     "own_words": {"options": [], "left_out": ""},
@@ -30,41 +32,25 @@ CANNED = {
 }
 
 
-def outsiders(demo):
-    """Everyone in his messages who isn't in his Iris circle, and every group chat's name."""
-    names = set()
-    for t in demo.profile["threads"]:
-        names.update(o for o in t["others"] if o not in demo.circle)
-        if t["group"]:
-            names.add(t["title"])
-    words = set()
-    for n in names:
-        words.add(n)
-        if n.split()[0] not in {c.split()[0] for c in demo.circle}:
-            words.add(n.split()[0])
-    return sorted(w for w in words if w)
-
-
-def test_no_outside_names_reach_muse():
+def catch():
     sent = []
 
     def fake_ask(system, user, schema=None, label="", **kw):
         sent.append((label, user))
         return json.loads(json.dumps(CANNED[label]))
+    return sent, fake_ask
 
+
+def test_no_outside_names_reach_muse():
+    sent, fake = catch()
     old = muse.ask
-    muse.ask = fake_ask
+    muse.ask = fake
     try:
         demo = Demo()
-        hidden = outsiders(demo)
-        assert hidden, "the demo should include people outside the circle"
-        state = {"lifts_sent": [], "journal": {}}
-        for i in range(20, len(demo.days)):
-            s = demo.situation(i, state)
-            read(s)
-            for m in s["circle"]:
-                if lift.pick_interest(m, s["pattern"]):
-                    lift.write(s, m, "support")
+        hidden = demo.outsiders()
+        assert {"Jess", "Chris", "Tasha", "Ravi"} <= set(hidden), hidden
+        for i in range(14, len(demo.days)):
+            decide(demo.situation(i))
             ctx = demo.journal_context(i)
             history = [{"role": "user", "text": "long day. sent some reels and went to bed late"}]
             journal.turn(history, ctx)
@@ -73,12 +59,33 @@ def test_no_outside_names_reach_muse():
     finally:
         muse.ask = old
     labels = {label for label, _ in sent}
-    assert {"read", "lift_write", "lift_check", "journal", "own_words", "daily_page"} <= labels, labels
+    assert {"day", "note_write", "note_check", "journal", "own_words", "daily_page"} <= labels, labels
     for label, payload in sent:
         for name in hidden:
             assert not re.search(r"(?<!\w)" + re.escape(name) + r"(?!\w)", payload), (label, name)
 
 
+def test_note_writer_is_blind():
+    """The writer sees only the name, relation, mood, one interest and the action type. Never the day."""
+    sent, fake = catch()
+    old = muse.ask
+    muse.ask = fake
+    try:
+        demo = Demo()
+        decide(demo.situation(40))     # the blood-test day
+    finally:
+        muse.ask = old
+    writes = [json.loads(p) for label, p in sent if label == "note_write"]
+    assert writes
+    for w in writes:
+        assert set(w) <= {"person", "relation", "mood", "interest", "action", "language",
+                          "recent_notes_to_this_friend", "avoid_these_problems"}, set(w)
+        blob = json.dumps(w).lower()
+        for private in ("blood", "lab", "moment", "long week", "maya", "sam", "omar", "priya", "dev"):
+            assert private not in blob, private
+
+
 if __name__ == "__main__":
     test_no_outside_names_reach_muse()
+    test_note_writer_is_blind()
     print("privacy tests passed")

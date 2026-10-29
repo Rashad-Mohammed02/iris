@@ -6,7 +6,9 @@ Output:
   out/profile.json   owner, circle (Close Friends), interests
 
 Privacy rule: the text of messages written by anyone other than the owner is
-never read into an event. For other people we keep only who and when.
+never read into an event. For other people we keep only who and when. The
+owner's own words are kept (own_words on message_sent) so Muse can read the
+gist of what he talks about.
 
 Usage:
   python3 data/parse_export.py [EXPORT_DIR] [--tz America/New_York]
@@ -213,7 +215,9 @@ def parse(export, tz="America/New_York"):
                         to=title, group=is_group,
                         length=len(text), reply_delay_s=None if reconnect else delay, reconnect=reconnect,
                         creator=share.get("original_content_owner", "") if is_share else None,
-                        url=share.get("link", "") if is_share else None)
+                        url=share.get("link", "") if is_share else None,
+                        # v2: his own words only, for the gist of what he talks about. Never anyone else's.
+                        own_words=text[:200] if text else None)
                     last_other_ts = None
                 else:
                     # Someone else's message: keep who and when, never what.

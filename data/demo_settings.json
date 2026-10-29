@@ -1,23 +1,34 @@
 {
-  "note": "Arjun's choices in the demo: who is in his circle, how each person relates, the permission he set, and which of his interests each person may ever hear about. All fictional.",
+  "note": "Arjun's Iris v2 choices in the demo: his 5, how each person relates, each one's setting (every_day is the norm; big_moments and never are options), and what he shares with each. All fictional.",
   "age": 28,
-  "send_mode": "automatic",
+  "country": "US",
+  "note_time": "18:00",
+  "send_mode": "auto",
+  "sources": {
+    "instagram": true,
+    "spotify": true,
+    "calendar": true
+  },
+  "notes_switch_on_day": 15,
   "circle": [
     {
       "name": "Maya Chen",
       "relation": "girlfriend",
-      "permission": "When it matters",
+      "setting": "every_day",
       "mutual": true,
+      "nearby": true,
       "allowed_interests": [
         "film photography",
-        "F1"
+        "F1",
+        "live music"
       ]
     },
     {
       "name": "Sam Okafor",
       "relation": "best friend",
-      "permission": "Always",
+      "setting": "every_day",
       "mutual": true,
+      "nearby": true,
       "allowed_interests": [
         "F1",
         "the NBA"
@@ -26,34 +37,35 @@
     {
       "name": "Dev Rao",
       "relation": "brother",
-      "permission": "When it matters",
+      "setting": "every_day",
       "mutual": true,
+      "nearby": false,
       "allowed_interests": [
         "the NBA",
         "F1"
       ]
     },
     {
-      "name": "Priya Rao",
-      "relation": "sister",
-      "permission": "Just this once",
+      "name": "Omar Haddad",
+      "relation": "close friend",
+      "setting": "every_day",
       "mutual": true,
+      "nearby": true,
       "allowed_interests": [
-        "stand-up comedy",
+        "live music",
         "film photography"
       ]
     },
     {
-      "name": "Omar Haddad",
-      "relation": "close friend",
-      "permission": "Never",
+      "name": "Priya Rao",
+      "relation": "sister",
+      "setting": "big_moments",
       "mutual": true,
+      "nearby": false,
       "allowed_interests": [
-        "the NBA",
-        "stand-up comedy"
+        "stand-up comedy",
+        "film photography"
       ]
     }
-  ],
-  "lifts_switch_on_day": 15,
-  "country": "US"
+  ]
 }

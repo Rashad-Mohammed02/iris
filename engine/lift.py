@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT))
 
 from engine import muse  # noqa: E402
 from engine.interests import NEVER  # noqa: E402
-from engine.voice import lint  # noqa: E402
+from engine.voice import lint_v1 as lint  # noqa: E402
 
 WRITE_PROMPT = ROOT / "prompts" / "lift_v2.txt"
 CHECK_PROMPT = ROOT / "prompts" / "check_v1.txt"

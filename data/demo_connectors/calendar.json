@@ -1,0 +1,1212 @@
+{
+ "_label": "SIMULATED. Not a real calendar. Every event, place and person is fictional.",
+ "owner": "Arjun Rao",
+ "timezone": "America/New_York",
+ "events": [
+  {
+   "id": "e001",
+   "title": "Design sync",
+   "start": "2026-09-23T11:00",
+   "end": "2026-09-23T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e003",
+   "title": "Planning",
+   "start": "2026-09-23T12:30",
+   "end": "2026-09-23T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e002",
+   "title": "1:1 with Jess",
+   "start": "2026-09-23T15:00",
+   "end": "2026-09-23T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e005",
+   "title": "Team standup",
+   "start": "2026-09-24T09:30",
+   "end": "2026-09-24T09:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e004",
+   "title": "Planning",
+   "start": "2026-09-24T12:30",
+   "end": "2026-09-24T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e006",
+   "title": "Sprint review",
+   "start": "2026-09-25T14:00",
+   "end": "2026-09-25T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e007",
+   "title": "Run club",
+   "start": "2026-09-26T08:00",
+   "end": "2026-09-26T09:00",
+   "all_day": false,
+   "kind": "routine",
+   "with": [
+    "Chris Park"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e008",
+   "title": "Planning",
+   "start": "2026-09-28T12:30",
+   "end": "2026-09-28T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e010",
+   "title": "Team standup",
+   "start": "2026-09-29T09:30",
+   "end": "2026-09-29T09:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e011",
+   "title": "Design sync",
+   "start": "2026-09-29T11:00",
+   "end": "2026-09-29T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e009",
+   "title": "Planning",
+   "start": "2026-09-29T12:30",
+   "end": "2026-09-29T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e012",
+   "title": "Team standup",
+   "start": "2026-09-30T09:30",
+   "end": "2026-09-30T09:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e013",
+   "title": "Sprint review",
+   "start": "2026-09-30T14:00",
+   "end": "2026-09-30T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e014",
+   "title": "Design sync",
+   "start": "2026-10-01T11:00",
+   "end": "2026-10-01T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e015",
+   "title": "Sprint review",
+   "start": "2026-10-01T14:00",
+   "end": "2026-10-01T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e016",
+   "title": "1:1 with Jess",
+   "start": "2026-10-01T15:00",
+   "end": "2026-10-01T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e017",
+   "title": "Team standup",
+   "start": "2026-10-02T09:30",
+   "end": "2026-10-02T09:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e018",
+   "title": "Run club",
+   "start": "2026-10-03T08:00",
+   "end": "2026-10-03T09:00",
+   "all_day": false,
+   "kind": "routine",
+   "with": [
+    "Chris Park"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e020",
+   "title": "Design sync",
+   "start": "2026-10-05T11:00",
+   "end": "2026-10-05T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e019",
+   "title": "1:1 with Jess",
+   "start": "2026-10-05T15:00",
+   "end": "2026-10-05T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e021",
+   "title": "1:1 with Jess",
+   "start": "2026-10-06T15:00",
+   "end": "2026-10-06T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e022",
+   "title": "Planning",
+   "start": "2026-10-07T12:30",
+   "end": "2026-10-07T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e023",
+   "title": "Sprint review",
+   "start": "2026-10-07T14:00",
+   "end": "2026-10-07T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e024",
+   "title": "1:1 with Jess",
+   "start": "2026-10-07T15:00",
+   "end": "2026-10-07T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e026",
+   "title": "Planning",
+   "start": "2026-10-08T12:30",
+   "end": "2026-10-08T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e025",
+   "title": "Sprint review",
+   "start": "2026-10-08T14:00",
+   "end": "2026-10-08T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e027",
+   "title": "Design sync",
+   "start": "2026-10-09T11:00",
+   "end": "2026-10-09T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e028",
+   "title": "Sprint review",
+   "start": "2026-10-09T14:00",
+   "end": "2026-10-09T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e029",
+   "title": "Pickup basketball",
+   "start": "2026-10-09T19:00",
+   "end": "2026-10-09T21:00",
+   "all_day": false,
+   "kind": "social",
+   "with": [
+    "Sam Okafor"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e030",
+   "title": "Run club",
+   "start": "2026-10-10T08:00",
+   "end": "2026-10-10T09:00",
+   "all_day": false,
+   "kind": "routine",
+   "with": [
+    "Chris Park"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e063",
+   "title": "Study block: PMP",
+   "start": "2026-10-10T19:00",
+   "end": "2026-10-10T22:00",
+   "all_day": false,
+   "kind": "study",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e064",
+   "title": "Study block: PMP",
+   "start": "2026-10-11T19:00",
+   "end": "2026-10-11T22:00",
+   "all_day": false,
+   "kind": "study",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e067",
+   "title": "Q4 launch deck due",
+   "start": "2026-10-12T00:00",
+   "end": "2026-10-12T23:59",
+   "all_day": true,
+   "kind": "deadline",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e031",
+   "title": "Design sync",
+   "start": "2026-10-12T11:00",
+   "end": "2026-10-12T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e032",
+   "title": "Planning",
+   "start": "2026-10-12T12:30",
+   "end": "2026-10-12T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e033",
+   "title": "1:1 with Jess",
+   "start": "2026-10-12T15:00",
+   "end": "2026-10-12T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e065",
+   "title": "Study block: PMP",
+   "start": "2026-10-12T19:00",
+   "end": "2026-10-12T22:00",
+   "all_day": false,
+   "kind": "study",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e034",
+   "title": "Team standup",
+   "start": "2026-10-13T09:30",
+   "end": "2026-10-13T09:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e066",
+   "title": "Study block: PMP",
+   "start": "2026-10-13T19:00",
+   "end": "2026-10-13T22:00",
+   "all_day": false,
+   "kind": "study",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e068",
+   "title": "PMP exam",
+   "start": "2026-10-14T08:00",
+   "end": "2026-10-14T12:00",
+   "all_day": false,
+   "kind": "exam",
+   "with": [],
+   "status": "confirmed",
+   "location": "Test center, 5th Ave"
+  },
+  {
+   "id": "e037",
+   "title": "Planning",
+   "start": "2026-10-14T12:30",
+   "end": "2026-10-14T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e036",
+   "title": "Sprint review",
+   "start": "2026-10-14T14:00",
+   "end": "2026-10-14T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e035",
+   "title": "1:1 with Jess",
+   "start": "2026-10-14T15:00",
+   "end": "2026-10-14T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e038",
+   "title": "Planning",
+   "start": "2026-10-15T12:30",
+   "end": "2026-10-15T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e069",
+   "title": "Dinner with Omar",
+   "start": "2026-10-15T19:30",
+   "end": "2026-10-15T21:30",
+   "all_day": false,
+   "kind": "social",
+   "with": [
+    "Omar Haddad"
+   ],
+   "status": "cancelled"
+  },
+  {
+   "id": "e040",
+   "title": "Planning",
+   "start": "2026-10-16T12:30",
+   "end": "2026-10-16T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e039",
+   "title": "Sprint review",
+   "start": "2026-10-16T14:00",
+   "end": "2026-10-16T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e041",
+   "title": "Run club",
+   "start": "2026-10-17T08:00",
+   "end": "2026-10-17T09:00",
+   "all_day": false,
+   "kind": "routine",
+   "with": [
+    "Chris Park"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e042",
+   "title": "Design sync",
+   "start": "2026-10-19T11:00",
+   "end": "2026-10-19T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e043",
+   "title": "Planning",
+   "start": "2026-10-19T12:30",
+   "end": "2026-10-19T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e045",
+   "title": "Team standup",
+   "start": "2026-10-20T09:30",
+   "end": "2026-10-20T09:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e044",
+   "title": "Planning",
+   "start": "2026-10-20T12:30",
+   "end": "2026-10-20T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e046",
+   "title": "1:1 with Jess",
+   "start": "2026-10-20T15:00",
+   "end": "2026-10-20T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e048",
+   "title": "Design sync",
+   "start": "2026-10-21T11:00",
+   "end": "2026-10-21T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e047",
+   "title": "Sprint review",
+   "start": "2026-10-21T14:00",
+   "end": "2026-10-21T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e049",
+   "title": "1:1 with Jess",
+   "start": "2026-10-21T15:00",
+   "end": "2026-10-21T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e051",
+   "title": "Team standup",
+   "start": "2026-10-22T09:30",
+   "end": "2026-10-22T09:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e050",
+   "title": "Sprint review",
+   "start": "2026-10-22T14:00",
+   "end": "2026-10-22T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e070",
+   "title": "Weekend in Chicago",
+   "start": "2026-10-23T17:00",
+   "end": "2026-10-25T21:00",
+   "all_day": true,
+   "kind": "trip",
+   "with": [
+    "Maya Chen"
+   ],
+   "location": "Chicago",
+   "status": "confirmed"
+  },
+  {
+   "id": "e052",
+   "title": "Planning",
+   "start": "2026-10-26T12:30",
+   "end": "2026-10-26T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e053",
+   "title": "1:1 with Jess",
+   "start": "2026-10-27T15:00",
+   "end": "2026-10-27T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e055",
+   "title": "Team standup",
+   "start": "2026-10-28T09:30",
+   "end": "2026-10-28T09:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e071",
+   "title": "PMP results",
+   "start": "2026-10-28T10:00",
+   "end": "2026-10-28T10:15",
+   "all_day": false,
+   "kind": "results",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e054",
+   "title": "Design sync",
+   "start": "2026-10-28T11:00",
+   "end": "2026-10-28T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e056",
+   "title": "Planning",
+   "start": "2026-10-29T12:30",
+   "end": "2026-10-29T13:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e057",
+   "title": "1:1 with Jess",
+   "start": "2026-10-29T15:00",
+   "end": "2026-10-29T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e072",
+   "title": "Celebration dinner",
+   "start": "2026-10-29T19:30",
+   "end": "2026-10-29T22:00",
+   "all_day": false,
+   "kind": "social",
+   "with": [
+    "Maya Chen",
+    "Sam Okafor"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e058",
+   "title": "Design sync",
+   "start": "2026-10-30T11:00",
+   "end": "2026-10-30T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e073",
+   "title": "The Low Lanterns live",
+   "start": "2026-10-30T20:00",
+   "end": "2026-10-30T23:00",
+   "all_day": false,
+   "kind": "show",
+   "with": [],
+   "status": "tentative",
+   "public": true,
+   "interest": "live music",
+   "tickets": {
+    "seller": "Ticketmaster"
+   },
+   "location": "Brooklyn Steel"
+  },
+  {
+   "id": "e059",
+   "title": "Run club",
+   "start": "2026-10-31T08:00",
+   "end": "2026-10-31T09:00",
+   "all_day": false,
+   "kind": "routine",
+   "with": [
+    "Chris Park"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e074",
+   "title": "Blood test",
+   "start": "2026-11-02T08:00",
+   "end": "2026-11-02T08:30",
+   "all_day": false,
+   "kind": "health",
+   "with": [],
+   "status": "confirmed",
+   "location": "City Lab, Court St"
+  },
+  {
+   "id": "e060",
+   "title": "1:1 with Jess",
+   "start": "2026-11-02T15:00",
+   "end": "2026-11-02T15:30",
+   "all_day": false,
+   "kind": "work",
+   "with": [
+    "Jess Moreno"
+   ],
+   "status": "confirmed"
+  },
+  {
+   "id": "e062",
+   "title": "Design sync",
+   "start": "2026-11-03T11:00",
+   "end": "2026-11-03T11:45",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e061",
+   "title": "Sprint review",
+   "start": "2026-11-03T14:00",
+   "end": "2026-11-03T15:00",
+   "all_day": false,
+   "kind": "work",
+   "with": [],
+   "status": "confirmed"
+  },
+  {
+   "id": "e077",
+   "title": "Stand-up night at The Cellar",
+   "start": "2026-11-06T19:00",
+   "end": "2026-11-06T23:00",
+   "all_day": false,
+   "kind": "show",
+   "with": [],
+   "status": "tentative",
+   "public": true,
+   "interest": "stand-up comedy",
+   "tickets": {
+    "seller": "Ticketmaster"
+   }
+  },
+  {
+   "id": "e076",
+   "title": "NBA: Brooklyn home game",
+   "start": "2026-11-08T19:00",
+   "end": "2026-11-08T23:00",
+   "all_day": false,
+   "kind": "show",
+   "with": [],
+   "status": "tentative",
+   "public": true,
+   "interest": "the NBA",
+   "tickets": {
+    "seller": "Ticketmaster"
+   }
+  },
+  {
+   "id": "e075",
+   "title": "F1 Las Vegas GP watch party",
+   "start": "2026-11-13T19:00",
+   "end": "2026-11-13T23:00",
+   "all_day": false,
+   "kind": "show",
+   "with": [],
+   "status": "tentative",
+   "public": true,
+   "interest": "F1",
+   "tickets": {
+    "seller": "Ticketmaster"
+   }
+  }
+ ],
+ "free_busy": {
+  "Maya Chen": [
+   {
+    "start": "2026-09-24T12:00",
+    "end": "2026-09-24T13:00"
+   },
+   {
+    "start": "2026-09-25T13:00",
+    "end": "2026-09-25T14:00"
+   },
+   {
+    "start": "2026-09-29T12:30",
+    "end": "2026-09-29T13:30"
+   },
+   {
+    "start": "2026-09-30T13:00",
+    "end": "2026-09-30T14:00"
+   },
+   {
+    "start": "2026-10-02T13:00",
+    "end": "2026-10-02T14:00"
+   },
+   {
+    "start": "2026-10-20T13:00",
+    "end": "2026-10-20T14:00"
+   },
+   {
+    "start": "2026-10-21T12:30",
+    "end": "2026-10-21T13:30"
+   },
+   {
+    "start": "2026-10-23T00:00",
+    "end": "2026-10-23T23:59"
+   },
+   {
+    "start": "2026-10-24T00:00",
+    "end": "2026-10-24T23:59"
+   },
+   {
+    "start": "2026-10-25T00:00",
+    "end": "2026-10-25T23:59"
+   },
+   {
+    "start": "2026-10-28T12:00",
+    "end": "2026-10-28T13:00"
+   },
+   {
+    "start": "2026-10-29T13:00",
+    "end": "2026-10-29T14:00"
+   },
+   {
+    "start": "2026-10-30T12:30",
+    "end": "2026-10-30T13:30"
+   },
+   {
+    "start": "2026-11-02T12:30",
+    "end": "2026-11-02T13:30"
+   },
+   {
+    "start": "2026-11-05T12:00",
+    "end": "2026-11-05T13:00"
+   },
+   {
+    "start": "2026-11-06T12:00",
+    "end": "2026-11-06T13:00"
+   },
+   {
+    "start": "2026-11-09T13:00",
+    "end": "2026-11-09T14:00"
+   },
+   {
+    "start": "2026-11-10T12:30",
+    "end": "2026-11-10T13:30"
+   }
+  ],
+  "Sam Okafor": [
+   {
+    "start": "2026-09-24T12:00",
+    "end": "2026-09-24T13:00"
+   },
+   {
+    "start": "2026-09-25T12:30",
+    "end": "2026-09-25T13:30"
+   },
+   {
+    "start": "2026-09-28T12:30",
+    "end": "2026-09-28T13:30"
+   },
+   {
+    "start": "2026-09-30T13:00",
+    "end": "2026-09-30T14:00"
+   },
+   {
+    "start": "2026-10-02T12:30",
+    "end": "2026-10-02T13:30"
+   },
+   {
+    "start": "2026-10-05T12:30",
+    "end": "2026-10-05T13:30"
+   },
+   {
+    "start": "2026-10-12T12:00",
+    "end": "2026-10-12T13:00"
+   },
+   {
+    "start": "2026-10-13T12:30",
+    "end": "2026-10-13T13:30"
+   },
+   {
+    "start": "2026-10-15T12:00",
+    "end": "2026-10-15T13:00"
+   },
+   {
+    "start": "2026-10-16T12:30",
+    "end": "2026-10-16T13:30"
+   },
+   {
+    "start": "2026-10-21T12:00",
+    "end": "2026-10-21T13:00"
+   },
+   {
+    "start": "2026-10-23T12:30",
+    "end": "2026-10-23T13:30"
+   },
+   {
+    "start": "2026-10-26T12:00",
+    "end": "2026-10-26T13:00"
+   },
+   {
+    "start": "2026-10-29T12:00",
+    "end": "2026-10-29T13:00"
+   },
+   {
+    "start": "2026-11-02T13:00",
+    "end": "2026-11-02T14:00"
+   },
+   {
+    "start": "2026-11-03T13:00",
+    "end": "2026-11-03T14:00"
+   },
+   {
+    "start": "2026-11-04T12:00",
+    "end": "2026-11-04T13:00"
+   },
+   {
+    "start": "2026-11-09T12:00",
+    "end": "2026-11-09T13:00"
+   },
+   {
+    "start": "2026-11-10T12:30",
+    "end": "2026-11-10T13:30"
+   }
+  ],
+  "Omar Haddad": [
+   {
+    "start": "2026-09-24T12:00",
+    "end": "2026-09-24T13:00"
+   },
+   {
+    "start": "2026-09-25T12:00",
+    "end": "2026-09-25T13:00"
+   },
+   {
+    "start": "2026-09-29T13:00",
+    "end": "2026-09-29T14:00"
+   },
+   {
+    "start": "2026-09-30T12:30",
+    "end": "2026-09-30T13:30"
+   },
+   {
+    "start": "2026-10-06T12:00",
+    "end": "2026-10-06T13:00"
+   },
+   {
+    "start": "2026-10-07T12:30",
+    "end": "2026-10-07T13:30"
+   },
+   {
+    "start": "2026-10-14T12:30",
+    "end": "2026-10-14T13:30"
+   },
+   {
+    "start": "2026-10-15T13:00",
+    "end": "2026-10-15T14:00"
+   },
+   {
+    "start": "2026-10-20T12:30",
+    "end": "2026-10-20T13:30"
+   },
+   {
+    "start": "2026-10-22T13:00",
+    "end": "2026-10-22T14:00"
+   },
+   {
+    "start": "2026-10-27T12:30",
+    "end": "2026-10-27T13:30"
+   },
+   {
+    "start": "2026-10-29T12:00",
+    "end": "2026-10-29T13:00"
+   },
+   {
+    "start": "2026-10-30T13:00",
+    "end": "2026-10-30T14:00"
+   },
+   {
+    "start": "2026-11-02T12:00",
+    "end": "2026-11-02T13:00"
+   },
+   {
+    "start": "2026-11-03T12:00",
+    "end": "2026-11-03T13:00"
+   },
+   {
+    "start": "2026-11-04T12:30",
+    "end": "2026-11-04T13:30"
+   },
+   {
+    "start": "2026-11-05T13:00",
+    "end": "2026-11-05T14:00"
+   },
+   {
+    "start": "2026-11-06T12:30",
+    "end": "2026-11-06T13:30"
+   }
+  ],
+  "Dev Rao": [
+   {
+    "start": "2026-09-25T13:00",
+    "end": "2026-09-25T14:00"
+   },
+   {
+    "start": "2026-09-29T12:00",
+    "end": "2026-09-29T13:00"
+   },
+   {
+    "start": "2026-09-30T12:30",
+    "end": "2026-09-30T13:30"
+   },
+   {
+    "start": "2026-10-05T13:00",
+    "end": "2026-10-05T14:00"
+   },
+   {
+    "start": "2026-10-06T12:00",
+    "end": "2026-10-06T13:00"
+   },
+   {
+    "start": "2026-10-07T12:00",
+    "end": "2026-10-07T13:00"
+   },
+   {
+    "start": "2026-10-08T12:30",
+    "end": "2026-10-08T13:30"
+   },
+   {
+    "start": "2026-10-09T12:30",
+    "end": "2026-10-09T13:30"
+   },
+   {
+    "start": "2026-10-15T12:30",
+    "end": "2026-10-15T13:30"
+   },
+   {
+    "start": "2026-10-16T12:00",
+    "end": "2026-10-16T13:00"
+   },
+   {
+    "start": "2026-10-22T12:00",
+    "end": "2026-10-22T13:00"
+   },
+   {
+    "start": "2026-10-23T13:00",
+    "end": "2026-10-23T14:00"
+   },
+   {
+    "start": "2026-11-03T12:30",
+    "end": "2026-11-03T13:30"
+   },
+   {
+    "start": "2026-11-05T12:30",
+    "end": "2026-11-05T13:30"
+   },
+   {
+    "start": "2026-11-09T12:00",
+    "end": "2026-11-09T13:00"
+   },
+   {
+    "start": "2026-11-10T12:00",
+    "end": "2026-11-10T13:00"
+   }
+  ],
+  "Priya Rao": [
+   {
+    "start": "2026-09-23T12:30",
+    "end": "2026-09-23T13:30"
+   },
+   {
+    "start": "2026-09-24T12:00",
+    "end": "2026-09-24T13:00"
+   },
+   {
+    "start": "2026-09-25T12:30",
+    "end": "2026-09-25T13:30"
+   },
+   {
+    "start": "2026-10-01T12:30",
+    "end": "2026-10-01T13:30"
+   },
+   {
+    "start": "2026-10-07T12:00",
+    "end": "2026-10-07T13:00"
+   },
+   {
+    "start": "2026-10-09T13:00",
+    "end": "2026-10-09T14:00"
+   },
+   {
+    "start": "2026-10-15T13:00",
+    "end": "2026-10-15T14:00"
+   },
+   {
+    "start": "2026-10-19T12:00",
+    "end": "2026-10-19T13:00"
+   },
+   {
+    "start": "2026-10-20T13:00",
+    "end": "2026-10-20T14:00"
+   },
+   {
+    "start": "2026-10-22T12:30",
+    "end": "2026-10-22T13:30"
+   },
+   {
+    "start": "2026-10-26T12:00",
+    "end": "2026-10-26T13:00"
+   },
+   {
+    "start": "2026-10-27T12:30",
+    "end": "2026-10-27T13:30"
+   },
+   {
+    "start": "2026-10-28T13:00",
+    "end": "2026-10-28T14:00"
+   },
+   {
+    "start": "2026-10-29T12:30",
+    "end": "2026-10-29T13:30"
+   },
+   {
+    "start": "2026-10-30T12:00",
+    "end": "2026-10-30T13:00"
+   },
+   {
+    "start": "2026-11-03T12:00",
+    "end": "2026-11-03T13:00"
+   },
+   {
+    "start": "2026-11-04T12:30",
+    "end": "2026-11-04T13:30"
+   },
+   {
+    "start": "2026-11-05T12:30",
+    "end": "2026-11-05T13:30"
+   }
+  ]
+ }
+}

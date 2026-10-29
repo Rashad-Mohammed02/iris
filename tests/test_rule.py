@@ -1,4 +1,5 @@
-"""The rule must catch the heavy week and stay quiet on normal weeks.
+"""The rule must catch the low stretch in Arjun's month and stay quiet on normal weeks.
+In v2 the rule is one input to the day read, not the decider.
 
 Uses the demo's ground-truth file, which only tests may read.
 """
@@ -21,7 +22,7 @@ def run():
 
 def test_normal_weeks_never_trigger():
     res = run()
-    for r in res[:21]:  # days 1 to 21, including the late Saturday on day 13
+    for r in res[:17] + res[35:]:  # learning, the first ordinary days, and the good end of the month
         assert not r["heavy_stretch"], r["day"]
         assert not r["lighter_stretch"], r["day"]
     assert res[12]["off_signals"] == [], "a single late night must not count as off"
@@ -29,13 +30,14 @@ def test_normal_weeks_never_trigger():
 
 def test_heavy_week_is_caught():
     res = run()
-    assert any(r["heavy_stretch"] for r in res[23:27]), "heavy stretch should be caught by days 24 to 27"
-    assert "Dev Rao" in res[25]["quiet_with"]
+    assert any(r["heavy_stretch"] for r in res[19:23]), "the tired stretch should be caught by days 20 to 23"
+    assert res[22]["off_day"] and "woke_in_night" in res[22]["off_signals"], "day 23 is the low day"
 
 
-def test_recovered_by_day_30():
+def test_good_days_are_not_heavy():
     res = run()
-    assert not res[29]["heavy_stretch"]
+    for i in (30, 31, 32, 35, 36, 37):   # the trip, the big news, the celebration, the show
+        assert not res[i]["heavy_stretch"] and not res[i]["lighter_stretch"], i + 1
 
 
 def test_rest_is_read_from_the_longest_quiet_stretch():
@@ -48,7 +50,7 @@ def test_rest_is_read_from_the_longest_quiet_stretch():
 
 
 def test_reconnecting_is_not_a_slow_reply():
-    """Day 29: Arjun finally writes back to Dev after days of silence. That's recovery, not a heavy day."""
+    """Day 29: Arjun writes back to Dev after a gap. That's reconnecting, not a heavy day."""
     res = run()
     assert not res[28]["off_day"], res[28]["off_signals"]
     assert "slower_replies" not in res[28]["off_signals"]
@@ -58,7 +60,7 @@ def test_reconnecting_is_not_a_slow_reply():
 def test_nothing_is_judged_in_the_first_two_weeks():
     res = run()
     assert all(r["learning"] for r in res[:14])
-    assert not any(r["off_day"] for r in res[:21])
+    assert not any(r["off_day"] for r in res[:17])
 
 
 def test_content_alone_never_flags_a_day():
@@ -74,14 +76,14 @@ def test_matches_ground_truth_phases():
     days = truth.get("days") or truth
     res = run()
     flagged = {r["day"] for r in res if r["heavy_stretch"]}
-    hard = {d["date"] for d in days if isinstance(d, dict) and d.get("phase") == "hard_week"}
+    hard = {d["date"] for d in days if isinstance(d, dict) and d.get("phase") in ("study_crunch", "exam", "low")}
     assert hard and len(flagged & hard) >= 3
 
 
 if __name__ == "__main__":
     test_normal_weeks_never_trigger()
     test_heavy_week_is_caught()
-    test_recovered_by_day_30()
+    test_good_days_are_not_heavy()
     test_rest_is_read_from_the_longest_quiet_stretch()
     test_reconnecting_is_not_a_slow_reply()
     test_nothing_is_judged_in_the_first_two_weeks()

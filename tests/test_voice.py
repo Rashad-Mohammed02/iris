@@ -1,4 +1,4 @@
-"""The lint must pass good lifts and catch every kind of bad one. Offline."""
+"""v2 word check: mood words pass, everything private still fails. Offline."""
 
 import sys
 from pathlib import Path
@@ -6,60 +6,60 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from engine.voice import lint  # noqa: E402
+from engine.voice import lint, phrase_ok  # noqa: E402
 
 
-def test_good_lifts_pass():
+def test_mood_words_now_pass():
     for text, interest in [
-        ("Arjun could use a little lift this week. Arjun's deep into F1, so surprise Arjun with race tickets.", "F1"),
-        ("Maya's had a full week. Pasta recipes are Maya's thing right now, so dinner's on you?", "pasta recipes"),
-        ("Priya is due for something good. A roll of film for the film photography kick would make the week.", "film photography"),
+        ("Arjun, proud day. Grab two seats with Arjun for the next F1 race?", "F1"),
+        ("Arjun, tired today. Send Arjun your best NBA highlight?", "NBA"),
+        ("Arjun, a bit low. Lunch with Arjun this week to swap film photography finds?", "film photography"),
+        ("Arjun, stressed today. A small F1 plan with Arjun this weekend?", "F1"),
+        ("Arjun, a bit sad. Send Arjun an F1 clip that made you laugh?", "F1"),
     ]:
         assert lint(text, interest) == [], (text, lint(text, interest))
 
 
-def test_bad_lifts_fail():
+def test_private_things_still_fail():
     cases = [
-        "Arjun seems sad lately. He's into F1. Check on him.",          # feeling, pronoun, therapy
-        "Arjun has been up late scrolling reels. Send F1 stuff.",        # signals
-        "Arjun needs you right now — F1 tickets?",                  # needy, dash
-        "Arjun could use a lift! F1 night?",                             # exclamation
-        "Arjun could use a lift because of work. F1 night?",             # reason
-        "Arjun could use a lift. Arjun loves F1. Plan a race night.",    # three sentences
+        "Arjun, depressed today. Check on Arjun with an F1 clip?",          # diagnosis, therapy
+        "Arjun, low today. Arjun said \"not my best day\", so send F1?",    # quoting his messages
+        "Arjun, tired. The blood test went fine, F1 night?",                # health
+        "Arjun, stressed. Rent is due, so maybe an F1 night?",              # money
+        "Arjun, sad after the breakup. F1 night?",                          # relationship detail
+        "Arjun, low after the layoff. F1 night?",                           # work trouble
+        "Arjun, low. Arjun has been up late scrolling. F1?",                # source, three sentences
+        "Arjun, low today. He needs you, F1 night?",                        # pronoun, needy
+        "Arjun, happy day! F1 night?",                                      # exclamation
+        "Arjun, happy day — F1 night?",                               # dash
+        "Arjun, low today. Arjun is feeling suicidal, F1?",                 # crisis
     ]
     for text in cases:
         assert lint(text, "F1"), text
 
 
-def test_whole_words_only():
-    assert lint("Follow the F1 race with Arjun this weekend.", "F1") == []   # "low" inside "follow"
-    assert lint("Arjun could use a lift. Down the street there's an F1 bar.", "F1")
+def test_names_and_private_terms():
+    assert "names someone else: Maya" in lint("Arjun, happy. Maya says F1 night?", "F1", other_names=["Maya"])
+    assert lint("Arjun, happy. Chicago was fun, F1 night?", "F1", private_terms=["Chicago"])
 
 
-def test_other_names_and_private_terms():
-    assert "names someone else: Maya" in lint("Arjun could use a lift. Maya says F1.", "F1", other_names=["Maya"])
-    assert lint("Arjun could use a lift. Halvorsen fans love F1.", "F1", private_terms=["Halvorsen"])
+def test_moment_check():
+    assert phrase_ok("exam tomorrow") == [] and phrase_ok("back from a trip") == []
+    assert phrase_ok("a weekend in chicago", private_terms=["Chicago"])
+    assert phrase_ok("a blood test") and phrase_ok("the breakup") and phrase_ok("a very long and hard week at work")
 
 
-def test_recovery_words_in_every_language():
-    """A good-day lift can't hint things were bad before, in English or Spanish."""
-    assert lint("Todo va bien con Ignacio ahora, quizas ver el partido juntos?", language="es")
-    assert lint("Arjun is doing better these days. F1 night this weekend?", "F1")
-    assert lint("Arjun is into F1 again. Race night this weekend?", "F1")
-    assert lint("Ignacio esta de vuelta con el futbol. Partido el sabado?", language="es")
-
-
-def test_fallback_lines_pass():
-    from engine.lift import FALLBACK
-    for kind, line in FALLBACK.items():
-        assert lint(line.format(name="Arjun", interest="F1"), "F1") == [], (kind, line)
+def test_fallback_passes():
+    from engine.note import FALLBACK
+    for mood in ("happy", "tired", "low", "okay", "proud"):
+        text = FALLBACK.format(name="Arjun", mood=mood, interest="F1")
+        assert lint(text, "F1") == [], (text, lint(text, "F1"))
 
 
 if __name__ == "__main__":
-    test_good_lifts_pass()
-    test_bad_lifts_fail()
-    test_whole_words_only()
-    test_other_names_and_private_terms()
-    test_recovery_words_in_every_language()
-    test_fallback_lines_pass()
+    test_mood_words_now_pass()
+    test_private_things_still_fail()
+    test_names_and_private_terms()
+    test_moment_check()
+    test_fallback_passes()
     print("voice tests passed")

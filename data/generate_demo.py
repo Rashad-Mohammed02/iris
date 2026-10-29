@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Iris demo data: synthetic 30-day Instagram history for "Arjun".
+Iris demo data: a synthetic 42-day Instagram history for "Arjun", plus his
+simulated calendar and Spotify feeds (Iris v2, the everyday version).
 
 EVERYTHING THIS SCRIPT PRODUCES IS FICTIONAL. Arjun, his circle, every
 handle, every creator account, every caption and every message are invented
@@ -9,7 +10,9 @@ for a hackathon demo. Any match with a real account is a coincidence.
 What it writes: a folder shaped like Instagram's "Download your information"
 JSON export (see README.md for which parts follow documented structure and
 which are our assumption), plus a clearly labelled `_simulated/` folder with
-signals the real export does not contain.
+signals the real export does not contain. It also writes the two SIMULATED
+connector feeds, data/demo_connectors/calendar.json and spotify.json (format
+in engine/connectors.py and data/README.md).
 
 Deterministic: the same parameters always give byte-identical output.
 Standard library only. Python 3.9+.
@@ -33,28 +36,41 @@ from datetime import date, datetime, timedelta, timezone
 # =============================================================================
 
 SEED = 20261103                      # change for a different (but still fixed) history
-END_DATE = date(2026, 11, 3)         # last day of the history (day 30)
-NUM_DAYS = 30
+END_DATE = date(2026, 11, 3)         # last day of the history (day 42)
+NUM_DAYS = 42
 LOCAL_TZ = "America/New_York"        # Arjun lives on US Eastern time
 
-# Strain: 0.0 = his normal, 1.0 = most drifted. Days not listed are 0.0.
-# Day 1 = END_DATE - 29 days. Maya's hard week is days 22-27; 28-30 is recovery.
-STRAIN_BY_DAY = {
-    22: 0.45, 23: 0.75, 24: 0.95, 25: 1.00, 26: 1.00, 27: 0.85,   # Maya's hard week
-    28: 0.55, 29: 0.30, 30: 0.15,                                  # recovery tail
+# Day 1 = END_DATE - 41 days (Wed 23 Sep). Days 1-14 are the two weeks Iris only learns his normal.
+# Days 15-42 are "his month": ordinary days with a few that stand out, in any direction.
+STORY = {
+    18: "study_crunch", 19: "study_crunch", 20: "study_crunch", 21: "study_crunch",   # a tired stretch
+    22: "exam",                                                                     # the exam itself
+    23: "low",                                                                      # a flat, low day after it
+    24: "easing", 25: "easing",
+    31: "trip", 32: "trip", 33: "trip",                                             # a weekend away with Maya
+    34: "back",
+    35: "friends_news",                                                             # Priya tells him something private
+    36: "big_news",                                                                 # he passed
+    37: "celebrate",
+    38: "show",                                                                     # a gig with Omar
+    39: "after_show",
+    41: "lab_morning",                                                              # a routine blood test (private)
 }
-HARD_WEEK = range(22, 28)
-RECOVERY = range(28, 31)
 
-# Days inside the baseline that are late but upbeat (a race night with friends).
+# Strain: 0.0 = his normal, 1.0 = most drifted. Days not listed are 0.0.
+STRAIN_BY_DAY = {18: 0.35, 19: 0.45, 20: 0.55, 21: 0.5, 22: 0.45, 23: 0.95, 24: 0.4, 25: 0.2, 34: 0.2, 39: 0.15}
+HARD_WEEK = range(23, 24)             # the low day
+RECOVERY = range(24, 26)              # easing afterwards
+
+# Days that are late but upbeat (a race night, the trip, good news, the gig).
 # Useful as a false-positive guard: late is not the same as heavy.
-UPBEAT_LATE_DAYS = [13]
+UPBEAT_LATE_DAYS = [13, 31, 32, 36, 37, 38]
 
-# He goes quiet with his brother: no messages or replies from Arjun on these days.
-DEV_QUIET_DAYS = range(23, 29)        # breaks the silence on day 29
+# v1 had him go quiet with his brother; v2's month has no quiet stretch.
+DEV_QUIET_DAYS = range(0, 0)
 
-# The lift lands: Sam surprises him with something F1 on this day (Arjun's reaction only).
-LIFT_DAY = 28
+# v1 had a lift land on a fixed day; v2 has no scripted receiver side.
+LIFT_DAY = 0
 
 # Sundays are a little heavier in his baseline ("Sundays look heavier for you").
 SUNDAY_HEAVY_BUMP = 0.6
@@ -222,15 +238,13 @@ ARJUN_LINES = {
                    "grabbing groceries, need anything?", "haha yes", "i'll pick you up at 7", "new episode is out btw",
                    "love you", "can't wait for saturday", "send me the link", "omg yes let's do it",
                    "how was the presentation?", "i made the garlic noodles from that reel, not bad actually"],
-        "strained": ["how are you holding up?", "i'm here, no rush to reply", "want me to bring dinner over?",
-                     "i can come by after work", "you don't have to talk about it, i'm just here", "did you eat today?",
-                     "picking up your favorite soup", "i'll stay over tonight if you want", "proud of you for getting through today",
-                     "sleep ok?", "text me when you're up", "it's okay, really", "one day at a time",
-                     "i've got tomorrow covered, don't worry about it", "here whenever you want to vent", "i'm not going anywhere",
-                     "ok, calling you in a bit", "you're not a burden, i promise", "yeah i'm up", "can't sleep either",
-                     "tired but ok", "sorry, long day. i'm here now"],
-        "recovery": ["you sound so much better today", "dinner out this weekend? my treat", "so glad today was easier",
-                     "love you. proud of you", "ok that made me laugh", "pasta night thursday?"],
+        "strained": ["long day, i'm wiped", "sorry, brain is mush tonight", "can we just stay in tonight?",
+                     "studying again, call you after?", "i'm so tired of flashcards", "ugh another chapter",
+                     "not my best day tbh", "kind of a flat day", "yeah i'm up", "can't sleep, still thinking about it",
+                     "tired but ok", "sorry, long day. i'm here now", "thanks for the snacks, lifesaver",
+                     "just need this week to be over"],
+        "recovery": ["feeling more like myself today", "dinner out this weekend? my treat", "today was easier",
+                     "love you", "ok that made me laugh", "pasta night thursday?"],
         "share_note_normal": ["us", "this is so you", "we need to make this", "lmao", "ok this is us on sundays"],
         "share_note_strained": ["this is me today", "felt this", "too real", "same", "tired tired"],
     },
@@ -243,9 +257,8 @@ ARJUN_LINES = {
                    "if they don't pit him in the next two laps the whole race is over",
                    "ok but hear me out, best overtake of the season was the one in the rain",
                    "pickup at the usual court, 7, bring the good ball this time"],
-        "strained": ["sorry man been slammed", "yeah maybe next week", "can't this weekend", "maya stuff, all good tho"],
-        "recovery": ["thank you man, needed that", "pickup this week? i'm back", "ok i'm actually so hyped",
-                     "race this weekend at mine?"],
+        "strained": ["sorry man been slammed", "yeah maybe next week", "can't this weekend", "studying, all good tho"],
+        "recovery": ["pickup this week?", "race this weekend at mine?"],
         "lift": ["WAIT. are you serious", "dude. vegas?? you're insane", "i owe you big time", "ok i'm actually so hyped"],
         "share_note_normal": ["this is literally you", "LMAO", "watch till the end", "box box"],
         "share_note_strained": [],
@@ -256,7 +269,7 @@ ARJUN_LINES = {
                    "bro what", "haha classic", "fantasy trade? i'll give you my rb", "dad sent the family photo lol",
                    "that's wild", "call this weekend?"],
         "strained": ["yeah", "later"],
-        "recovery": ["hey sorry man, been a week", "call this weekend?", "yeah saw the race, wild", "how's mom doing?"],
+        "recovery": ["call this weekend?", "yeah saw the race, wild", "how's mom doing?"],
         "share_note_normal": ["lmao", "bro", "this is you on race day"],
         "share_note_strained": [],
     },
@@ -268,7 +281,7 @@ ARJUN_LINES = {
                    "mom called me twice today asking if you're eating, please text her back lol",
                    "are you coming home for thanksgiving or doing it with maya's family this year?"],
         "strained": ["sorry busy week", "can't talk rn"],
-        "recovery": ["sorry i went quiet, crazy week", "call sunday?"],
+        "recovery": ["call sunday?"],
         "share_note_normal": ["this is mom", "lol"],
         "share_note_strained": [],
     },
@@ -277,7 +290,7 @@ ARJUN_LINES = {
                    "this song is everything", "we need to shoot downtown soon", "haha yes", "saturday works",
                    "that light though", "you going to the show?"],
         "strained": ["sorry man, later"],
-        "recovery": ["sorry, been a week. shoot next weekend?"],
+        "recovery": ["shoot next weekend?"],
         "share_note_normal": ["need this lens", "look at that grain"],
         "share_note_strained": [],
     },
@@ -294,6 +307,26 @@ ARJUN_LINES = {
                                   "sending money for the gift now", "yes", "haha"],
                        "strained": [], "recovery": ["sorry, catching up now"],
                        "share_note_normal": ["lol"], "share_note_strained": []},
+}
+
+# What Arjun says first on the days that stand out (his side only, all fictional).
+SCRIPTED = {
+    ("maya", 18): ["study block tonight, call you after?"],
+    ("maya", 20): ["deck is finally done. i'm wiped", "exam in two days, why did i sign up for this"],
+    ("sam", 20): ["can't do pickup friday, exam sunday. after that i'm all yours"],
+    ("maya", 22): ["exam in an hour, wish me luck", "ok it's done. brain is mush"],
+    ("maya", 23): ["kind of a flat day honestly", "can we just stay in tonight", "no idea how it went, that's the worst part"],
+    ("omar", 23): ["sorry man, raincheck on dinner? not up for it today"],
+    ("maya", 31): ["packed! train at 6?", "this view though"],
+    ("sam", 32): ["sending you the skyline, you'd love it"],
+    ("maya", 34): ["home. that was the best weekend"],
+    ("priya", 35): ["promise i won't tell anyone about the job thing until you're ready"],
+    ("maya", 36): ["I PASSED", "i actually passed. dinner tomorrow, my treat"],
+    ("sam", 36): ["BRO I PASSED", "drinks on me this weekend"],
+    ("dev", 36): ["passed the exam!! tell mom before she hears it from priya lol"],
+    ("omar", 36): ["passed!! we're celebrating at the gig next week"],
+    ("omar", 38): ["doors at 7, meet out front?", "that set was unreal"],
+    ("maya", 41): ["lab at 8 then straight to work, just the yearly one", "starving lol"],
 }
 
 THREADS = {
@@ -442,11 +475,9 @@ def strain(d):
 
 
 def phase(d):
-    if d in HARD_WEEK:
-        return "hard_week"
-    if d in RECOVERY:
-        return "recovery"
-    return "baseline"
+    if d <= 14:
+        return "learning"
+    return STORY.get(d, "ordinary")
 
 
 # =============================================================================
@@ -614,14 +645,8 @@ def generate_thread(thread, watches_by_day):
         quiet = thread in ("dev", "group_siblings") and d in DEV_QUIET_DAYS
         n_exch = steady_count(p["exch"])
         # scripted beats Arjun says first on these days, in order
-        scripted = []
-        if thread == "sam" and d == LIFT_DAY:
-            scripted = list(ARJUN_LINES["sam"]["lift"])
-        if thread == "dev" and d == DEV_QUIET_DAYS.stop:
-            scripted = ["hey sorry man, been a week", "call this weekend?"]
-        if thread == "sam" and d == LIFT_DAY:
-            n_exch = max(n_exch, 2)
-        if thread == "dev" and d == DEV_QUIET_DAYS.stop:     # he breaks the silence
+        scripted = list(SCRIPTED.get((thread, d), []))
+        if scripted:
             n_exch = max(n_exch, 1)
         for i in range(n_exch):
             t = active_start_minute(weekend, s, thread)
@@ -630,7 +655,7 @@ def generate_thread(thread, watches_by_day):
             arjun_starts = (not quiet) and rng.random() < p["p_init"] and not is_group
             if thread == "sam" and d == LIFT_DAY and i == 0:
                 arjun_starts = False
-            if thread == "dev" and d == DEV_QUIET_DAYS.stop and i == 0:
+            if scripted and i == 0:
                 arjun_starts = True
             turns = rng.randint(2, 7)
             turn_is_arjun = arjun_starts
@@ -972,24 +997,162 @@ def summarize(watches, threads, saved):
         "owner": OWNER["name"], "circle": {k: {"name": v["name"], "role": v["role"]} for k, v in CIRCLE.items()},
         "start_date": START_DATE.isoformat(), "end_date": END_DATE.isoformat(), "timezone": LOCAL_TZ,
         "day_boundary": "per-day stats use activity days running 05:00 to 05:00 local",
-        "arc": {"baseline_days": "1-21", "hard_week_days": "%d-%d" % (HARD_WEEK.start, HARD_WEEK.stop - 1),
-                "recovery_days": "%d-%d" % (RECOVERY.start, RECOVERY.stop - 1),
-                "dev_quiet_days": "%d-%d" % (DEV_QUIET_DAYS.start, DEV_QUIET_DAYS.stop - 1),
-                "upbeat_late_days": UPBEAT_LATE_DAYS, "lift_day": LIFT_DAY},
+        "arc": {"learning_days": "1-14", "month_days": "15-%d" % NUM_DAYS,
+                "story": {str(k): v for k, v in sorted(STORY.items())},
+                "upbeat_late_days": UPBEAT_LATE_DAYS},
         "expected_signals": [
-            "Late nights: last activity moves from ~00:20 to ~02:00-03:00 on days 23-27, plus a 03:30-04:00 wake-up scroll on days 24-26.",
-            "Reel themes: burnout / tired / strong-friend / slow songs rise sharply, especially after midnight.",
-            "Reels sent to Maya shift to being tired and supporting a partner, mostly after 23:00.",
-            "Replies to Sam, Priya, Omar slow from minutes to hours, get shorter, some left on read.",
-            "No messages from Arjun to Dev on days 23-28 (configured; with this seed his last one is Sunday 25 Oct), story likes on Dev stop; he breaks it on day 29.",
+            "Days 18-21: a tired stretch before the exam: later nights, more heavy reels, shorter replies.",
+            "Day 22: exam day. Day 23: a low day (strain 0.95): the latest night, a wake-up scroll, slow replies.",
+            "Days 31-33: a weekend away with Maya, late but upbeat. Day 36: big news, he passed. Day 38: a gig with Omar.",
+            "Day 35: his side mentions Priya's private job news (a friend's secret no note may carry).",
+            "Day 41: a routine blood test on his calendar (health, never shared).",
             "Arjun sends Sam far more reels than anyone else in the baseline.",
             "Day 13 is late but upbeat (F1 night): late alone is not a heavy signal.",
-            "Interests for a lift: F1 (strong), film photography, NBA, home espresso.",
-            "Day 28: Arjun's reaction to Sam's F1 surprise (the lift landing).",
+            "Interests: F1 (strong), film photography, NBA, home espresso, stand-up comedy.",
         ],
         "saved_count": len(saved),
         "days": days,
     }
+
+
+# =============================================================================
+# SIMULATED connector feeds: calendar (what happens to him) and Spotify (what he hears)
+# Format: engine/connectors.py. Fictional events, songs and artists only.
+# =============================================================================
+
+CONNECTORS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "demo_connectors")
+
+# A small fictional catalog: (track, artist, valence, energy). Valence: 0 = slow and sad, 1 = bright.
+CATALOG = {
+    "favorites": [("Pit Lane Summer", "Neon Paddock", 0.82, 0.78), ("Golden Hour Lap", "Neon Paddock", 0.76, 0.66),
+                  ("Lights Out", "The Undercuts", 0.71, 0.85), ("Halfway Home", "The Low Lanterns", 0.58, 0.48),
+                  ("Paper Planes Again", "June Harbor", 0.64, 0.52), ("Kitchen Radio", "Mabel Ortiz", 0.69, 0.44),
+                  ("Fast Break", "Court Vision", 0.79, 0.88), ("Second Roll", "Grain Theory", 0.55, 0.42)],
+    "focus": [("Study Loop 4", "Quiet Desk", 0.45, 0.22), ("Rain on the Window", "Quiet Desk", 0.40, 0.18),
+              ("Margins", "Paper Lamp", 0.42, 0.25)],
+    "slow": [("Gray Tuesday", "Hollow Pines", 0.16, 0.20), ("Nothing to Say", "Hollow Pines", 0.12, 0.18),
+             ("Underwater Lights", "Mira Vale", 0.22, 0.26)],
+    "bright": [("Champagne Problems Solved", "The Undercuts", 0.93, 0.90), ("Victory Lap", "Neon Paddock", 0.95, 0.92),
+               ("Big Yes", "Sunny Okoro", 0.91, 0.84)],
+    "road": [("Highway Skyline", "June Harbor", 0.80, 0.70), ("Window Seat", "Mabel Ortiz", 0.74, 0.55)],
+    "lanterns": [("Halfway Home", "The Low Lanterns", 0.58, 0.48), ("Static Hearts", "The Low Lanterns", 0.66, 0.74),
+                 ("North Platform", "The Low Lanterns", 0.61, 0.69)],
+}
+# How each kind of day sounds: (plays, {catalog: weight}).
+LISTENING = {
+    "ordinary": (32, {"favorites": 8, "focus": 1, "bright": 1, "road": 1, "lanterns": 1}),
+    "study_crunch": (40, {"focus": 7, "favorites": 2, "slow": 1}),
+    "exam": (18, {"focus": 4, "favorites": 2}),
+    "low": (36, {"slow": 9, "focus": 1}),
+    "easing": (30, {"favorites": 6, "slow": 2}),
+    "trip": (26, {"road": 6, "favorites": 4, "bright": 1}),
+    "back": (28, {"favorites": 7, "road": 2}),
+    "big_news": (44, {"bright": 8, "favorites": 4}),
+    "celebrate": (36, {"bright": 4, "favorites": 6}),
+    "show": (46, {"lanterns": 10, "favorites": 2}),
+    "after_show": (34, {"lanterns": 6, "favorites": 4}),
+    "lab_morning": (30, {"favorites": 8, "focus": 1}),
+    "friends_news": (30, {"favorites": 8, "focus": 1}),
+}
+
+
+def _iso(d, minute):
+    return (datetime(day_date(d).year, day_date(d).month, day_date(d).day) + timedelta(minutes=minute)).strftime("%Y-%m-%dT%H:%M")
+
+
+def build_spotify(crng):
+    plays = []
+    for d in range(1, NUM_DAYS + 1):
+        kind = phase(d) if phase(d) in LISTENING else "ordinary"
+        n, mix = LISTENING[kind]
+        n = max(4, int(n + crng.gauss(0, 4)))
+        repeat = None
+        if kind in ("low", "show", "big_news"):
+            repeat = crng.choice(CATALOG[max(mix, key=mix.get)])
+        minutes = sorted(crng.uniform(7 * 60, 23 * 60 + 30) for _ in range(n))
+        for k, m in enumerate(minutes):
+            if repeat and k % 3 == 0:
+                track = repeat
+            else:
+                pool = crng.choices(list(mix), weights=list(mix.values()), k=1)[0]
+                track = crng.choice(CATALOG[pool])
+            plays.append({"ts": _iso(d, m), "master_metadata_track_name": track[0],
+                          "master_metadata_album_artist_name": track[1],
+                          "ms_played": int(crng.uniform(0.6, 1.0) * 210000),
+                          "x_valence": track[2], "x_energy": track[3]})
+    return {"_label": "SIMULATED. Not a real Spotify account. Field names follow Spotify's extended streaming "
+                      "history; x_valence and x_energy stand in for audio features. Every song and artist is fictional.",
+            "owner": OWNER["name"], "timezone": LOCAL_TZ, "plays": plays}
+
+
+def build_calendar(crng):
+    events, n = [], [0]
+
+    def ev(d, start, end, title, kind, **kw):
+        n[0] += 1
+        e = {"id": "e%03d" % n[0], "title": title, "start": _iso(d, start), "end": _iso(d, end), "all_day": False,
+             "kind": kind, "with": [], "status": "confirmed"}
+        e.update(kw)
+        events.append(e)
+
+    meetings = [("Team standup", 9 * 60 + 30, 15), ("Design sync", 11 * 60, 45), ("1:1 with Jess", 15 * 60, 30),
+                ("Sprint review", 14 * 60, 60), ("Planning", 12 * 60 + 30, 60)]
+    for d in range(1, NUM_DAYS + 1):
+        wd = day_date(d).weekday()
+        if wd < 5 and phase(d) not in ("trip",):
+            for title, start, dur in crng.sample(meetings, crng.randint(1, 3)):
+                ev(d, start, start + dur, title, "work", **({"with": ["Jess Moreno"]} if "Jess" in title else {}))
+        if wd == 5 and phase(d) not in ("trip",):
+            ev(d, 8 * 60, 9 * 60, "Run club", "routine", **{"with": ["Chris Park"]})
+        if wd == 4 and phase(d) == "ordinary":
+            ev(d, 19 * 60, 21 * 60, "Pickup basketball", "social", **{"with": ["Sam Okafor"]})
+    for d in (18, 19, 20, 21):
+        ev(d, 19 * 60, 22 * 60, "Study block: PMP", "study")
+    ev(20, 0, 24 * 60 - 1, "Q4 launch deck due", "deadline", all_day=True)
+    ev(22, 8 * 60, 12 * 60, "PMP exam", "exam", location="Test center, 5th Ave")
+    ev(23, 19 * 60 + 30, 21 * 60 + 30, "Dinner with Omar", "social", status="cancelled", **{"with": ["Omar Haddad"]})
+    events.append({"id": "e%03d" % (n[0] + 1), "title": "Weekend in Chicago", "start": _iso(31, 17 * 60),
+                   "end": _iso(33, 21 * 60), "all_day": True, "kind": "trip", "with": ["Maya Chen"],
+                   "location": "Chicago", "status": "confirmed"})
+    n[0] += 1
+    ev(36, 10 * 60, 10 * 60 + 15, "PMP results", "results")
+    ev(37, 19 * 60 + 30, 22 * 60, "Celebration dinner", "social", **{"with": ["Maya Chen", "Sam Okafor"]})
+    ev(38, 20 * 60, 23 * 60, "The Low Lanterns live", "show", status="tentative", public=True,
+       interest="live music", tickets={"seller": "Ticketmaster"}, location="Brooklyn Steel")
+    ev(41, 8 * 60, 8 * 60 + 30, "Blood test", "health", location="City Lab, Court St")
+    # Public events after his month, so tickets can be offered near its end.
+    for title, d, interest in (("F1 Las Vegas GP watch party", 52, "F1"), ("NBA: Brooklyn home game", 47, "the NBA"),
+                               ("Stand-up night at The Cellar", 45, "stand-up comedy")):
+        ev(d, 19 * 60, 23 * 60, title, "show", status="tentative", public=True, interest=interest,
+           tickets={"seller": "Ticketmaster"})
+    # Friends share free/busy only (never titles). Dev and Priya live out of town, so no lunch with them.
+    free_busy = {}
+    for key in ("maya", "sam", "omar", "dev", "priya"):
+        blocks = []
+        for d in range(1, NUM_DAYS + 8):
+            if day_date(d).weekday() < 5 and crng.random() < 0.45:
+                start = crng.choice([12 * 60, 12 * 60 + 30, 13 * 60])
+                blocks.append({"start": _iso(d, start), "end": _iso(d, start + 60)})
+            if key == "maya" and 31 <= d <= 33:
+                blocks.append({"start": _iso(d, 0), "end": _iso(d, 24 * 60 - 1)})
+        free_busy[CIRCLE[key]["name"]] = blocks
+    events.sort(key=lambda e: e["start"])
+    return {"_label": "SIMULATED. Not a real calendar. Every event, place and person is fictional.",
+            "owner": OWNER["name"], "timezone": LOCAL_TZ, "events": events, "free_busy": free_busy}
+
+
+def build_connectors(out_dir=CONNECTORS_DIR):
+    crng = random.Random(SEED + 1)   # its own generator, so the Instagram export stays byte-identical
+    os.makedirs(out_dir, exist_ok=True)
+    for name, data in (("calendar.json", build_calendar(crng)), ("spotify.json", build_spotify(crng))):
+        with open(os.path.join(out_dir, name), "w", encoding="utf-8") as f:
+            if "plays" in data:   # one play per line keeps the file small and readable
+                head = {k: v for k, v in data.items() if k != "plays"}
+                f.write(json.dumps(head, ensure_ascii=False, indent=1)[:-2] + ',\n "plays": [\n')
+                f.write(",\n".join("  " + json.dumps(p, ensure_ascii=False) for p in data["plays"]) + "\n ]\n}\n")
+            else:
+                json.dump(data, f, ensure_ascii=False, indent=1)
+                f.write("\n")
 
 
 def print_table(truth):
@@ -1008,6 +1171,7 @@ if __name__ == "__main__":
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()
     truth = build(args.out)
+    build_connectors()
     if not args.quiet:
         print("Wrote %s (days %s to %s)" % (args.out, truth["start_date"], truth["end_date"]))
         print_table(truth)

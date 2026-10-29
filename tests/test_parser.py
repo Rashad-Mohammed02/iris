@@ -1,4 +1,4 @@
-"""The parser must never carry other people's words into events."""
+"""The parser must never carry other people's words into events. Only his own (own_words, v2)."""
 
 import json
 import sys
@@ -18,6 +18,8 @@ def test_no_other_people_text():
         if e["type"] == "message_received":
             assert set(e) <= {"ts", "day", "hour", "type", "frm", "thread", "group"}
         assert "content" not in e and "text" not in e
+        if e.get("own_words"):
+            assert e["type"] == "message_sent", e   # his own words only, never anyone else's
 
 
 def test_shapes():

@@ -8,7 +8,7 @@ sys.path.insert(0, str(ROOT))
 
 from engine import safety  # noqa: E402
 from engine.decide import decide  # noqa: E402
-from tests.test_decide import BASE_READ, m, sit  # noqa: E402
+from tests.test_decide import m, reading, sit  # noqa: E402
 
 
 def test_help_line_by_country():
@@ -26,16 +26,24 @@ def test_help_line_by_country():
 
 
 def test_decide_uses_the_persons_country():
-    s = sit([m("A", "Always")])
+    s = sit([m("A")])
     s["user"]["country"] = "GB"
-    out = decide(s, reading=dict(BASE_READ, crisis="suicide"), write_lifts=False)
-    assert "116 123" in out["cards"][0]["text"] and "988" not in out["cards"][0]["text"]
+    out = decide(s, reading=reading(crisis="suicide"), write_notes=False)
+    assert "116 123" in out["cards"][0]["text"] and "988" not in out["cards"][0]["text"] and not out["notes"]
     s["user"]["country"] = "IN"
-    s["pattern"]["signals"] = {"crisis_content": {"watched": 3}}
-    assert "14416" in decide(s, write_lifts=False)["cards"][0]["text"]
+    s["day"]["see"] = {"crisis_content": {"watched": 3}}
+    out = decide(s, write_notes=False)
+    assert "14416" in out["cards"][0]["text"] and not out["notes"]
+
+
+def test_backstop_words():
+    assert safety.scan(["everyone would be better off without me"])["crisis"] == "suicide"
+    assert safety.scan(["i keep cutting myself"])["crisis"] == "self_harm"
+    assert safety.scan(["exam tomorrow, wish me luck"])["crisis"] == "none"
 
 
 if __name__ == "__main__":
     test_help_line_by_country()
     test_decide_uses_the_persons_country()
+    test_backstop_words()
     print("safety tests passed")

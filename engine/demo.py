@@ -1,14 +1,16 @@
-"""Turn Arjun's Instagram export into what each part of Iris reads on a
-given day: the situation for a lift decision, the journal's context, the orbit,
-and the plain facts behind the Daily Page.
+"""Turn Arjun's Instagram export and his simulated connector feeds into what
+each part of Iris reads on a given day: the v2 situation for a note decision,
+the journal's context, the orbit, and the plain facts behind the Daily Page.
 
 Everything here comes from his own side of the data (see data/parse_export.py).
+People outside his 5 are never named in anything that goes to Muse.
 """
 
 import json
+import re
 import sys
 from collections import Counter
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from statistics import median
 
@@ -16,6 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from engine.baseline import baseline_for, daily_signals, load_events, load_profile  # noqa: E402
+from engine.connectors import Feeds  # noqa: E402
 from engine.rule import evaluate  # noqa: E402
 
 OUT = ROOT / "out"
@@ -30,6 +33,26 @@ def clock(h):
     hh, mm = int(h), int(round((h - int(h)) * 60)) % 60
     return f"{(hh % 12) or 12}:{mm:02d} {'AM' if hh < 12 else 'PM'}"
 
+
+# What the rule found off his own normal, in plain words (shown to Muse and in his private log).
+SIGNAL_WORDS = {
+    "later_to_sleep": "getting to sleep later than usual",
+    "shorter_rest": "shorter nights than usual",
+    "longer_rest": "sleeping much longer than usual",
+    "woke_in_night": "up in the middle of your usual rest",
+    "daytime_binge": "a lot more scrolling during the day",
+    "more_sessions": "picking up your phone more often",
+    "more_reels": "more reels than usual",
+    "heavier_reels": "heavier reels than usual",
+    "interest_fading": "less of what you usually love",
+    "sending_heavy_reels": "sending heavier reels",
+    "slower_replies": "slower replies",
+    "shorter_replies": "shorter replies",
+    "fewer_messages": "fewer messages to your people",
+    "more_messages": "a lot more messages than usual",
+    "fewer_starts": "starting fewer conversations",
+    "gone_quiet": "gone quiet with someone",
+}
 
 REST_WORDS = {"later_to_sleep": "got to sleep later than usual", "shorter_rest": "a shorter night than usual",
               "longer_rest": "slept much longer than usual", "woke_in_night": "up for a while in the middle of the night"}
@@ -66,6 +89,9 @@ class Demo:
         # Only the people he put in his Iris circle are ever named to Muse. Everyone else he talks to,
         # and every group chat, stays out of what Muse reads (they never agreed to anything).
         self.circle = {m["name"] for m in self.settings["circle"]}
+        self.settings_names = [m["name"] for m in self.settings["circle"]]
+        self.feeds = Feeds.demo()   # SIMULATED calendar and Spotify feeds (data/demo_connectors/)
+        self._outsiders = self.outsiders()
         self.owner = self.profile["owner"]["name"]
         self.first = self.owner.split()[0]
 
@@ -107,59 +133,99 @@ class Demo:
     def reels_sent(self, name, days):
         return sum(1 for d in days for e in self.by_day.get(d, []) if e["type"] == "reel_sent" and e.get("to") == name)
 
-    # ---- what the lift engine reads ------------------------------------
-    def situation(self, i, state=None):
-        state = state or {}
-        row, rule, base = self.rows[i], self.rule[i], baseline_for(self.rows, i)
-        recent = self.days[max(0, i - WINDOW + 1):i + 1]
-        idx = range(max(0, i - WINDOW + 1), i + 1)
-        signals = {
-            "rest": {
-                "short_or_late_nights": sum(any(s in self.rule[j]["off_signals"] for s in ("later_to_sleep", "shorter_rest"))
-                                            for j in idx),
-                "woke_in_night": sum("woke_in_night" in self.rule[j]["off_signals"] for j in idx),
-                "of_days": len(recent),
-                "usual_rest_hours": round(base["rest_hours"]["median"], 1) if base and base["rest_hours"] else None,
-                "recent_rest_hours": [self.rows[j]["rest_hours"] for j in idx],
+    # ---- what the v2 engine reads ---------------------------------------
+    def outsiders(self):
+        """Everyone he talks to or meets who isn't in his Iris 5, and every group chat's name.
+        They never agreed to anything, so their names never reach Muse."""
+        people, groups = set(), set()
+        for t in self.profile["threads"]:
+            people.update(o for o in t["others"] if o not in self.circle)
+            if t["group"]:
+                groups.add(t["title"])
+        for e in self.feeds.events:
+            people.update(w for w in e.get("with", []) if w not in self.circle)
+        firsts = {c.split()[0] for c in self.circle}
+        words = set(groups)
+        for n in people:
+            words.add(n)
+            if n.split() and n.split()[0] not in firsts:
+                words.add(n.split()[0])
+        return sorted((w for w in words if w), key=len, reverse=True)
+
+    def scrub(self, text):
+        for n in self._outsiders:
+            text = re.sub(r"(?<!\w)" + re.escape(n) + r"(?!\w)", "someone", text, flags=re.I)
+        return text
+
+    def _usual(self, i, fn, window=28):
+        past = [fn(j) for j in range(max(0, i - window), i)]
+        return round(median(past)) if past else None
+
+    def _events(self, day):
+        out = []
+        for e in self.feeds.events_on(day):
+            inner = [w.split()[0] for w in e.get("with", []) if w in self.circle]
+            outside = sum(1 for w in e.get("with", []) if w not in self.circle)
+            out.append({"title": self.scrub(e["title"]), "kind": e["kind"], "all_day": e.get("all_day", False),
+                        "time": None if e.get("all_day") else e["start"][11:16], "status": e.get("status", "confirmed"),
+                        "with": inner + (["someone outside your 5"] * min(outside, 1))})
+        return out
+
+    def day_input(self, i):
+        """One day as Muse reads it: see, hear, talk, happens, and what the rule found off his normal."""
+        d, row, base = self.days[i], self.rows[i], baseline_for(self.rows, i)
+        dd = date.fromisoformat(d)
+        evs = self.by_day.get(d, [])
+        circle_first = {n: n.split()[0] for n in self.circle}
+        sent_today = lambda j: sum(1 for e in self.by_day.get(self.days[j], []) if e["type"] == "message_sent")
+        own = [self.scrub(e["own_words"]) for e in sorted(evs, key=lambda e: e["ts"])
+               if e["type"] == "message_sent" and e.get("own_words") and not e.get("group") and e["to"] in self.circle]
+        with5 = {}
+        for n in self.settings_names:
+            with5[circle_first[n]] = {"sent": row["people"].get(n, {}).get("sent", 0),
+                                      "usual": self._usual(i, lambda j: self.rows[j]["people"].get(n, {}).get("sent", 0)),
+                                      "reels_sent": row["reels_sent_to"].get(n, 0)}
+        return {
+            "date": d, "weekday": weekday(d), "use_day": i + 1,
+            "see": {
+                "reels_watched": row["reels"], "usual_reels": round(base["reels"]["median"]) if base else None,
+                "themes_today": self.themes([d], heavy=False, top=4),
+                "heavy_themes": self.themes([d], heavy=True, top=3),
+                "heavy_share": round(row["heavy_share"], 2),
+                "usual_heavy_share": round(base["heavy_share"]["median"], 2) if base else None,
+                "saved": sum(1 for e in evs if e["type"] == "post_saved"),
+                "reels_sent_outside_your_5": sum(c for n, c in row["reels_sent_to"].items() if n not in self.circle),
+                "crisis_content": self.crisis_content(d),
             },
-            "reel_themes": {"recent": self.themes(recent, heavy=True), "baseline": self.themes(self.days[:21], heavy=False)},
-            "heavy_reel_share": {"recent": round(median(self.rows[j]["heavy_share"] for j in idx), 2),
-                                 "usual": round(base["heavy_share"]["median"], 2) if base else None},
-            "reels_sent_to": [{"to": n.split()[0], "count": self.reels_sent(n, recent)}
-                              for n in row["people"] if n in self.circle and self.reels_sent(n, recent)],
-            "reply_rhythm": {n.split()[0]: f["evidence"] for j in idx for f in [self.rule[j]]
-                             for n in f["evidence"].get("slower_replies", []) + f["evidence"].get("shorter_replies", [])},
-            "quiet_with": [{"name": n.split()[0],
-                            "days_since_you_wrote": i - (self.last_sent(n, i) or 0)} for n in rule["quiet_with"]
-                           if n in self.circle],
-            "interests": [{"topic": t, "status": "current"} for t in self.interests],
-            "crisis_content": self.crisis_content(self.days[i]),
+            "hear": self.feeds.listening(d),
+            "talk": {
+                "messages_you_sent": sent_today(i), "usual": self._usual(i, sent_today),
+                "with_your_5": with5,
+                "outside_your_5": sum(1 for e in evs if e["type"] == "message_sent" and e["to"] not in self.circle),
+                "own_words": list(dict.fromkeys(own))[:60],   # his own lines today, each once
+            },
+            "happens": {
+                "yesterday": self._events((dd - timedelta(days=1)).isoformat()),
+                "today": self._events(d),
+                "tomorrow": self._events((dd + timedelta(days=1)).isoformat()),
+            },
+            "normal": [SIGNAL_WORDS[s] for s in self.rule[i]["off_signals"] if s in SIGNAL_WORDS],
         }
-        signals["reply_rhythm"] = sorted({n.split()[0] for j in idx for k in ("slower_replies", "shorter_replies")
-                                          for n in self.rule[j]["evidence"].get(k, []) if n in self.circle})
-        sent_week = state.get("lifts_sent", [])
-        circle = []
-        for m in self.settings["circle"]:
-            circle.append({
-                "name": m["name"].split()[0], "relation": m["relation"], "permission": m["permission"],
-                "mutual": m["mutual"], "language": "en",
-                "lifts_last_7_days": sum(1 for l in sent_week if l["to"] == m["name"].split()[0] and i - l["day"] < 7),
-                "just_this_once_used": any(l["to"] == m["name"].split()[0] for l in sent_week)
-                                       and m["permission"] == "Just this once",
-                "allowed_interests": self.shared_interests(m["name"], i),
-            })
-        stretch = "clearly_heavy" if rule["heavy_stretch"] else ("off_normal" if rule["lighter_stretch"] else "none")
+
+    def situation(self, i, recent_notes=None):
+        """The v2 situation for engine/decide.py on day i (0-based)."""
+        s = self.settings
         return {
             "id": f"demo-day-{i + 1}",
-            "user": {"name": self.first, "age": self.settings["age"], "country": self.settings.get("country", "US")},
-            "circle": circle,
-            "pattern": {"learning_day": i + 1, "window": f"last {len(recent)} days vs his own normal",
-                        "signals": signals, "journal": state.get("journal", {}).get(i, []),
-                        "settings": {"pause": "all lifts paused"} if state.get("paused") else {}},
-            "rule_stretch": stretch,
-            "send_mode": self.settings.get("send_mode", "automatic"),
-            "corrections": state.get("corrections", []),
-            "recent_lines": {},
+            "user": {"name": self.first, "age": s["age"], "country": s.get("country", "US")},
+            "settings": {"note_time": s.get("note_time", "18:00"), "send_mode": s.get("send_mode", "auto"),
+                         "sources": s.get("sources", {})},
+            "circle": [{"name": m["name"].split()[0], "relation": m["relation"], "setting": m["setting"],
+                        "mutual": m["mutual"], "nearby": m.get("nearby", True), "language": "en",
+                        "allowed_interests": m["allowed_interests"]} for m in s["circle"]],
+            "day": self.day_input(i),
+            "feeds": self.feeds,
+            "recent_notes": recent_notes or {},
         }
 
     def last_sent(self, name, upto):
@@ -191,7 +257,7 @@ class Demo:
             if self.reels_sent(n, [self.days[i]]):
                 fact += f" You sent {first} a reel today."
             out.append({"name": first, "full_name": n, "relation": m["relation"], "ring": ring,
-                        "fact": fact, "permission": m["permission"]})
+                        "fact": fact, "setting": m.get("setting")})
         return out
 
     # ---- the Daily Page's raw facts (private) ---------------------------

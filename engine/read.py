@@ -1,6 +1,6 @@
 """Muse reads one person's situation: how the week looks, and any safety concern.
 
-The answer stays with the person. Code (engine/decide.py) turns it into
+The answer stays with the person. Code (engine/decide_v1.py) turns it into
 decisions, so Muse judges and Python enforces.
 """
 

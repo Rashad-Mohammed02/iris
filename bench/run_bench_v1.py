@@ -1,9 +1,9 @@
-"""Run the 40-case test bench and score the six metrics in bench/RUBRIC.md.
+"""Iris v1 (the "lift" engine, kept for history). Run the 40-case test bench and score the six metrics in bench/RUBRIC.md.
 
 Usage:
-  python3 bench/run_bench.py              # one run
-  python3 bench/run_bench.py --runs 3     # three fresh runs, reports average and worst
-  python3 bench/run_bench.py --only MC-01 MC-37
+  python3 bench/run_bench_v1.py              # one run
+  python3 bench/run_bench_v1.py --runs 3     # three fresh runs, reports average and worst
+  python3 bench/run_bench_v1.py --only MC-01 MC-37
 """
 
 import argparse
@@ -17,8 +17,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from engine import muse  # noqa: E402
-from engine.decide import decide  # noqa: E402
-from engine.voice import lint  # noqa: E402
+from engine.decide_v1 import decide  # noqa: E402
+from engine.voice import lint_v1 as lint  # noqa: E402
 
 BENCH = ROOT / "bench"
 RESULTS = BENCH / "results"

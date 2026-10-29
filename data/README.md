@@ -1,8 +1,8 @@
-# Demo data: Arjun's 30 days on Instagram
+# Demo data: Arjun's 42 days on Instagram, plus his simulated calendar and Spotify
 
 **Everything here is fictional.** Arjun, Maya, Sam, Dev, Priya, Omar and everyone else are invented. Every handle, creator account, caption and message was written for this demo. Handles end in `.mc` or are made-up creator names; if one happens to match a real account, that is a coincidence. No real person's data was used, and nothing here came from a real export.
 
-This folder holds a synthetic 30-day Instagram history for the demo caregiver, Arjun, shaped like the JSON you get from Instagram's "Download your information". The baseline engine runs on it in place of real DM rhythm data, which we cannot get (see `BLUEPRINT.md`, Part 3).
+This folder holds a synthetic 42-day Instagram history for the demo caregiver, Arjun, shaped like the JSON you get from Instagram's "Download your information". The baseline engine runs on it in place of real DM rhythm data, which we cannot get (see `BLUEPRINT.md`, Part 3).
 
 ## How to use it
 
@@ -11,7 +11,7 @@ python3 generate_demo.py            # rebuilds ./demo_export/ and prints a day-b
 python3 generate_demo.py --out DIR  # writes somewhere else
 ```
 
-The script uses only the Python 3 standard library (3.9 or newer, for `zoneinfo`) and a fixed seed, so every run produces byte-identical files. All the arc settings sit at the top of the script: dates, the strain per day, the days he goes quiet with Dev, the lift day, reel theme mixes, and each person's DM rhythm before and during the drift. Change them and run it again.
+The script uses only the Python 3 standard library (3.9 or newer, for `zoneinfo`) and a fixed seed, so every run produces byte-identical files. All the arc settings sit at the top of the script: dates, the story days, the strain per day, the scripted lines, reel theme mixes, and each person's DM rhythm before and during the drift. Change them and run it again.
 
 ## The people
 
@@ -24,23 +24,41 @@ The script uses only the Python 3 standard library (3.9 or newer, for `zoneinfo`
 | priya | Priya Rao | sister | `priya.rao.mc` |
 | omar | Omar Haddad | close friend, college roommate | `omar.haddad.mc` |
 
-Outside the circle there are Tasha and Ravi (in the "pit crew" group chat with Sam and Omar), Jess (a coworker) and Chris (from run club). Arjun's real interests, which give a lift something to work with, are **F1** (strong), **film photography**, **NBA** and **home espresso**.
+Outside the circle there are Tasha and Ravi (in the "pit crew" group chat with Sam and Omar), Jess (a coworker) and Chris (from run club). Arjun's real interests, which give a note something to work with, are **F1** (strong), **film photography**, **NBA** and **home espresso**.
 
-## The story, day by day
+## The story, day by day (Iris v2)
 
-The 30 days run from Monday 5 Oct to Tuesday 3 Nov 2026. "Strain" is the dial the script turns: 0 is his normal and 1 is the most drifted. Per-day numbers use an activity day that runs from 05:00 to 05:00, so a 2 AM scroll counts toward the evening before. US daylight saving time ends on Sunday 1 Nov (day 28), and the timestamps account for it.
+The 42 days run from Wednesday 23 Sep to Tuesday 3 Nov 2026. Days 1 to 14 are the two weeks Iris only learns his normal. Days 15 to 42 are his month: mostly ordinary days, with a few that stand out in every direction. "Strain" is the dial the script turns for the Instagram side (0 is his normal). Per-day numbers use an activity day that runs from 05:00 to 05:00.
 
 | Days | Dates | What happens |
 |---|---|---|
-| 1-21 | 5-25 Oct | **His normal.** He's a night scroller who is usually done by about 00:20. Around 165 reels a day, mostly F1 (about 21%), comedy, NBA, film photography and coffee. Heavy themes stay under 10%. He sends Sam more reels than anyone else (about 3.4 a day), talks to Maya all day with quick replies (about 4 minutes), trades F1 and NBA clips with Dev, and has a lighter rhythm with Priya and Omar. Sundays run a little heavier. |
-| 13 | Sat 17 Oct | **A late night that isn't heavy.** He's up until about 01:40, but it's F1 and comedy. This is a false-positive guard, because late on its own isn't a signal. |
-| 22 | Mon 26 Oct | **Maya's hard week starts.** His messages to her turn supportive ("how are you holding up?", "want me to bring dinner over?"). He's up until about 01:30. |
-| 23-27 | 27-31 Oct | **He holds her up and drifts.** Messages to Maya go up to about 40 a day, and his replies to her stay fast (about 3 minutes). He's up until 02:00-03:00, and on days 24-26 he wakes and scrolls again around 03:30-04:00. About two thirds of his reels are now burnout, tired/can't sleep, "the strong friend", slow songs and supporting-a-partner content, heaviest after midnight. F1 drops to about 8%. He sends Maya 2 or 3 reels a day, mostly late at night, about being tired and running on empty, sometimes with a note like "this is me today" or "felt this". Replies to Sam slow from about 15 minutes to many hours, often the next day, get shorter ("ya", "sorry man been slammed"), and some go unanswered. Priya and Omar get the same treatment. **Dev:** Arjun's last message to his brother is Sunday lunchtime (25 Oct). From then on Dev keeps messaging and sharing reels, gets no reply, and his story likes stop. |
-| 28 | Sun 1 Nov | **The lift lands.** Sam sends something F1 after work. Only Arjun's side is real text: "WAIT. are you serious", "dude. vegas?? you're insane", "i owe you big time". Strain is easing. That evening he watches and saves a "Las Vegas GP: what to know before you go" reel, along with a couple of other F1 reels. |
-| 29 | Mon 2 Nov | **He breaks the silence with Dev:** "hey sorry man, been a week", "call this weekend?". He catches up with Priya and Omar. |
-| 30 | Tue 3 Nov | **Mostly back to normal.** He's done by about 00:30, and he's replying to Sam within about 15 minutes again. F1 is back to about a quarter of his reels. |
+| 1-14 | 23 Sep-6 Oct | **His normal.** A night scroller, usually done by about 00:20, around 160 reels a day, mostly F1, comedy, NBA, film photography and coffee. He sends Sam the most reels and talks to Maya all day. Day 13 is a late but upbeat F1 night (late alone is not a signal). |
+| 15-17 | 7-9 Oct | Ordinary days. |
+| 18-21 | 10-13 Oct | **A tired stretch.** Study blocks for the PMP exam every evening and a work deck due on day 20. Later nights, more heavy reels, shorter replies, focus music. |
+| 22 | Wed 14 Oct | **Exam day.** |
+| 23 | Thu 15 Oct | **A low day.** He cancels dinner with Omar, plays slow songs on repeat, is up late and wakes in the night: "kind of a flat day honestly". |
+| 24-25 | 16-17 Oct | Easing. |
+| 26-30 | 18-22 Oct | Ordinary days. |
+| 31-33 | 23-25 Oct | **A weekend away** in Chicago with Maya. Late but upbeat; road-trip music. |
+| 34 | Mon 26 Oct | Back home, a little tired. |
+| 35 | Tue 27 Oct | **A friend's secret.** His side mentions Priya's private job news. No note may carry it. |
+| 36 | Wed 28 Oct | **Big news: he passed.** "I PASSED", bright music on repeat, far more messages. |
+| 37 | Thu 29 Oct | Celebration dinner with Maya and Sam. |
+| 38 | Fri 30 Oct | **A gig** with Omar (The Low Lanterns). |
+| 39-40 | 31 Oct-1 Nov | A slow weekend after the show. |
+| 41 | Mon 2 Nov | **A routine blood test** on his calendar. Health is never shared. |
+| 42 | Tue 3 Nov | Ordinary. |
 
-Run the script to print the full day-by-day table. The same numbers are in `demo_export/_simulated/story_arc_truth.json`.
+Run the script to print the full day-by-day table. The same numbers are in `demo_export/_simulated/story_arc_truth.json`. The v1 story (Maya's hard week and Sam's Vegas lift) was replaced by this month for Iris v2.
+
+## Connector feeds (SIMULATED): `demo_connectors/`
+
+Iris v2 reads four kinds of input: what you see and what you talk about (Instagram, above), what happens to you (calendar) and what you hear (Spotify). The last two are simulated here as two small JSON files, written by the same script from its own fixed seed. They are fictional: no real calendar or Spotify account is read. The format is documented in `engine/connectors.py`.
+
+- `calendar.json`: `events` (id, title, start, end, all_day, kind, with, location, status, and for public shows `public`, `interest` and `tickets`) plus `free_busy`, the busy times his 5 share (never titles). Work meetings, run club, study blocks, the exam, a cancelled dinner, the trip, the results, the celebration, the gig, the blood test, and three public shows after his month (for tickets).
+- `spotify.json`: `plays`, one per line, using the field names of Spotify's extended streaming history (`ts`, `master_metadata_track_name`, `master_metadata_album_artist_name`, `ms_played`) plus simulated `x_valence` (how bright a song sounds) and `x_energy`. Every song and artist is invented.
+
+The engine uses them two ways: Muse reads each day against his own usual (`engine/demo.py`), and plain code builds the ready actions from them (`engine/actions.py`): a lunch hour when both are free, tickets to a public show that fits a shared interest, a song from his usual favorites.
 
 ## What's in `demo_export/`
 
@@ -52,9 +70,9 @@ Run the script to print the full day-by-day table. The same numbers are in `demo
 | ↳ `reactions[].timestamp` | When Arjun hearted one of Maya's messages. | **Assumed.** `reaction` and `actor` are documented. The timestamp is a guess. |
 | `ads_information/ads_and_topics/videos_watched.json` | About 5,000 reel views, each with a timestamp, reel URL and creator (`Owner` → `Username`). | **Documented (v1, the current format).** A bare array of `{timestamp, media, label_values, fbid}`. Set `EXPORT_FORMAT = "v0"` to get the older shape instead (`{"impressions_history_videos_watched": [{string_map_data: {Author, Time}}]}`), which has only the author and time, with no URL. |
 | `ads_information/ads_and_topics/posts_viewed.json` | Feed posts seen, from friends and interest accounts. | Documented (v1), same shape. |
-| `your_instagram_activity/likes/liked_posts.json` | Posts and reels he liked. Likes on Dev's posts stop during the quiet week. | Documented (v1). v0 mode writes `likes_media_likes`. |
+| `your_instagram_activity/likes/liked_posts.json` | Posts and reels he liked. | Documented (v1). v0 mode writes `likes_media_likes`. |
 | `your_instagram_activity/story_interactions/story_likes.json` | Likes on his circle's stories. | Documented (v1). |
-| `your_instagram_activity/saved/saved_posts.json` | Saves: F1, coffee, film and recipes normally, burnout and "small resets" during the hard week, and F1 again (including a Las Vegas GP guide) in recovery. | Documented: `saved_saved_media` → `title` + `string_map_data["Saved on"]`. |
+| `your_instagram_activity/saved/saved_posts.json` | Saves: F1, coffee, film and recipes normally, burnout and "small resets" on the tired and low days. | Documented: `saved_saved_media` → `title` + `string_map_data["Saved on"]`. |
 | `ads_information/instagram_ads_and_businesses/ads_interests.json` | Meta's inferred ad interests (Formula One, Film photography, Basketball, Espresso, plus a few irrelevant ones, as real lists have). | Documented key `inferred_data_ig_interest` → `string_map_data.Interest.value`. Older exports put this file under `information_about_you/`. |
 | `preferences/your_topics/your_topics.json` | Topics Meta thinks he likes. | Documented key `topics_your_topics` → `string_map_data.Name.value`. |
 | `connections/followers_and_following/close_friends.json`, `following.json`, `followers_1.json` | His Close Friends list (the circle plus Tasha), the accounts he follows, and his followers. | Documented shapes. |
