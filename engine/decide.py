@@ -1,4 +1,4 @@
-"""Who gets a note today, if anyone. Iris v2: Muse reads; this file enforces.
+"""Who gets a note today, if anyone. Muse reads; this file enforces.
 
 Every gate below is plain code, in a fixed order, so no model output can talk
 its way past a setting, a pause or a safety stop.

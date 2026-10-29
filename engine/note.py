@@ -1,4 +1,4 @@
-"""Write one note for one friend, then prove it leaks nothing. Iris v2.
+"""Write one note for one friend, then prove it leaks nothing.
 
 The note is minimal: the person's name, how they feel today in a word or two,
 and a short nudge to connect with one idea ("Arjun, proud day. A song to keep it
@@ -22,8 +22,8 @@ from engine.day import private_terms  # noqa: E402
 from engine.interests import NEVER  # noqa: E402
 from engine.voice import lint  # noqa: E402
 
-WRITE_PROMPT = ROOT / "prompts" / "note_v2.txt"   # note_v1.txt kept for history
-CHECK_PROMPT = ROOT / "prompts" / "check_v2.txt"
+WRITE_PROMPT = ROOT / "prompts" / "note.txt"
+CHECK_PROMPT = ROOT / "prompts" / "check.txt"
 
 WRITE_SCHEMA = {
     "title": "note_options",

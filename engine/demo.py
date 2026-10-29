@@ -1,6 +1,6 @@
 """Turn Arjun's Instagram export and his simulated connector feeds into what
-each part of Iris reads on a given day: the v2 situation for a note decision,
-the journal's context, the orbit, and the plain facts behind the Daily Page.
+each part of Iris reads on a given day: the situation for a note decision and
+the orbit.
 
 Everything here comes from his own side of the data (see data/parse_export.py).
 People outside his 5 are never named in anything that goes to Muse.
@@ -133,7 +133,7 @@ class Demo:
     def reels_sent(self, name, days):
         return sum(1 for d in days for e in self.by_day.get(d, []) if e["type"] == "reel_sent" and e.get("to") == name)
 
-    # ---- what the v2 engine reads ---------------------------------------
+    # ---- what the engine reads ---------------------------------------
     def outsiders(self):
         """Everyone he talks to or meets who isn't in his Iris 5, and every group chat's name.
         They never agreed to anything, so their names never reach Muse."""
@@ -213,7 +213,7 @@ class Demo:
         }
 
     def situation(self, i, recent_notes=None):
-        """The v2 situation for engine/decide.py on day i (0-based)."""
+        """The situation for engine/decide.py on day i (0-based)."""
         s = self.settings
         return {
             "id": f"demo-day-{i + 1}",
@@ -259,56 +259,3 @@ class Demo:
             out.append({"name": first, "full_name": n, "relation": m["relation"], "ring": ring,
                         "fact": fact, "setting": m.get("setting")})
         return out
-
-    # ---- the Daily Page's raw facts (private) ---------------------------
-    def day_facts(self, i):
-        row, base = self.rows[i], baseline_for(self.rows, i)
-        d = self.days[i]
-        talked = sorted(((p["sent"], n.split()[0]) for n, p in row["people"].items() if p["sent"]), reverse=True)
-        groups = Counter(e["to"] for e in self.by_day.get(d, []) if e["type"] == "message_sent" and e.get("group"))
-        off = self.rule[i]["off_signals"]
-        late = "later_to_sleep" in off
-        top_group = groups.most_common(1)[0][0] if groups else None
-        members = next((t["others"] for t in self.profile["threads"] if t["title"] == top_group), [])
-        return {
-            "day": f"{weekday(d)}, day {i + 1}",
-            # The time only counts when it's later than his own usual for this kind of night.
-            "up_later_than_usual": late,
-            "last_active": clock(row["last_active"]) if late else None,
-            "usual_last_active": clock(base["rest_start"]["median"]) if late and base and base["rest_start"] else None,
-            "reels_watched": row["reels"],
-            "usual_reels": round(base["reels"]["median"]) if base and base["reels"] else None,
-            "reel_themes_today": self.themes([d], top=3),
-            "talked_most_with": [n for _, n in talked[:2]],
-            "reels_sent_to": {n.split()[0]: c for n, c in row["reels_sent_to"].items()},
-            "busiest_group_chat": {"name": top_group, "members": [m.split()[0] for m in members]} if top_group else None,
-            "quiet_with": [q.split()[0] for q in self.rule[i]["quiet_with"]],
-            "interests_today": [t for t in self.themes([d], heavy=False, top=2)],
-            # Plain words for the page, each already measured against his own normal. No clock times.
-            "rest": [REST_WORDS[s] for s in REST_WORDS if s in off],
-            "scrolled_more_in_the_day": "daytime_binge" in off,
-        }
-
-    # ---- the journal's context -----------------------------------------
-    def journal_context(self, i, named_before=()):
-        orbit = self.orbit(i)
-        facts = self.day_facts(i)
-        week = []
-        r = self.rule[i]
-        if "later_to_sleep" in r["off_signals"] or "shorter_rest" in r["off_signals"]:
-            week.append("Getting to sleep later than usual this week.")
-        for q in self.rule[i]["quiet_with"]:
-            if q not in self.circle:
-                continue
-            ls = self.last_sent(q, i)
-            if ls is not None and i - ls >= 2:
-                week.append(f"You haven't written to {q.split()[0]} since {weekday(self.days[ls])}.")
-        sent_to = self.rows[i]["reels_sent_to"]
-        if sent_to:
-            named = [n.split()[0] for n in sent_to if n in self.circle]
-            others = "other people" if any(n not in self.circle for n in sent_to) else None
-            week.append("Sent reels to " + ", ".join(named + ([others] if others else [])) + " today.")
-        week.append("Reels lately: mostly " + ", ".join(facts["reel_themes_today"]).lower() + ".")
-        return {"person": self.first, "country": self.settings.get("country", "US"),
-                "circle": [{"name": o["name"], "relation": o["relation"], "facts": o["fact"]} for o in orbit],
-                "week": week, "interests": self.interests, "named_before": list(named_before)}

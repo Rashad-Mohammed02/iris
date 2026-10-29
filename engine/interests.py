@@ -1,8 +1,8 @@
-"""What the owner is into, for lifts. Muse merges and names; Python guards.
+"""What the owner is into, for notes. Muse merges and names; Python guards.
 
-A lift may carry one allowed interest ("he's deep into F1 lately"). Anything
+A note may carry one allowed interest ("he's deep into F1 lately"). Anything
 heavy, private or risky is filtered out twice: before Muse sees the list, and
-again on what Muse returns. A tester told us a lift must never suggest
+again on what Muse returns. A tester told us a note must never suggest
 alcohol, so that is on the never list along with health, money and the rest.
 """
 
@@ -19,7 +19,7 @@ from engine import muse  # noqa: E402
 from engine.baseline import load_events, load_profile  # noqa: E402
 
 OUT = ROOT / "out"
-PROMPT = ROOT / "prompts" / "interests_v1.txt"
+PROMPT = ROOT / "prompts" / "interests.txt"
 RECENT_DAYS = 14
 MAX_PICKS = 4
 

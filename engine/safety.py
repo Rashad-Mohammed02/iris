@@ -1,5 +1,5 @@
 """Serious is never automatic. Plain-text safety net under the Muse read,
-and the private cards the person sees instead of any lift.
+and the private cards the person sees instead of any note.
 
 The regexes are a backstop, not the main detector: Muse reads the private
 writing too. Either one flagging is enough.
@@ -67,7 +67,7 @@ def card(kind, country=None):
     return text.replace(US_LINES[kind], line)
 
 
-# Reel themes that mean "show help, never a lift". In the real product these come from Meta's own
+# Reel themes that mean "show help, never a note". In the real product these come from Meta's own
 # content labels for suicide and self-harm; in the demo they come from the simulated theme hints.
 CRISIS_THEMES = {"self_harm", "suicide"}
 

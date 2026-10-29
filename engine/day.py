@@ -1,7 +1,7 @@
 """Muse reads one person's day: one plain mood, the moment behind it in general
 words (for the person's own log; friends never see it), how big it is, any crisis, and a good fit for each friend.
 
-Iris v2. Any direction counts: happy, proud, tired, low, calm. The read stays
+Any direction counts: happy, proud, tired, low, calm. The read stays
 with the person. Code (engine/decide.py) turns it into notes, so Muse judges
 and Python enforces. Everything Muse returns is checked here before use.
 
@@ -27,7 +27,7 @@ from engine import muse, safety  # noqa: E402
 from engine.actions import TYPES  # noqa: E402
 from engine.voice import phrase_ok  # noqa: E402
 
-PROMPT = ROOT / "prompts" / "day_v1.txt"
+PROMPT = ROOT / "prompts" / "day.txt"
 
 # One plain word for the day, and which way it points. Code uses the direction to pick a fallback action.
 MOODS = {

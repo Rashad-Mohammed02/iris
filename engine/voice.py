@@ -3,11 +3,11 @@
 The check runs on every note before it can be sent. It is deliberately strict:
 a false alarm costs one rewrite, a miss can reveal something private.
 
-v2 (the everyday notes): a plain mood word is now allowed, in any direction
+A plain mood word is allowed, in any direction
 (happy, proud, tired, stressed, low...), because telling your 5 how you are is
 the point. What stays banned: therapy and diagnosis words, crisis words, quotes
 from messages, other people's names, health, money, work trouble, relationship
-details and where the person is. lint_v1 keeps the v1 rules for the old bench.
+details and where the person is.
 """
 
 import re
@@ -98,7 +98,7 @@ def _common(text, other_names, private_terms, max_words):
 
 
 def lint(text, interest=None, other_names=(), private_terms=(), language="en", person=None):
-    """v2 note check. Return a list of problems; empty means the note passes.
+    """The note check. Return a list of problems; empty means the note passes.
 
     With `person`, the note must open with the person's name and use it only
     once: the nudge after it never repeats the name ("Send Arjun a song" reads
@@ -127,52 +127,3 @@ def phrase_ok(text, private_terms=(), other_names=()):
 
 
 # ---------------------------------------------------------------------------
-# v1 (lifts), kept so the old bench in bench/run_bench_v1.py still runs as it did.
-
-MAX_WORDS_V1 = 30
-
-BANNED_V1 = {
-    "feeling": [
-        "sad", "down", "low", "depressed", "anxious", "anxiety", "stressed", "stress", "lonely", "overwhelmed",
-        "struggling", "hurting", "upset", "exhausted", "burnt out", "burnout", "drained", "heartbroken", "rough",
-        "hard time", "going through", "not okay", "off lately", "tired", "tough", "heavy", "blue", "scared",
-    ],
-    "reason or signal": [
-        "because", "since", "after", "due to", "scrolling", "up late", "late nights", "reels", "reel",
-        "hasn't replied", "quiet lately", "quiet", "messages", "journal", "pattern", "noticed", "muse saw", "data",
-        "instagram", "online", "posting", "lately",
-    ],
-    "therapy": [
-        "support", "self-care", "holding space", "validate", "process", "boundaries", "mental health", "wellbeing",
-        "healing", "trauma", "check in on", "check on", "check in", "reach out", "be there for", "lean on",
-        "therapy", "counseling", "feelings",
-    ],
-    "needy": [
-        "needs you", "needs someone", "won't ask", "don't let him", "don't let her", "worried", "concerned",
-        "fragile", "before it's too late", "urgent", "alone",
-    ],
-    "ai tell": BANNED["ai tell"],
-    "recovery": ["again", "back to", "better", "now that", "these days", "anymore", "ahora", "otra vez", "de nuevo",
-                 "de vuelta", "mejor", "va bien", "ya no"],
-    "pronoun": BANNED["pronoun"],
-    "feeling (es)": [
-        "triste", "estresado", "estresada", "cansado", "cansada", "agotado", "agotada", "deprimido", "deprimida",
-        "ansiedad", "preocupado", "preocupada", "porque", "desde", "apoyo", "mensajes",
-    ],
-}
-EVERY_LANGUAGE_V1 = {"recovery"}
-_PATTERNS_V1 = _compile(BANNED_V1)
-
-
-def lint_v1(text, interest=None, other_names=(), private_terms=(), language="en"):
-    """The v1 lift check: no feeling words at all. Return a list of problems."""
-    problems = []
-    for cat, pat in _PATTERNS_V1.items():
-        if cat not in EVERY_LANGUAGE_V1 and cat.endswith("(es)") != (language == "es"):
-            continue  # each language gets its own word list
-        for m in pat.finditer(text):
-            problems.append(f"{cat} word: {m.group(0)!r}")
-    problems += [p for p in _common(text, other_names, private_terms, MAX_WORDS_V1) if p != "quoted words"]
-    if interest and language == "en" and interest.lower() not in text.lower():
-        problems.append(f"interest {interest!r} not named")
-    return problems
