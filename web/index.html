@@ -4,52 +4,37 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Iris Prototype</title>
-<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="bar">
-  <div class="brand">
-    <img class="mark" src="img/peach-avatar.png" alt="">
-    <div>
-      <div class="name">Iris</div>
-      <div class="sub">a concept for Muse</div>
+<link rel="stylesheet" href="style.css">
+<div class="stage">
+  <div class="wrap">
+    <header class="pagetitle">
+      <div class="brand"><img src="img/peach-avatar.png" alt="">Iris <span>a concept for Muse</span></div>
+      <button class="hoodbtn" id="hoodTop" type="button" aria-label="Under the hood"><svg class="i" viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>Under the hood</button>
+    </header>
+    <div class="device" id="device">
+      <div class="glass" id="glass">
+        <div class="sbar"><span>6:02</span><span class="isl"></span><span class="sys"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3.2" fill="none" stroke="#111" opacity=".45"/><rect x="2" y="2" width="20" height="8" rx="1.9"/></svg></span></div>
+        <div class="top">
+          <button class="ico" id="backBtn" type="button" aria-label="Back"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <div class="bars" id="bars"><i><b></b></i><i><b></b></i><i><b></b></i></div>
+          <button class="ico" id="hoodBtn" type="button" aria-label="Under the hood"><svg class="i" viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg></button>
+        </div>
+        <div id="slot"></div>
+      </div>
     </div>
-  </div>
-  <div class="phones" id="phones" aria-label="Whose phone"></div>
-  <div class="days">
-    <button id="prev" type="button" aria-label="Previous day">&#8249;</button>
-    <div id="dayLabel" class="day-label"></div>
-    <button id="next" type="button" aria-label="Next day">&#8250;</button>
-  </div>
-  <div class="tools">
-    <button type="button" id="storyBtn" aria-label="The story"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Story</span></button>
-    <button type="button" id="hoodBtn" aria-label="Under the hood"><svg viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg><span>Under the hood</span></button>
-  </div>
-  <div class="subbar" id="subbar"></div>
-</header>
-
-<main class="stage">
-  <div class="device" id="device">
-    <div class="glass" id="glass">
-      <div class="status"><span class="time">8:12</span><span class="island"></span><span class="sys"></span></div>
-      <div class="banner-wrap" id="banner"></div>
-      <div class="view" id="view"></div>
-      <nav class="tabbar" id="tabbar"></nav>
-      <div class="layer" id="sheet"></div>
+    <div class="under">
+      <button type="button" id="prevU" aria-label="Back"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>Back</button>
+      <div class="where" id="where"></div>
+      <button type="button" id="nextU" class="primary" aria-label="Next">Next<svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
-    <span class="lanyard" aria-hidden="true"><svg viewBox="0 0 60 170"><path d="M26 0c-1 22 0 40 2 56M34 0c1 22 0 40-2 56" stroke="#2c2c31" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="30" cy="66" r="12" fill="#2c2c31"/><path d="M22 62c5 4 11 4 16 0M22 70c5 4 11 4 16 0" stroke="#45454c" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M25 77c-4 28-9 58-13 90M35 77c4 28 8 58 12 90" stroke="#2c2c31" stroke-width="5" stroke-linecap="round" fill="none"/></svg></span>
+    <p class="caption">Hackathon prototype, not a Meta product. Every person and message is fictional. Character made with Muse Image. <a href="#built" id="builtLink">What I built</a></p>
   </div>
-  <div class="caption" id="caption"></div>
-  <p class="fine">Hackathon prototype, not a Meta product. Every person and message is fictional. Character made with Muse Image.</p>
-</main>
-
+</div>
 <div class="scrim" id="scrim" hidden></div>
-<aside class="drawer" id="story" hidden aria-label="The story"></aside>
-<aside class="drawer wide" id="hood" hidden aria-label="Under the hood"></aside>
-
+<aside class="drawer" id="hood" hidden aria-label="Under the hood"></aside>
 <script src="demo_data.js"></script>
-<script src="bench_data.js"></script>
-<script src="instagram_data.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

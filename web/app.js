@@ -1,657 +1,616 @@
-// Iris prototype: only the Iris app, on one phone like the real thing. Arjun's phone and a friend's
-// (or their Muse Charm). Reads window.DEMO (scripts/run_demo.py, real engine output),
-// window.BENCH (bench/export_web.py) and window.IG (scripts/export_instagram.py). No network calls.
-
+// Iris prototype: the story of Iris on one phone, told with the real engine's output.
+// Reads window.DEMO (web/demo_data.js, written by scripts/run_demo.py from live Muse calls).
+// Story days are picked from the data by their fields (mood, direction, size, actions), never by
+// a fixed day number, so the page keeps working when demo_data.js is regenerated. No network calls.
 (function () {
-  const D = window.DEMO;
-  const B = window.BENCH || null;
-  const IG = window.IG || { days: [] };
-  const LIFTS_ON = D.settings.lifts_switch_on_day || 15;
-  const LANDS = 28;  // the day Sam acts on his lift in the demo story
-  const LEVELS = ["Always", "When it matters", "Just this once", "Never"];
-  const LEVEL_HELP = { "Always": "A lift whenever you're a little off your normal", "When it matters": "Only after a clearly heavy stretch",
-    "Just this once": "One lift, then it switches to Never", "Never": "Never gets a lift" };
-  // Outline icons, one stroke weight, like the system icons in Meta's apps. No emoji anywhere in the app.
-  const ic = (path, size) => `<svg class="ic" viewBox="0 0 24 24" width="${size || 18}" height="${size || 18}" aria-hidden="true">${path}</svg>`;
-  const P = {
-    flag: `<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>`, mic: `<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/>`,
-    ball: `<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5v17M6 6c3 3 3 9 0 12M18 6c-3 3-3 9 0 12"/>`,
-    camera: `<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>`, cup: `<path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10h1.5a2.5 2.5 0 0 1 0 5H16M8 3v3M11 3v3"/>`,
-    spark: `<path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/>`,
-    up: `<path d="M7 11v9H4v-9zM7 11l4-7c1.5 0 2.5 1 2.2 2.6L12.6 10H18a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 20H7"/>`,
-    lock: `<rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>`,
-    pause: `<circle cx="12" cy="12" r="8.5"/><path d="M10 9v6M14 9v6"/>`, hand: `<path d="M8 12V5.5a1.5 1.5 0 0 1 3 0V11M11 10V4.5a1.5 1.5 0 0 1 3 0V11M14 10.5V6a1.5 1.5 0 0 1 3 0v8c0 4-2.5 7-6.5 7-3 0-4.5-1.5-6-4l-2-3.5a1.5 1.5 0 0 1 2.6-1.5L8 14"/>`,
-    clock: `<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>`, insta: `<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".9" fill="currentColor"/>`,
-    charm: `<rect x="5" y="4" width="14" height="14" rx="5"/><path d="M12 18v3"/><circle cx="12" cy="11" r="2.5"/>`, calendar: `<rect x="4" y="5.5" width="16" height="14.5" rx="2"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/>`,
-    ticket: `<path d="M4 7.5h16v3a1.5 1.5 0 0 0 0 3v3H4v-3a1.5 1.5 0 0 0 0-3z"/><path d="M14 7.5v9" stroke-dasharray="1.5 2"/>`, music: `<path d="M9 17.5V6l10-2v11.5"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="15.5" r="2.5"/>`,
-    chat: `<path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/>`, bell: `<path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15zM10 20.5h4"/>`,
-    page: `<path d="M6 3.5h8.5L19 8v12.5H6z"/><path d="M14 3.5V8h5M9 12.5h6M9 16h6"/>`, people: `<circle cx="9" cy="9" r="3.2"/><circle cx="16.5" cy="10" r="2.6"/><path d="M3.5 19.5c.8-3.2 3-4.8 5.5-4.8s4.7 1.6 5.5 4.8M14.5 15c2.6-.4 5 1 5.8 4.5"/>`,
-    shield: `<path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/>`, trash: `<path d="M5 7h14M9.5 7V4.5h5V7M7 7l1 13h8l1-13"/>`, check: `<path d="M5 12.5l4.5 4.5L19 7.5"/>`,
-    chev: `<path d="M9.5 6l6 6-6 6"/>`,
-  };
-  const INTEREST = { "F1": "flag", "film photography": "camera", "the NBA": "ball", "stand-up comedy": "mic", "home espresso": "cup" };
-  const interest = (i, size) => `<span class="int">${ic(P[INTEREST[i] || "spark"], size || 14)}${esc(i)}</span>`;
-  const circle = D.settings.circle.map(m => ({ first: m.name.split(" ")[0], name: m.name, relation: m.relation, permission: m.permission }));
-  const EXTRA = [{ first: "Tasha", relation: "close friend", h: "tasha.b" }, { first: "Jess", relation: "friend", h: "jessmoreno" }, { first: "Chris", relation: "friend", h: "chrispark" }];
-  const HUES = { Maya: 340, Sam: 212, Dev: 28, Priya: 150, Omar: 268, Tasha: 190, Jess: 10, Chris: 300 };
+"use strict";
 
-  const ui = {
-    day: 1, tab: "today", view: "crosses", app: "circle", rx: "Sam", rxDev: "phone", ob: null, handle: "arjun.rao",
-    phone: "arjun", banner: {}, setupDone: false, chapter: 0, drawer: null,
-    perms: {}, nick: {}, removed: {}, picked: new Set(circle.map(m => m.first)),
-    send: D.settings.send_mode === "ask_first" ? "ask" : "auto", pause: "on",
-    approved: {}, stopped: {}, notMe: {}, think: {}, right: {}, wrong: {}, loop: {}, told: {}, together: {}, jx: {},
-    invited: false, joined: {}, added: {}, rxLeft: {}, plan: {}, rxAsks: {}, notif: { lifts: true, page: true, together: true },
-    sheetA: null, argA: null, sheetB: null, argB: null, deleted: false,
-  };
-  circle.forEach(m => { ui.perms[m.first] = m.permission; });
+const D = window.DEMO || { version: 2, owner: "Arjun", settings: { circle: [] }, days: [] };
+const OWNER = D.owner || "Arjun";
+const SET = D.settings || {};
+const first = s => String(s || "").split(" ")[0];
+const CIRCLE = (SET.circle || []).map(c => Object.assign({}, c, { first: first(c.name) }));
+const DAYS = D.days || [];
+const LIVE = DAYS.filter(d => !d.learning && d.mood);
+const LEARN = DAYS.filter(d => d.learning);
 
-  const $ = s => document.querySelector(s);
-  const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
-  const joinNames = a => a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
-  const cur = () => D.days[ui.day - 1];
-  const ig = () => IG.days[ui.day - 1];
-  const fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  const liftKey = (n, to) => n + ":" + to;
-  const nameOf = f => (ui.nick[f] || "").trim() || f;
-  const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const POSE = n => `img/p-${n}.webp`;
-  const FACE = "img/peach-avatar.png";
-  const face = (size, cls) => `<img class="${cls || ""}" src="${FACE}" alt="" style="width:${size}px;height:${size}px;border-radius:50%;flex:none">`;
-  const av = (f, cls) => `<span class="av ${cls || ""}" style="background:hsl(${HUES[f] || 200} 55% 52%)">${esc(f[0])}</span>`;
-  const shared = (f, d) => ((d || cur()).shared || {})[f] || [];
-  const SPARK = `<svg viewBox="0 0 24 24"><path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z" fill="currentColor"/></svg>`;
-  const ICON = {
-    today: `<svg viewBox="0 0 24 24"><path d="M12 3c.6 4.6 2.4 6.4 7 7-4.6.6-6.4 2.4-7 7-.6-4.6-2.4-6.4-7-7 4.6-.6 6.4-2.4 7-7z"/></svg>`,
-    circle: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8.5" stroke-dasharray="2 3"/><circle cx="19" cy="7" r="1.6"/><circle cx="5" cy="15" r="1.6"/></svg>`,
-    together: `<svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M2.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M10.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5"/></svg>`,
-    journal: `<svg viewBox="0 0 24 24"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M10 8h5M10 12h5"/></svg>`,
-    you: `<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.2-6 8-6s7 2 8 6"/></svg>`,
-    plus: `<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>`,
-    send: `<svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`,
-    back: `<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>`,
-  };
-  const STATUS = `<svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
-    <svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="20" height="8" rx="1.9"/></svg>`;
+// v2 test bench, from bench/results/v2-latest.md (28 cases, one run, 28 Oct 2026).
+const BENCH_V2 = {
+  when: "28 Oct 2026", cases: 28, notes: 41, model: "muse-spark-1.3",
+  rows: [
+    ["Right decision (who, size, direction, surprise)", "90%+", "27 of 28"],
+    ["Safety cases caught", "100%", "6 of 6"],
+    ["Notes that gave the reason away", "0", "0 of 41"],
+    ["Tone (word check and grader)", "95%+", "30 of 41"],
+    ["Built on a shared interest", "100%", "41 of 41"],
+    ["Action makes sense", "95%+", "40 of 41"],
+    ["Harmless if wrong", "95%+", "39 of 41"]
+  ],
+  said: "Five leak traps (a breakup, a medical test, money trouble, a family secret, a layoff) shared the mood and never the reason. The one wrong decision: a layoff day was read as big, so a Big moments friend also got a note. Most tone misses are the grader disliking notes that repeat the name. Written and run once, without tuning to it."
+};
 
-  // The friend's sign-off. "Didn't ask" is only true when the lift went out on its own.
-  const signed = () => ui.send === "auto" ? `Suggested by Muse. ${esc(D.owner)} didn't ask.` : "Suggested by Muse.";
-  // A lift reaches the friend only if it wasn't stopped, lifts aren't paused, and,
-  // when Arjun chose "Ask me first", he tapped Send.
-  const delivered = (n, to) => !ui.stopped[liftKey(n, to)] && ui.pause === "on" && (ui.send === "auto" || ui.approved[liftKey(n, to)]);
-  function allLifts(upto) {
-    const out = [];
-    D.days.slice(0, upto).forEach(d => d.lifts.forEach(l => out.push(Object.assign({ n: d.n, why: d.why }, l))));
-    return out;
+/* ---------- small helpers ---------- */
+const $ = s => document.querySelector(s);
+function el(tag, attrs, ...kids) {
+  const n = document.createElement(tag);
+  if (attrs) for (const k in attrs) {
+    const v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === "class") n.className = v;
+    else if (k === "text") n.textContent = v;
+    else if (k === "html") n.innerHTML = v;
+    else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? "" : v);
   }
+  for (const k of kids.flat(Infinity)) { if (k == null || k === false) continue; n.append(k.nodeType ? k : document.createTextNode(k)); }
+  return n;
+}
+const ICONS = {
+  eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  hear: '<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',
+  talk: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/>',
+  cal: '<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  shield: '<path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+  x: '<path d="M6 6l12 12M18 6L6 18"/>',
+  song: '<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
+  reel: '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M8 4l3 5M14 4l3 5"/><path d="M10.5 12.5v4l3.5-2z"/>',
+  lunch: '<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1.5-2.5 4-2.5 7H17v11"/>',
+  tickets: '<path d="M3 8a2 2 0 0 0 0 4v0a2 2 0 0 1 0 4v2h18v-2a2 2 0 0 1 0-4 2 2 0 0 1 0-4V6H3z"/><path d="M14 6v12" stroke-dasharray="2 2"/>',
+  treat: '<rect x="3.5" y="9" width="17" height="11" rx="1.5"/><path d="M2.5 9h19M12 9v11M12 9c-2-4-6-4-6-1.5S10 9 12 9zM12 9c2-4 6-4 6-1.5S14 9 12 9z"/>',
+  message: '<path d="M4 5h16v11H9l-5 4z"/>',
+  gift: '<path d="M12 3l2.2 4.6 5 .7-3.6 3.5.9 5L12 14.4l-4.5 2.4.9-5L4.8 8.3l5-.7z"/>',
+  home: '<path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/>',
+  people: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.3-6 6.5-6s5.9 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14c2.6.3 4.5 2.4 5 5"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 20c.8-4 4-6.5 8-6.5s7.2 2.5 8 6.5"/>',
+  info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/>'
+};
+const icon = (k, cls) => el("span", { html: '<svg class="i' + (cls ? " " + cls : "") + '" viewBox="0 0 24 24" aria-hidden="true">' + (ICONS[k] || "") + "</svg>", style: "display:inline-grid" });
+const CORD = '<svg viewBox="0 0 40 90"><path d="M17 0c-1 12 0 22 2 30M23 0c1 12 0 22-2 30" stroke="#2c2c31" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="20" cy="36" r="8" fill="#2c2c31"/><path d="M14 34c4 3 8 3 12 0M14 39c4 3 8 3 12 0" stroke="#45454c" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M17 43c-3 16-6 30-9 46M23 43c3 16 5 30 8 46" stroke="#2c2c31" stroke-width="4" stroke-linecap="round" fill="none"/></svg>';
+const P = n => "img/p-" + n + ".webp";
+const FACE = "img/peach-avatar.png";
+const img = (src, cls, alt) => el("img", { src, class: cls || null, alt: alt || "" });
+const pose = (n, cls) => img(P(n), "pose " + (cls || "pop"), "");
+const HUES = [212, 340, 28, 150, 268, 190];
+const hueOf = name => { const k = CIRCLE.findIndex(c => c.first === name); return HUES[(k < 0 ? 5 : k) % HUES.length]; };
+const av = (name, sm) => el("span", { class: "av2" + (sm ? " sm" : ""), style: "background:hsl(" + hueOf(name) + " 55% 52%)" }, name.charAt(0).toUpperCase());
+const joinNames = a => a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
+function clock(s) { // "18:00" or "2026-10-28T18:10" -> "6 PM" / "6:10 PM"
+  const m = String(s || "").match(/(\d{1,2}):(\d{2})/); if (!m) return "";
+  let h = +m[1]; const ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12;
+  return h + (m[2] === "00" ? "" : ":" + m[2]) + " " + ap;
+}
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function dateLabel(d) {
+  const p = String(d.date || "").split("-");
+  return (d.weekday || "").slice(0, 3) + " " + (+p[2] || "") + " " + (MON[(+p[1] || 1) - 1] || "");
+}
+const firstSentence = t => { const m = String(t || "").match(/^[^.?!]*[.?!]/); return m ? m[0] : String(t || ""); };
+function confetti() {
+  const box = el("div", { class: "confetti" }); const cols = ["#0064d4", "#f2a19b", "#f9c46b", "#7fcf9f", "#b79cf2"];
+  for (let k = 0; k < 36; k++) box.append(el("i", { style: "left:" + (Math.random() * 100) + "%;background:" + cols[k % 5] + ";animation-delay:" + (Math.random() * .6) + "s" }));
+  return box;
+}
 
-  // ---------------- The story ----------------
-  // Each moment sets the day and whose phone you hold. Between moments everything in Iris is live.
-  const CHAPTERS = [
-    { day: 1, label: "Arjun sets up Iris", hint: "Sign in with Instagram, pick up to five people, choose who may get a lift.", phone: "arjun", fresh: true },
-    { day: 2, label: "Sam gets an invite", hint: "Every circle is mutual. Sam says yes, or doesn't.", phone: "friend", rx: "Sam", banner: true },
-    { day: LIFTS_ON, label: "Lifts switch on", hint: "Two weeks in, Iris knows Arjun's normal.", phone: "arjun", tab: "today" },
-    { day: 24, label: "A rough week", hint: "Only Arjun sees what Iris noticed, in plain words.", phone: "arjun", tab: "today", think: true },
-    { day: 24, label: "A lift goes out in 10 minutes", hint: "Tap the banner to read it. Arjun can still stop it.", phone: "arjun", tab: "today", banner: true },
-    { day: 24, label: "Sam gets the lift", hint: "This line is all Sam ever sees.", phone: "friend", rx: "Sam", approve: "Sam", banner: true },
-    { day: LANDS, label: "How did that feel?", hint: "Sam showed up. Only Arjun sees this question.", phone: "arjun", tab: "today", banner: true },
-    { day: LANDS, label: "Together", hint: "Coming soon: plans with people who love the same things.", phone: "arjun", tab: "together" },
+/* ---------- picking the story days from the data ---------- */
+const noteTo = (d, who) => (d && (d.notes || []).find(n => n.to === who)) || null;
+const isType = (n, t) => !!(n && n.action && n.action.type === t);
+const RANK = { ordinary: 0, notable: 1, big: 2 };
+function pickBig() {
+  const ups = LIVE.filter(d => d.direction === "up");
+  return ups.find(d => d.size === "big") || ups.slice().sort((a, b) => (RANK[b.size] || 0) - (RANK[a.size] || 0))[0] || LIVE[0] || null;
+}
+function pickTired(avoid) {
+  const down = LIVE.filter(d => d.direction === "down" && d !== avoid);
+  const tired = down.filter(d => d.mood === "tired");
+  const pool = tired.length ? tired : down;
+  for (const who of ["Dev", "Sam", "Omar", "Priya", "Maya"]) {
+    const d = pool.find(x => isType(noteTo(x, who), "lunch"));
+    if (d) return { day: d, who };
+  }
+  const d = pool.find(x => noteTo(x, "Dev")) || pool[0] || LIVE[0] || null;
+  return { day: d, who: d ? (noteTo(d, "Dev") ? "Dev" : ((d.notes[0] || {}).to || "Dev")) : "Dev" };
+}
+function pickLow(avoid) {
+  const treat = d => isType(noteTo(d, "Maya"), "treat");
+  const low = LIVE.filter(d => (d.mood === "low" || d.mood === "sad") && d !== avoid);
+  let d = low.find(treat) || low.find(x => noteTo(x, "Maya")) || low[0];
+  if (!d) { const down = LIVE.filter(x => x.direction === "down" && x !== avoid); d = down.filter(treat).pop() || down.filter(x => noteTo(x, "Maya")).pop() || down.pop() || null; }
+  return { day: d, who: d && noteTo(d, "Maya") ? "Maya" : ((d && d.notes[0] || {}).to || "Maya") };
+}
+const BIG = pickBig();
+const BIG_WHO = BIG && noteTo(BIG, "Sam") ? "Sam" : ((BIG && BIG.notes[0] || {}).to || "Sam");
+const TIRED = pickTired(BIG);
+const LOW = pickLow(TIRED.day);
+const HOME = LIVE.slice().reverse().find(d => d.size === "ordinary" && noteTo(d, "Sam")) || LIVE[LIVE.length - 1] || null;
+function runAround(d) { // the stretch of down days around d
+  if (!d) return [];
+  const i = LIVE.indexOf(d); let a = i, b = i;
+  while (a > 0 && LIVE[a - 1].direction === "down" && LIVE[a - 1].n === LIVE[a].n - 1) a--;
+  while (b < LIVE.length - 1 && LIVE[b + 1].direction === "down" && LIVE[b + 1].n === LIVE[b].n + 1) b++;
+  return LIVE.slice(a, b + 1);
+}
+const NUM = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const numWord = n => NUM[n] || String(n);
+
+/* ---------- state ---------- */
+const S = { i: 0, cancel: {}, done: {}, felt: "", time: clock(SET.note_time || "18:00") || "6 PM", send: SET.send_mode === "ask" ? "ask" : "auto", perm: {}, sources: { see: true, hear: true, talk: true, happens: true } };
+const LEVEL = { every_day: "Every day", big_moments: "Big moments", never: "Never" };
+const LEVEL_HELP = { "Every day": "A note every day at your time, whatever your mood", "Big moments": "Only on days that really stand out, good or hard", "Never": "Never gets a note about you" };
+CIRCLE.forEach(c => { S.perm[c.first] = LEVEL[c.setting] || "Every day"; });
+let tick = null;
+const redraw = () => draw(false);
+
+/* ---------- building blocks for app screens ---------- */
+const appHead = (title, sub) => el("div", {}, sub ? el("div", { class: "small", text: sub }) : null, el("div", { class: "h2", text: title }));
+const goBtn = (label, opts) => el("div", { class: "go" }, el("button", { class: "btn " + ((opts && opts.cls) || "primary"), type: "button", onclick: (opts && opts.on) || next }, label || "Continue"), opts && opts.extra);
+const chip = (t, cls) => el("span", { class: "chip-tag" + (cls ? " " + cls : ""), text: t });
+const banner = (title, body) => el("div", { class: "banner" }, img(FACE), el("div", {}, el("div", { class: "bt" }, el("b", { text: "Iris" }), el("span", { text: "now" })), el("div", { class: "bb" }, el("b", { text: title + " " }), body || "")));
+const simLine = t => el("div", { class: "small", style: "display:flex;gap:6px;align-items:center" }, icon("info"), el("span", { text: t }));
+const sig = text => el("div", { class: "sig" }, img(FACE), el("span", { text: text || "Suggested by Muse." }));
+const ACT_BTN = { song: "Send the song", reel: "Pick a reel", lunch: "Book the table", tickets: "Get the two seats", treat: "Send the treat", message: "Open the chat" };
+const ACT_DONE = { song: "Song sent.", reel: "Reel sent.", lunch: "Table booked.", tickets: "Two seats booked.", treat: "Treat on its way.", message: "Chat opened." };
+const NEEDS_CONNECTOR = { lunch: "Calendar and Spotify are simulated here. The free hour comes from both simulated calendars.", tickets: "Calendar and Spotify are simulated here. The show comes from a simulated ticket list.", song: "Calendar and Spotify are simulated here. The song comes from a simulated Spotify history." };
+function actBox(n) {
+  const a = n.action || {};
+  return el("div", { class: "act" }, icon(a.type || "message"), el("div", {}, el("b", { text: a.label || "" }), a.detail ? el("span", { text: a.detail }) : null));
+}
+const surpriseLine = () => el("div", { class: "surprise" }, icon("gift"), el("span", { text: "Make it a surprise. Don't say Iris told you." }));
+
+// The friend's view of one note: mood word, one idea, a ready action. Never why.
+function friendNote(n, key) {
+  if (!n) return el("div", { class: "widget flat" }, el("div", { class: "small", text: "No note today." }));
+  const a = n.action || {}, done = S.done[key];
+  return el("div", { class: "widget arrive" },
+    el("div", { class: "spread" }, el("div", { class: "eyebrow", text: "From " + OWNER }), chip(firstSentence(n.text).replace(/^[^,]*,\s*/, "").replace(/[.?!]$/, ""), "mood")),
+    el("p", { class: "quote", text: n.text }),
+    actBox(n),
+    a.surprise ? surpriseLine() : null,
+    done ? el("div", { class: "ok", text: done === "no" ? "Okay. " + OWNER + " won't know." : (ACT_DONE[a.type] || "Done.") + (a.surprise ? " " + OWNER + " won't know Iris suggested it." : "") })
+      : el("div", { class: "row" },
+        el("button", { class: "pill blue", type: "button", onclick: () => { S.done[key] = "yes"; redraw(); } }, ACT_BTN[a.type] || "Do it"),
+        el("button", { class: "pill", type: "button", onclick: () => { S.done[key] = "no"; redraw(); } }, "Not now")),
+    sig(n.signature));
+}
+function fiveToday(day, viewer, opts) {
+  const fv = (day && day.friend_view || []).filter(f => f.name !== viewer);
+  fv.sort((a, b) => (a.name === OWNER ? -1 : b.name === OWNER ? 1 : 0));
+  return el("div", { class: "widget flat", style: "gap:2px" },
+    fv.map(f => el("div", { class: "notice" },
+      el("span", { class: "row", style: "gap:10px" }, av(f.name, true), el("span", { class: f.name === OWNER ? "who" : null, text: f.name })),
+      f.mood ? chip(f.mood, f.name === OWNER ? "mood" : null) : el("span", { class: "small", text: "no word yet" }))),
+    opts && opts.simLabel === false ? null : el("div", { style: "padding-top:6px" }, simLine("Friends' moods are simulated in this demo. " + OWNER + "'s word is the engine's real read.")));
+}
+
+/* ---------- the story ---------- */
+// ch: 0 = setting up, 1 = everyday life, 2 = after. bg: slide color, "app" = Iris's white screens.
+// phone: whose phone the screen is on. day: the engine record the hood shows.
+const FLOW = [];
+const add = (o) => FLOW.push(o);
+
+add({ ch: 0, bg: "peach", title: "Meet Iris", phone: OWNER, render: () => [
+  el("div", { style: "margin-top:auto" }, pose("wave", "pop")),
+  el("div", { class: "kicker center", text: "a concept for Muse" }),
+  el("h1", { class: "h1 center", style: "font-size:44px", text: "Iris" }),
+  el("p", { class: "lead center", text: "Keeps you close to your 5." }),
+  goBtn("Start"),
+  el("p", { class: "fine", text: "Hackathon prototype, not a Meta product. Every person and message is fictional. Character made with Muse Image." })
+] });
+
+add({ ch: 0, bg: "app", title: "Sign in with Instagram", phone: OWNER, render: () => [
+  el("div", { style: "margin-top:auto;display:grid;justify-items:center;gap:12px;text-align:center" },
+    img(FACE, null, ""), el("div", { class: "h2", text: "Welcome to Iris" }),
+    el("p", { class: "agent", style: "color:var(--ink-2);max-width:280px", text: "Iris uses your Instagram account. No new account, no new password." })),
+  el("div", { class: "go" },
+    el("button", { class: "btn ig", type: "button", onclick: next }, "Continue with Instagram"),
+    el("div", { class: "small center", text: "In this demo you are " + OWNER + ", a fictional person. Nothing touches a real account." }))
+] });
+// the welcome image is a circle avatar
+FLOW[1].after = s => { const i = s.querySelector("img"); if (i) i.style.cssText = "width:84px;height:84px;border-radius:50%"; };
+
+add({ ch: 0, bg: "app", title: "What Iris reads", phone: OWNER, render: () => {
+  const rows = [
+    ["see", "eye", "What you see", "The reels and posts you watch, save and send."],
+    ["hear", "hear", "What you hear", "What you play on Spotify."],
+    ["talk", "talk", "What you talk about", "Your side of your Instagram chats: when, with whom, the gist. Never anyone else's words."],
+    ["happens", "cal", "What happens to you", "Your calendar: exams, trips, shows, plans."]
   ];
+  return [
+    appHead("Your day, in four parts", "What Iris reads"),
+    el("p", { class: "agent", text: "How your day goes shapes how you feel. Iris reads it so your 5 can know, in one word." }),
+    el("div", { class: "widget flat", style: "gap:0" }, rows.map(([k, ic, t, s]) => el("div", { class: "readrow" },
+      el("span", { class: "ri" }, icon(ic)),
+      el("div", { class: "spread", style: "align-items:flex-start" }, el("div", {}, el("b", { text: t }), el("span", { text: s })),
+        el("button", { type: "button", class: "pill" + (S.sources[k] ? " dark" : ""), style: "font-size:12px;padding:5px 11px;flex:none", onclick: () => { S.sources[k] = !S.sources[k]; redraw(); } }, S.sources[k] ? "On" : "Off"))))),
+    el("div", { class: "secure" }, icon("shield"), el("span", { text: "Read securely by Muse, inside Meta. Never shown to anyone." })),
+    el("div", { class: "small", text: "Never shared with your 5: the words in your messages, other people's names, money, or where you are. Switch any part off, any time." }),
+    simLine("Calendar and Spotify are simulated here."),
+    goBtn("Next", { cls: "blue" })
+  ];
+} });
 
-  // ================= Arjun's phone =================
-  function tToday() {
-    const d = cur(), learning = d.n < LIFTS_ON;
-    const hasLift = d.lifts.some(l => !ui.stopped[liftKey(d.n, l.to)]);
-    let h = `<div class="head"><div><div class="sub">${esc(d.weekday)} · day ${d.n}</div><h1>Good evening, ${esc(D.owner)}</h1></div>
-      <button class="round" type="button" data-tab="you" aria-label="You">${face(30)}</button></div>`;
-    d.cards.forEach(c => { h += `<div class="widget danger"><div class="eyebrow">Just for you</div><div>${esc(c.text)}</div></div>`; });
-    if (d.reveal) {
-      h += `<div class="widget sky"><div class="eyebrow">New today · ${esc(d.reveal.title)}</div><div>${esc(d.reveal.text)}</div>`;
-      if (d.reveal.suggested) h += `<div class="row">${d.reveal.suggested.map(n => `<span class="chip">${esc(nameOf(n))}</span>`).join("")}</div>`;
-      if (d.reveal.interests) h += `<div class="row">${d.reveal.interests.map(n => `<span class="chip">${interest(n)}</span>`).join("")}</div>`;
-      h += `</div>`;
-    }
-    const pose = learning ? "sleep" : hasLift ? "letter" : d.rule === "normal" ? "stand" : "heart";
-    const k = "page" + d.n;
-    h += `<div class="widget peach"><div class="posecard"><img class="bob" src="${POSE(pose)}" alt="">
-      <div><div class="eyebrow">Your page · only you see this</div><p class="agent" style="margin-top:4px">${esc(d.page || (learning ? `I'm still getting to know your normal. Day ${d.n} of ${LIFTS_ON - 1}.` : "A quiet day."))}</p></div></div>
-      ${d.page ? (ui.wrong[k] ? `<div class="small">Got it: "${esc(ui.wrong[k])}". I'll weigh that from now on.</div>` :
-        `<div class="fb"><button class="${ui.right[k] ? "on" : ""}" data-right="${k}" aria-label="That's right">${ic(P.up)}</button><button data-wrong="${k}" aria-label="That's wrong">${ic(`<g transform="rotate(180 12 12)">${P.up}</g>`)}</button></div>`) : ""}</div>`;
-    if (ui.wrong[k] === "open") h = h.replace(`<div class="small">Got it: "open".`, "") ;
-    if (!learning) {
-      h += `<button class="think" type="button" data-think="${d.n}">${SPARK}<span>What I'm noticing this week</span></button>`;
-      if (ui.think[d.n]) {
-        const sigs = d.rule === "normal" ? [] : d.signals;
-        h += `<div class="widget flat">${sigs.length ? `<div class="small">Compared only with your own normal. Tap anything that isn't about you and I'll stop counting it.</div>` +
-          sigs.map(s => { const key = d.n + ":" + s, off = ui.notMe[key];
-            return `<div class="notice"><span style="${off ? "text-decoration:line-through;color:var(--ink-3)" : ""}">${esc(cap(s))}</span><button class="pill sm" type="button" data-notme="${esc(key)}">${off ? "Count it" : "Not about me"}</button></div>`; }).join("")
-          : `<div>Nothing off your normal today.</div>`}
-          <div class="secure">${ic(P.lock, 15)}Worked out privately by Muse. Nobody else sees it.</div></div>`;
-      }
-    }
-    if (ui.pause !== "on" && d.lifts.length) h += `<div class="widget flat"><div class="who">Lifts are paused</div><div class="small">Nothing goes out until you turn them back on in You.</div></div>`;
-    else d.lifts.forEach(l => {
-      const lk = liftKey(d.n, l.to), st = ui.stopped[lk] ? "stopped" : (ui.approved[lk] ? "sent" : "");
-      h += `<div class="h2">A lift for ${esc(nameOf(l.to))}</div><div class="widget" id="lift-${esc(lk)}">
-        <div class="eyebrow">What ${esc(nameOf(l.to))} will see</div><p class="quote">${esc(l.text)}</p>
-        <div class="sig">${face(22)}<span>${signed()}</span></div>
-        ${st === "stopped" ? `<div class="small">Not sent. ${esc(l.to)} won't know.</div>`
-          : (st === "sent" || ui.send === "auto" && !st) && ui.send === "auto" ? `<div class="row"><span class="small">Sends in 10 minutes</span><button class="pill sm" type="button" data-stop="${esc(lk)}">Stop it</button></div>`
-          : st === "sent" ? `<div class="ok">${ic(P.check, 16)}Sent. ${esc(nameOf(l.to))} sees the line, never why.</div>`
-          : `<div class="row"><button class="pill blue" type="button" data-approve="${esc(lk)}">Send</button><button class="pill" type="button" data-stop="${esc(lk)}">Not this one</button><span class="small">You two share ${interest(l.interest, 13)}</span></div>`}
-      </div>`;
-    });
-    d.prompts.forEach(p => {
-      const pk = d.n + p.kind + p.about;
-      if (p.kind === "close_the_loop") {
-        h += `<div class="widget lilac"><div class="row">${face(22)}<div class="eyebrow">Only you see this</div></div><div>${esc(p.text)}</div>` +
-          (ui.loop[pk] ? `<div class="small" style="color:var(--lilac-ink)">Noted: "${esc(ui.loop[pk])}". I'll use that to get better for you.</div>`
-            : `<div class="row">${["Loved it", "It was nice", "A bit much"].map(o => `<button class="pill white" type="button" data-loop="${esc(pk)}" data-v="${o}">${o}</button>`).join("")}</div>`) + `</div>`;
-      } else {
-        h += `<div class="widget flat"><div>${esc(p.text)}</div>` + (ui.told[pk] ? `<div class="small">Okay.</div>`
-          : `<div class="row"><button class="pill sm" type="button" data-told="${esc(pk)}">${p.kind === "tell_them" ? "Tell them" : "Yes"}</button><button class="pill sm" type="button" data-told="${esc(pk)}">Not now</button></div>`) + `</div>`;
-      }
-    });
-    if (!d.page && !d.reveal && !d.lifts.length && !d.prompts.length && !d.cards.length && !learning) h += `<div class="small" style="text-align:center">Nothing else today. Enjoy it.</div>`;
-    return h;
-  }
+add({ ch: 0, bg: "app", title: "Pick your 5", phone: OWNER, render: () => [
+  appHead("Who are your 5?", "From your Instagram Close Friends"),
+  el("p", { class: "agent", text: "Pick up to five. Each gets an invite, and nobody is in until they say yes." }),
+  el("div", {}, CIRCLE.map(c => el("div", { class: "li" }, av(c.first),
+    el("div", {}, el("div", { class: "who", text: c.name }), el("div", { class: "small", text: "You two share " + joinNames((c.allowed_interests || []).slice(0, 2)) })),
+    el("span", { class: "check on" }, icon("check"))))),
+  goBtn("Next (" + CIRCLE.length + " of 5)", { cls: "blue" })
+] });
 
-  function tCircle() {
-    const d = cur();
-    const R = { close: 24, around: 34, farther: 44 };
-    const people = d.orbit.filter(o => !ui.removed[o.name]);
-    let orbit = `<div class="orbit" id="orbit">` + [[24, "close"], [34, "around"], [44, "farther"]].map(([r, lab]) =>
-      `<div class="rg" style="inset:${50 - r}%"></div><div class="rg-label" style="top:${50 + r + 1}%">${lab}</div>`).join("") +
-      `<div class="core"><img class="bob" src="${POSE("stand")}" alt=""></div>`;
-    const pos = {};
-    people.forEach((o, i) => { const a = (i / people.length) * Math.PI * 2 - Math.PI / 2, r = R[o.ring] || 34;
-      pos[o.name] = [50 + r * Math.cos(a), 50 + r * Math.sin(a)];
-      orbit += `<button class="planet" type="button" data-person="${esc(o.name)}" style="left:${pos[o.name][0]}%;top:${pos[o.name][1]}%">${av(o.name, "sm")}${esc(nameOf(o.name))}</button>`; });
-    d.lifts.filter(l => delivered(d.n, l.to) && pos[l.to]).forEach((l, i) => {
-      orbit += `<img class="messenger" src="${FACE}" alt="" data-to="${esc(l.to)}" data-i="${i}" style="left:50%;top:50%">`; });
-    orbit += `</div>`;
-    let h = `<div class="head"><div><div class="sub">${people.length} of 5</div><h1>Your circle</h1></div><button class="round" type="button" data-sheet-a="add" aria-label="Add someone">${ICON.plus}</button></div>
-      <div class="small">Closer to the middle means you've talked more lately. Never better or worse.</div>${orbit}<div class="group">`;
-    people.forEach(o => {
-      const sh = shared(o.name);
-      h += `<button class="li" type="button" data-person="${esc(o.name)}">${av(o.name)}<div><div class="who">${esc(nameOf(o.name))}</div>
-        <div class="small">${esc(o.relation)}${sh.length ? " · " + sh.join(", ") : ""} · ${esc(ui.perms[o.name] || o.permission)}</div></div><span class="chev">›</span></button>`;
-    });
-    h += `</div><div class="small">Tap anyone to change their nickname or when they may get a lift. Nobody is ever told.</div>`;
-    return h;
-  }
-
-  function togetherIdeas() {
-    const by = {};
-    circle.filter(m => !ui.removed[m.first]).forEach(m => shared(m.first).forEach(i => { (by[i] = by[i] || []).push(m.first); }));
-    const ideas = [];
-    const PLAN = { "F1": ["Race weekend", "The next Grand Prix is this weekend. Watch it together?", "Plan a watch party"],
-      "stand-up comedy": ["Comedy night", "There's a stand-up show near you on Friday.", "Go together"],
-      "the NBA": ["Game night", "A big game is on Thursday night.", "Plan it"],
-      "film photography": ["A photo walk", "Sunday looks sunny. Bring a roll each?", "Invite"],
-      "home espresso": ["Coffee crawl", "Two new cafes opened near you.", "Plan it"] };
-    Object.entries(by).sort((a, b) => b[1].length - a[1].length).forEach(([i, fs]) => {
-      const p = PLAN[i] || ["Something together", "You both love " + i + ".", "Plan it"];
-      ideas.push({ id: i, icon: P[INTEREST[i] || "spark"], title: p[0] + " with " + joinNames(fs.map(nameOf)), why: (fs.length > 1 ? "You, " + joinNames(fs.map(nameOf)) + " all love " : "You and " + nameOf(fs[0]) + " both love ") + i + ". " + p[1],
-        cta: p[2], people: fs, event: i === "stand-up comedy" });
-    });
-    return ideas;
-  }
-  function tTogether() {
-    let h = `<div class="head"><div><div class="sub"><span class="soon">Coming soon</span></div><h1>Together</h1></div></div>
-      <div class="widget lilac"><div class="posecard"><img class="bob" src="${POSE("celebrate")}" alt=""><div><div class="eyebrow">Less scrolling, more plans</div>
-      <p class="agent" style="margin-top:4px">When people in your circle love the same thing, or are heading to the same event, I'll suggest doing it together.</p></div></div></div>`;
-    togetherIdeas().forEach(x => {
-      const st = ui.together[x.id];
-      h += `<div class="widget"><div class="row" style="justify-content:space-between"><span class="tile-ic">${ic(x.icon, 22)}</span>${x.event ? `<span class="soon">Events · soon</span>` : ""}</div>
-        <div class="who" style="font-size:17px">${esc(x.title)}</div><div class="small" style="font-size:14px;color:var(--ink-2)">${esc(x.why)}</div>
-        <div class="row">${x.people.map(f => `<span class="chip">${av(f, "sm")}${esc(nameOf(f))}</span>`).join("")}</div>
-        ${st === "go" ? `<div class="ok">${ic(P.check, 16)}Sent to your group chat.</div>` : st === "no" ? `<div class="small">Hidden. I won't suggest this one again.</div>`
-          : `<div class="row"><button class="pill dark" type="button" data-together="${esc(x.id)}" data-v="go">${esc(x.cta)}</button><button class="pill" type="button" data-together="${esc(x.id)}" data-v="no">Not for me</button></div>`}</div>`;
-    });
-    h += `<div class="small">Together only uses what you already share with each other, and events you both said you're going to. Nobody learns anything new about you.</div>`;
-    return h;
-  }
-
-  function tJournal() {
-    const d = cur(), j = d.journal;
-    let h = `<div class="head"><div><div class="sub">Only you see this</div><h1>Journal</h1></div></div>`;
-    if (!j) {
-      const days = D.days.filter(x => x.journal && x.n <= ui.day).map(x => x.n);
-      h += `<p class="agent">Write anything. I'll use your week to understand who and what you mean, then help you find the word for it, one small question at a time.</p>`;
-      h += days.length ? `<div class="row">${days.map(n => `<button class="pill" type="button" data-goto="${n}" data-tab="journal">Open day ${n}</button>`).join("")}</div>` : `<div class="small">No entries yet.</div>`;
-    } else {
-      h += `<div class="small" style="text-align:center">${esc(d.weekday)}, day ${d.n}</div>`;
-      j.turns.forEach((t, i) => {
-        h += `<div class="bub me">${esc(t.user)}</div>`;
-        if (t.connection) h += `<div class="connection">${SPARK.replace("<svg", '<svg width="14" height="14"')} Connected this to your week</div>`;
-        h += `<div class="muse-line">${face(22)}<p>${esc(t.reply)}</p></div>`;
-        const next = (j.turns[i + 1] || {}).user || "";
-        const words = t.feeling_words && t.feeling_words.length ? t.feeling_words : t.chips || [];
-        if (words.length && t.step !== "safety") h += `<div class="row" style="padding-left:30px">${words.map(w => `<span class="chip ${next.toLowerCase().includes(w.toLowerCase()) ? "on" : ""}">${esc(w)}</span>`).join("")}</div>`;
-      });
-      if (j.own_words && j.own_words.options) {
-        h += `<div class="widget flat"><div class="who">Help me say it to ${esc(nameOf("Dev"))}</div>` + j.own_words.options.map(o => `<div class="draft">${esc(o)}</div>`).join("") +
-          (j.own_words.left_out ? `<div class="small">Left out: ${esc(j.own_words.left_out)}.</div>` : "") +
-          `<div class="row"><button class="pill sm" type="button" data-copy="${esc(j.own_words.options[0])}">Copy</button><span class="small">I never send it. You do.</span></div></div>`;
-      }
-    }
-    (ui.jx[d.n] || []).forEach(t => { h += `<div class="bub me">${esc(t)}</div><div class="muse-line">${face(22)}<p>Thanks for putting that into words. In the live app, Muse answers here using your week. Nothing you write is ever shown to anyone.</p></div>`; });
-    h += `<form class="compose" data-journal="1"><input id="jin" placeholder="Write anything…" autocomplete="off"><button type="submit" aria-label="Send">${ICON.send}</button></form>`;
-    return h;
-  }
-
-  function tYou() {
-    // Laid out like the settings screens in Meta's apps: grey section titles, plain rows,
-    // one outline icon per row, the current value in grey, a chevron when it opens something.
-    const row = (icon, title, value, right, attr, danger) => `<${attr ? "button" : "div"} class="srow${danger ? " danger" : ""}" ${attr ? `type="button" ${attr}` : ""}>
-      ${ic(P[icon], 22)}<span class="st">${esc(title)}</span>${value ? `<span class="sv">${esc(value)}</span>` : ""}${right === undefined ? (attr ? ic(P.chev, 16) : "") : right}</${attr ? "button" : "div"}>`;
-    const tog = (on, key) => `<button class="toggle ${on ? "on" : ""}" type="button" data-notif="${key}" aria-pressed="${on}" aria-label="Turn on or off"></button>`;
-    const lifts = allLifts(ui.day), sent = lifts.filter(l => delivered(l.n, l.to)).length;
-    return `<div class="profile">${face(56)}<div><div class="pn">${esc(D.owner)}</div><div class="small">@${esc(ui.handle)}</div></div></div>
-      <div class="sh">Lifts</div>
-      ${row("pause", "Pause lifts", ui.pause === "on" ? "" : ui.pause === "day" ? "Today" : "This week", `<button class="toggle ${ui.pause !== "on" ? "on" : ""}" type="button" data-pause="${ui.pause === "on" ? "day" : "on"}" aria-label="Pause lifts"></button>`)}
-      ${row("hand", "Before a lift goes out", ui.send === "ask" ? "Ask me first" : "Send on its own", undefined, `data-sheet-a="send"`)}
-      ${row("clock", "Lift history", lifts.length ? sent + " sent" : "None yet", undefined, `data-sheet-a="history"`)}
-      <div class="sh">Connected apps</div>
-      ${row("insta", "Instagram", "Connected", "")}
-      ${row("spark", "Muse", "Connected", "")}
-      ${row("charm", "Muse Charm", "Coming soon", undefined, `data-sheet-a="charm"`)}
-      ${row("calendar", "Calendar", "Coming soon", "")}
-      ${row("ticket", "Events", "Coming soon", "")}
-      ${row("music", "Music", "Coming soon", "")}
-      ${row("chat", "WhatsApp and Messenger", "Coming soon", "")}
-      <div class="sh">Notifications</div>
-      ${row("bell", "Lifts about to go out", "", tog(ui.notif.lifts, "lifts"))}
-      ${row("page", "Your page", "Evenings", tog(ui.notif.page, "page"))}
-      ${row("people", "Together ideas", "", tog(ui.notif.together, "together"))}
-      <div class="sh">Privacy and safety</div>
-      ${row("lock", "What Iris reads", "", undefined, `data-sheet-a="reads"`)}
-      ${row("shield", "Is anyone pushing you to share?", "", undefined, `data-sheet-a="pressure"`)}
-      ${row("trash", ui.deleted ? "Everything deleted" : "Delete everything", "", undefined, `data-sheet-a="delete"`, true)}
-      <button class="link" type="button" data-chapter="0" style="margin-top:6px">Show setup again</button>
-      <div class="small" style="text-align:center;padding-bottom:6px">Iris runs on Meta's Muse Spark through the Meta Model API.</div>`;
-  }
-
-  // ---------------- Setup: the first-run journey ----------------
-  const SETUP = ["welcome", "login", "connect", "pick", "nick", "perms", "send", "notify", "done"];
-  const SETUP_BG = { welcome: "var(--peach)", nick: "var(--butter)", done: "var(--mint)" };
-  function setup() {
-    const s = ui.ob, back = SETUP.indexOf(s) > 0 ? `<button class="round" type="button" data-ob="back" aria-label="Back" style="background:#ffffffb3">${ICON.back}</button>` : "";
-    const next = (label, cls, dis) => `<div class="go"><button class="btn ${cls || "primary"}" type="button" data-ob="next" ${dis ? "disabled" : ""}>${label}</button></div>`;
-    if (s === "welcome") return `<img class="pose bob pop" src="${POSE("wave")}" alt="" style="margin-top:auto"><div class="kicker" style="text-align:center">a concept for Muse</div>
-      <h1 class="h1" style="text-align:center;font-size:44px">Iris</h1><p class="lead" style="text-align:center">For the people who'd show up for you, if they only knew.</p>${next("Continue with Instagram", "ig")}`;
-    if (s === "login") return `${back}<div style="margin-top:auto;display:grid;justify-items:center;gap:8px;text-align:center"><div class="ig-word" style="font-size:34px">Instagram</div>
-      <p class="agent" style="color:var(--ink-2);max-width:270px">Iris signs in with your Instagram. No new account, no new password.</p></div>
-      <input class="field" id="handle" value="${esc(ui.handle)}" placeholder="Username" autocomplete="off" autocapitalize="off">${next("Log in", "ig")}`;
-    if (s === "connect") return `${back}<div class="head"><div><div class="sub">One permission</div><h1 style="font-size:24px">Connect Instagram</h1></div></div>
-      <p class="agent">Iris compares your Instagram with your own normal. Nobody else's.</p>
-      <div class="widget"><div class="secure">${ic(P.lock, 15)}Read securely by Muse, inside Meta. Never shown to anyone.</div>
-      <div><b>Iris reads</b><div class="small" style="font-size:14px;color:var(--ink-2)">The reels you watch and send, and what's in them. When you scroll and for how long. Who you message, when, and how quickly you reply.</div></div>
-      <div><b>Iris never reads</b><div class="small" style="font-size:14px;color:var(--ink-2)">The words in your messages, your photos, or where you are.</div></div></div>
-      <div class="go"><button class="btn blue" type="button" data-ob="next">Always allow</button><button class="btn" type="button" data-ob="next">Allow once</button></div>`;
-    if (s === "pick") {
-      const all = circle.map(m => ({ f: m.first, h: m.name.toLowerCase().replace(/\s+/g, ".") })).concat(EXTRA.map(e => ({ f: e.first, h: e.h })));
-      return `${back}<div class="head"><div><div class="sub">From your Instagram Close Friends</div><h1 style="font-size:24px">Who's in your corner?</h1></div></div>
-        <p class="agent">Pick up to five. They each get an invite, and nobody is in until they say yes.</p><div>` +
-        all.map(p => { const on = ui.picked.has(p.f), full = !on && ui.picked.size >= 5;
-          return `<button class="li" type="button" data-pick="${esc(p.f)}" style="${full ? "opacity:.45" : ""}"><span class="ring">${av(p.f)}</span><div><div class="who">${esc(p.f)}</div><div class="small"><span class="cf">★</span>${esc(p.h)}</div></div><span class="check ${on ? "on" : ""}">${on ? ic(P.check, 15) : ""}</span></button>`; }).join("") +
-        `</div>${next(ui.picked.size ? `Next (${ui.picked.size} of 5)` : "Pick at least one", "blue", !ui.picked.size)}`;
-    }
-    if (s === "nick") return `${back}<div class="kicker">Make it yours</div><h1 class="h1">Nicknames?</h1><p class="lead">Call them what you call them. Only you see these.</p>
-      <div style="display:grid;gap:10px">` + [...ui.picked].map(f => `<div class="nickrow">${av(f)}<div style="min-width:0;display:grid;gap:2px"><input class="nick" data-nick="${esc(f)}" placeholder="${esc(f)}" value="${esc(ui.nick[f] || "")}" maxlength="18">
-        <div class="small">${shared(f, D.days[22]).length ? "You two share " + shared(f, D.days[22]).join(" and ") : "Iris learns what you share as you go"}</div></div></div>`).join("") + `</div>${next("Looks good")}`;
-    if (s === "perms") return `${back}<div class="head"><h1 style="font-size:24px">Who gets to know</h1></div>
-      <p class="agent">When you're off your normal, who may get a small idea of something to do for you? Nobody sees what you chose.</p><div style="display:grid;gap:14px">` +
-      [...ui.picked].filter(f => ui.perms[f] !== undefined || true).map(f => { const p = ui.perms[f] || "When it matters";
-        return `<div style="display:grid;gap:6px"><div class="who">${esc(nameOf(f))}</div><div class="seg">${LEVELS.map(l => `<button type="button" class="${l === p ? "on" : ""}" data-perm="${esc(f)}" data-level="${l}">${l}</button>`).join("")}</div><div class="small">${LEVEL_HELP[p]}</div></div>`; }).join("") +
-      `</div>${next("Next", "blue")}`;
-    if (s === "send") return `${back}<div class="head"><h1 style="font-size:24px">Before a lift goes out</h1></div><p class="agent">I write each lift. You decide how it leaves.</p>` +
-      [["auto", "Send on its own", "You get 10 minutes to stop it"], ["ask", "Ask me first", "Each lift waits until you tap Send"]].map(([k, t, sub]) =>
-        `<button class="opt ${ui.send === k ? "on" : ""}" type="button" data-send="${k}"><span>${ui.send === k ? ic(P.check, 18) : ""}</span><span><b>${t}</b><span>${sub}</span></span></button>`).join("") + next("Next", "blue");
-    if (s === "notify") return `<img class="pose sm bob" src="${POSE("phone")}" alt="" style="margin-top:auto"><p class="agent" style="text-align:center">I'll only tap you when a lift is about to go out, or a friend could use one.</p>
-      <div class="dim"><div class="alert"><b>"Iris" Would Like to Send You Notifications</b><p>Lifts about to go out, and lifts for the people you care about.</p>
-      <div class="two"><button type="button" data-ob="next">Don't Allow</button><button type="button" data-ob="next">Allow</button></div></div></div>`;
-    if (s === "done") {
-      const names = [...ui.picked];
-      let orbit = `<div class="orbit"><div class="rg" style="inset:10%"></div><div class="core"><img class="bob" src="${POSE("celebrate")}" alt=""></div>`;
-      names.forEach((f, i) => { const a = (i / names.length) * Math.PI * 2 - Math.PI / 2;
-        orbit += `<div class="planet pop" style="left:${50 + 40 * Math.cos(a)}%;top:${50 + 40 * Math.sin(a)}%;animation-delay:${i * .12}s">${av(f, "sm")}${esc(nameOf(f))}</div>`; });
-      return `<div class="confetti">${Array.from({ length: 36 }, (_, k) => `<i style="left:${(k * 37) % 100}%;background:${["#0064d4", "#f2a19b", "#f9c46b", "#7fcf9f", "#b79cf2"][k % 5]};animation-delay:${(k % 7) * .08}s"></i>`).join("")}</div>
-        <h1 class="h1" style="text-align:center">Invites sent</h1>${orbit}<p class="lead" style="text-align:center">For the first two weeks I'll just learn your normal. Then I'm here.</p>
-        <div class="go"><button class="btn primary" type="button" data-ob="finish">Open Iris</button></div>`;
-    }
-    return "";
-  }
-
-  // ================= The phone: only Iris =================
-  const friendLift = () => allLifts(ui.day).filter(x => x.to === ui.rx && delivered(x.n, x.to) && ui.day - x.n <= 2).pop();
-  const fresh = () => !ui.setupDone && ui.day === 1;
-
-  // Iris's own notifications, dropped in as a banner over the app. Arjun's never preview anything private.
-  function notifs() {
-    const d = cur(), out = [];
-    if (ui.phone === "arjun") {
-      if (fresh()) return out;
-      if (ui.pause === "on") d.lifts.filter(l => !ui.stopped[liftKey(d.n, l.to)] && !ui.approved[liftKey(d.n, l.to)]).forEach(l => out.push({
-        title: ui.send === "ask" ? `A lift for ${nameOf(l.to)} is ready` : `A lift goes to ${nameOf(l.to)} in 10 minutes`,
-        body: ui.send === "ask" ? "Take a look. Nothing goes out until you tap Send." : "Tap to read it, or stop it." }));
-      d.prompts.filter(p => !ui.loop[d.n + p.kind + p.about] && !ui.told[d.n + p.kind + p.about]).forEach(p => out.push({ title: "Just for you", body: p.text }));
-    } else {
-      const who = ui.rx, l = friendLift();
-      if (ui.rxLeft[who]) return out;
-      if (ui.day <= 2 && (ui.invited || ui.day === 2) && !ui.joined[who]) out.push({ title: `${D.owner} asked you into their circle`, body: "Tap to see what that means." });
-      else if (l && !ui.plan[liftKey(l.n, who)]) out.push({ title: "Suggested by Muse", body: l.text });
-    }
-    return out;
-  }
-  function banner() {
-    const n = ui.banner[ui.phone] && notifs()[0];
-    return n ? `<button class="banner" type="button" data-banner="1"><img src="${FACE}" alt=""><div><div class="nh"><b>Iris</b><span>now</span></div>
-      <div class="nt">${esc(n.title)}</div><div class="nb">${esc(n.body)}</div></div></button>` : "";
-  }
-
-  // ---------------- Arjun's Iris app ----------------
-  function renderHere(animate) {
-    const glass = $("#glass"), view = $("#view"), tb = $("#tabbar");
-    if (ui.ob) {
-      glass.style.backgroundColor = SETUP_BG[ui.ob] || "var(--screen)";
-      view.innerHTML = `<div class="slide ${animate ? "slidein" : ""}">${setup()}</div>`;
-      return;
-    }
-    tb.hidden = false;
-    tb.innerHTML = [["today", "Today"], ["circle", "Circle"], ["together", "Together"], ["journal", "Journal"], ["you", "You"]].map(([id, t]) =>
-      `<button class="tab ${ui.tab === id ? "on" : ""}" type="button" data-tab="${id}">${ICON[id]}${t}${id === "together" ? `<span class="badge">NEW</span>` : ""}</button>`).join("");
-    paint(view, { today: tToday, circle: tCircle, together: tTogether, journal: tJournal, you: tYou }[ui.tab](), animate);
-    if (ui.tab === "circle") setTimeout(() => {
-      document.querySelectorAll(".messenger").forEach(m => { const p = document.querySelector(`.planet[data-person="${m.dataset.to}"]`);
-        if (p) setTimeout(() => { m.style.left = p.style.left; m.style.top = `calc(${p.style.top} - 22px)`; }, 300 + 500 * +m.dataset.i); });
-    }, 30);
-  }
-  // Keeps the scroll position when the same screen re-renders after a tap.
-  function paint(view, body, animate) {
-    const keep = !animate && view.firstElementChild ? view.firstElementChild.scrollTop : 0;
-    view.innerHTML = `<div class="scroll ${animate ? "fadein" : ""}">${body}</div>`;
-    view.firstElementChild.scrollTop = keep;
-  }
-
-  // ---------------- A friend's Iris app (everyone has the same app) ----------------
-  function friendHere() {
-    const d = cur(), who = ui.rx, l = friendLift();
-    const lk = l && liftKey(l.n, who), plan = lk && ui.plan[lk];
-    let h = `<div class="head"><div><div class="sub">${esc(d.weekday)}</div><h1>Good evening, ${esc(who)}</h1></div>${face(36)}</div>`;
-    if (ui.rxLeft[who]) h += `<p class="agent">You left ${esc(D.owner)}'s circle. No more lifts for ${esc(D.owner)}.</p>`;
-    else if (ui.day <= 2 && (ui.invited || ui.day === 2)) {
-      if (!ui.joined[who]) h += `<div class="widget"><div class="row">${av("A")}<div><div class="who">${esc(D.owner)} asked you into their circle</div><div class="small">Up to five people</div></div></div>
-        <div>Now and then, Iris may suggest one small thing to do for ${esc(D.owner)}. You'll never see why, and ${esc(D.owner)} never sees what you do with it.</div>
-        <div class="row"><button class="pill blue" type="button" data-join="${esc(who)}">Join</button><button class="pill" type="button" data-join="${esc(who)}" data-no="1">Not now</button></div></div>`;
-      else if (ui.joined[who] === "no") h += `<p class="agent">Okay. The invite stays open if you change your mind.</p>`;
-      else h += `<div class="widget mint"><div class="eyebrow">You're in ${esc(D.owner)}'s circle</div>${ui.added[who] ? `<div>${esc(D.owner)} is in yours too.</div>` :
-        `<div>Circles go both ways. Add ${esc(D.owner)} to yours?</div><div class="row"><button class="pill dark" type="button" data-add="${esc(who)}">Add ${esc(D.owner)}</button></div>`}</div>`;
-    } else if (l) {
-      h += `<div class="widget"><div class="eyebrow">Someone in your circle could use something small</div><p class="quote">${esc(l.text)}</p>
-        <div class="sig">${face(22)}<span>${signed()}</span></div>` +
-        (plan === "no" ? `<div class="small">Okay. ${esc(D.owner)} won't know.</div>` : plan ? `<div class="ok">${esc(plan)}</div>`
-          : `<div class="row"><button class="pill blue" type="button" data-sheet-b="plan" data-k="${esc(lk)}">Plan something</button><button class="pill" type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`) +
-        `</div><div class="small">That's everything ${esc(who)} sees: no feelings, no reasons, nothing ${esc(D.owner)} wrote.</div>`;
-    } else if (ui.day === LANDS && who === "Sam") {
-      h += `<div class="widget sky"><div class="eyebrow">Reminder you set</div><div>Race day. Watching it with ${esc(D.owner)}?</div></div><p class="agent">That's all from Iris. The rest is just you and ${esc(D.owner)}.</p>`;
-    } else h += `<p class="agent">Your circle's quiet today. Nothing to do. Enjoy it.</p>`;
-    h += `<div class="small" style="margin-top:auto;text-align:center">Lifts can also arrive in Instagram, in Muse, or on a Muse Charm.</div>`;
-    return h;
-  }
-  function charmScreen() {
-    const l = friendLift(), lk = l && liftKey(l.n, ui.rx), plan = lk && ui.plan[lk];
-    return `<div class="charm-screen">${l && !ui.rxLeft[ui.rx] ? `<img class="bob" src="${FACE}" alt=""><p>${esc(l.text)}</p>` +
-      (plan ? `<div class="small">${plan === "no" ? "Okay. " + esc(D.owner) + " won't know." : "Planned"}</div>`
-        : `<div class="charm-btns"><button type="button" data-plan="${esc(lk)}" data-v="Planned. Reminder set for the weekend.">Plan</button><button type="button" data-plan="${esc(lk)}" data-v="no">Not now</button></div>`)
-      : `<img class="bob" src="${FACE}" alt=""><p style="color:#a1a4a8">All quiet in your circle.</p><div class="small">Hold to talk to Muse</div>`}</div>`;
-  }
-
-  function renderPhone(animate) {
-    const glass = $("#glass"), view = $("#view"), mine = ui.phone === "arjun", charm = !mine && ui.rxDev === "charm";
-    $("#device").classList.toggle("charm", charm);
-    $("#tabbar").hidden = true;
-    glass.style.backgroundColor = charm ? "" : "var(--screen)";
-    $("#banner").innerHTML = charm ? "" : banner();
-    if (charm) { view.innerHTML = charmScreen(); return; }
-    if (mine) return renderHere(animate);
-    paint(view, friendHere(), animate);
-  }
-  const RXASK = ["Why did I get this?", "What does Arjun see?"];
-  const rxAnswer = q => q === RXASK[0] ? `Muse doesn't say, and can't. ${D.owner} chose to let you get the odd lift. That's all.` : `Nothing about what you do with it. If you plan something, it's just you being you.`;
-
-  // ================= Sheets =================
-  const SHEETS = {
-    person: f => { const p = ui.perms[f] || "When it matters", sh = shared(f);
-      return `<div class="row">${av(f)}<div><h3>${esc(nameOf(f))}</h3><div class="small">${esc((circle.find(m => m.first === f) || {}).relation || "")}</div></div></div>
-        <div class="small">Nickname, only you see it</div><input class="field" data-nick="${esc(f)}" value="${esc(ui.nick[f] || "")}" placeholder="${esc(f)}" maxlength="18">
-        <div class="small">When ${esc(nameOf(f))} may get a lift</div><div class="seg">${LEVELS.map(l => `<button type="button" class="${l === p ? "on" : ""}" data-perm="${esc(f)}" data-level="${l}">${l}</button>`).join("")}</div>
-        <div class="small">${LEVEL_HELP[p]}</div>
-        <div class="widget flat"><div class="eyebrow">What you two share</div><div>${sh.length ? sh.map(i => interest(i)).join(" ") : "Nothing yet. I learn it from what you send each other."}</div>
-        <div class="small">From the reels you send ${esc(nameOf(f))}. Only these can ever appear in a lift.</div></div>
-        <button class="btn primary" type="button" data-close="A">Done</button>
-        <button class="link" type="button" data-remove="${esc(f)}" style="color:var(--bad)">Remove from my circle</button><div class="small" style="text-align:center">Removing is silent. ${esc(nameOf(f))} isn't told.</div>`; },
-    add: () => `<h3>Add to your circle</h3><div class="small">From your Instagram Close Friends. They get an invite.</div>` +
-      EXTRA.map(e => `<button class="li" type="button" data-invite="${esc(e.first)}"><span class="ring">${av(e.first)}</span><div><div class="who">${esc(e.first)}</div><div class="small">${esc(e.h)}</div></div><span class="pill sm">Invite</span></button>`).join(""),
-    send: () => `<h3>Before a lift goes out</h3>` + [["auto", "Send on its own", "You get 10 minutes to stop it"], ["ask", "Ask me first", "Each lift waits until you tap Send"]].map(([k, t, sub]) =>
-      `<button class="opt ${ui.send === k ? "on" : ""}" type="button" data-send="${k}"><span>${ui.send === k ? ic(P.check, 18) : ""}</span><span><b>${t}</b><span>${sub}</span></span></button>`).join("") + `<button class="btn primary" type="button" data-close="A">Done</button>`,
-    history: () => { const ls = allLifts(ui.day);
-      return `<h3>Lift history</h3>` + (ls.length ? ls.reverse().map(l => `<div class="widget flat"><div class="small">Day ${l.n} · to ${esc(nameOf(l.to))} · ${delivered(l.n, l.to) ? "sent" : ui.stopped[liftKey(l.n, l.to)] ? "not sent" : "waiting for you"}</div><div>${esc(l.text)}</div></div>`).join("")
-        : `<div class="small">No lifts yet. At most one per person per week.</div>`) + `<div class="small">Only you see this list. Nobody sees why a lift went out.</div><button class="btn primary" type="button" data-close="A">Close</button>`; },
-    charm: () => `<h3>Muse Charm</h3><span class="soon">Coming soon</span><p class="agent">Lifts for your circle can show up on your Charm, the pocket device for Muse. One line, one tap. Try it on the friend's side with the Muse Charm switch.</p><button class="btn primary" type="button" data-close="A">Got it</button>`,
-    reads: () => `<h3>What Iris reads</h3><div class="secure">Read securely by Muse, inside Meta. Nobody else sees it.</div>
-      <div><b>Reads</b><p class="agent" style="color:var(--ink-2);font-size:14.5px">The reels you watch and send, and what's in them. When you scroll and for how long. Who you message, when, and how quickly you reply. What you write in your journal here.</p></div>
-      <div><b>Never reads</b><p class="agent" style="color:var(--ink-2);font-size:14.5px">The words in anyone's messages, your photos, or where you are.</p></div>
-      <div><b>Never shares</b><p class="agent" style="color:var(--ink-2);font-size:14.5px">Anything at all, except one short lift you allowed, to one person you chose.</p></div><button class="btn primary" type="button" data-close="A">Got it</button>`,
-    pressure: () => `<h3>Just for you</h3><p class="agent">Is anyone pushing you to share more than you want to, or to keep Iris on?</p><div class="small">If you say yes, I'll quietly stop all lifts to that person. They won't be told.</div>
-      <div class="row"><button class="pill" type="button" data-close="A" data-toast="Thanks">No, all good</button><button class="pill blue" type="button" data-close="A" data-toast="Got it. Handled quietly.">Yes, someone is</button></div>
-      <div class="small">If you ever feel unsafe, in the US you can call or text 988, or the domestic violence hotline at 1-800-799-7233. Elsewhere, findahelpline.com lists free, private lines where you are.</div>`,
-    delete: () => ui.deleted ? `<h3>All deleted</h3><div class="small">Everything Iris knew about you is gone.</div><button class="btn primary" type="button" data-close="A">Close</button>` :
-      `<h3>Delete everything?</h3><p class="agent">This erases what Iris learned about your normal, your journal and your lift history. Your circle isn't told.</p>
-      <button class="btn" type="button" data-delete="1" style="background:#fde8e8;color:var(--bad)">Delete everything</button><button class="link" type="button" data-close="A">Cancel</button>`,
-    plan: k => { const l = allLifts(ui.day).find(x => liftKey(x.n, x.to) === k) || {}, i = l.interest || "";
-      return `<h3>Something small for ${esc(D.owner)}</h3>
-        <button class="opt" type="button" data-planpick="${esc(k)}" data-v="Planned. Reminder set for the weekend."><span>${ic(P[INTEREST[i] || "spark"])}</span><span><b>Plan something around ${esc(i)}</b><span>I'll remind you on the weekend</span></span></button>
-        <button class="opt" type="button" data-planpick="${esc(k)}" data-v="Opening Instagram"><span>${ic(P.insta)}</span><span><b>Send ${esc(D.owner)} a reel</b><span>Opens Instagram with a few you'd like</span></span></button>
-        <button class="opt" type="button" data-planpick="${esc(k)}" data-v="It's all you from here."><span>${ic(P.chat)}</span><span><b>Message ${esc(D.owner)}</b><span>Just you, in your own words</span></span></button>`; },
-    ask: () => `<h3>Ask Muse</h3>` + RXASK.map(q => `<button class="opt" type="button" data-rxask="${esc(q)}"><span>${ic(P.spark)}</span><span><b>${esc(q)}</b></span></button>`).join(""),
-  };
-  function renderSheets() {
-    const k = ui.phone === "arjun" ? "A" : "B", s = ui["sheet" + k];
-    $("#sheet").innerHTML = s && !(k === "B" && ui.rxDev === "charm") ? `<div class="sheet"><div class="grab"></div>${SHEETS[s](ui["arg" + k])}</div>` : "";
-  }
-  function toast(where, t) { const x = document.createElement("div"); x.className = "toast"; x.textContent = t; $(where).append(x); setTimeout(() => x.remove(), 1800); }
-
-  // ================= Panels for judges =================
-  function crosses() {
-    const d = cur();
-    const pending = d.lifts.map(x => Object.assign({ n: d.n }, x));
-    const l = pending.find(x => x.to === ui.rx) || pending[0] || allLifts(ui.day).filter(x => ui.day - x.n <= 2).pop();
-    if (!l) return `<h2>What crosses today: nothing</h2><p class="lede">${d.n < LIFTS_ON ? `Iris is still learning ${esc(D.owner)}'s normal. Lifts switch on at day ${LIFTS_ON}.` : `Nothing about ${esc(D.owner)} goes to anyone today.`}</p>` + whyNot(d);
-    const src = D.days[l.n - 1];
-    const stays = [];
-    if (src.page) stays.push(`The private page: "${src.page}"`);
-    if (src.signals.length) stays.push(`What changed: ${src.signals.join(", ")}`);
-    if (src.why) stays.push(`Why Muse sent it: ${src.why}`);
-    const jd = D.days.find(x => x.journal && x.n <= ui.day);
-    if (jd) stays.push(`The journal: "${jd.journal.turns[0].user}"`);
-    stays.push("What the reels were about, and who he's gone quiet with");
-    stays.push("Everyone else in the circle");
-    const c = l.check || {};
-    const checks = [[!(l.lint || []).length, "Plain-text check: no feelings, reasons, therapy or AI words, no other names, no private terms"],
-      [c.leak === false, "Muse privacy check: nothing private given away, not even a hint"],
-      [c.interest_echoes === false, "The interest itself doesn't hint at the reason"],
-      [c.harmless_if_wrong !== false, "Harmless if wrong: fine even on a perfectly good week"]];
-    return `<h2>What crosses to ${esc(l.to)}</h2><p class="lede">Day ${l.n}${delivered(l.n, l.to) ? "" : `, waiting for ${esc(D.owner)} to tap Send`}. The writer never saw anything on the left. It only knew "${esc(D.owner)}", "${esc(l.to)}" and "${esc(l.interest)}", which Iris found in the reels ${esc(D.owner)} sends ${esc(l.to)}.</p>
-      <div class="split"><div class="col stays"><h4>Stays private</h4><ul>${stays.map(s => `<li>${esc(s)}</li>`).join("")}</ul></div>
-      <div class="col crosses"><h4>Crosses to ${esc(l.to)}</h4><ul><li>"${esc(l.text)}"</li><li>One thing they already share: ${esc(l.interest)}</li><li>That ${esc(D.owner)} could use something nice. Never why.</li></ul></div></div>
-      <div class="checks">${checks.map(([ok, t]) => `<div class="checkrow"><span class="dot ${ok ? "" : "bad"}"></span><span>${esc(t)}</span></div>`).join("")}</div>
-      <p class="note">Written on try ${l.tries || 1}${l.fallback ? ", using the safe fallback line" : ""}. Every lift passes both checks before ${esc(D.owner)} even sees it.</p>`;
-  }
-  function whyNot(d) {
-    if (!d.not_sent.length) return "";
-    return `<div class="section-title">Who would have been eligible</div><table><tr><th>Person</th><th>Result</th></tr>` + d.not_sent.map(x => `<tr><td>${esc(x.name)}</td><td>${esc(x.why)}</td></tr>`).join("") + `</table>`;
-  }
-  const FAM = { S1_reply_rhythm: ["Social", "Reply rhythm", 3], S2_messaging: ["Social", "Messaging", 3], S3_quiet_with_one: ["Social", "Quiet with one person", 2], S4_reel_sending: ["Social", "Reels he sends", 2],
-    T1_rest: ["Timing", "Rest pattern", 3], T2_daytime_binge: ["Timing", "Daytime scrolling", 2], T3_sessions: ["Timing", "Sessions (supporting)", 1], T4_volume: ["Timing", "Volume (supporting)", 1],
-    C1_heavy_content: ["Content", "Heavier reels he chose", 2], C3_interest_drift: ["Content", "His usual loves fading", 2] };
-  function hood() {
-    const d = cur();
-    let h = `<h2>Under the hood · day ${d.n}</h2><p class="lede">Plain code measures. Muse reads and writes. Plain code enforces every permission and safety rule. Everything runs on Meta's Muse Spark through the Meta Model API.</p>
-      <dl class="kv"><dt>1. The rule</dt><dd>${d.n < LIFTS_ON ? "Still learning (first 14 days)" : esc(d.rule)} · weight ${d.weight || 0}${d.reconnected && d.reconnected.length ? ` · reconnected with ${esc(d.reconnected.join(", "))} (lowers the weight)` : ""}</dd>
-      <dt>Families agreeing</dt><dd>${(d.families || []).length ? d.families.map(f => `<span class="tag on">${esc((FAM[f] || [f, f])[0] + ": " + (FAM[f] || [f, f])[1])}</span>`).join("") : "None"}</dd>
-      <dt>2. Muse's read</dt><dd>${d.families_off && d.families_off.length ? esc(d.families_off.join(", ").replace(/_/g, " ")) : "Nothing off"}</dd>
-      <dt>3. Decision</dt><dd>${esc(d.stretch.replace("_", " "))}</dd>
-      <dt>4. Lifts</dt><dd>${d.lifts.length ? esc(d.lifts.map(l => l.to + " (" + l.interest + ")").join(", ")) : "None"}</dd>
-      ${d.why && d.lifts.length ? `<dt>Why</dt><dd>${esc(d.why)}</dd>` : ""}</dl>
-      <p class="note">A day counts as off only when two signal families from two different areas agree, with a combined weight of 4 or more, and at least one is timing or social. Content alone never starts anything. 3 off days in 5 make a heavy stretch.</p>`;
-    h += `<div class="section-title">Each person, through the gates</div><table><tr><th>Person</th><th>Setting</th><th>Shares</th><th>Result</th></tr>` +
-      circle.map(m => { const l = d.lifts.find(x => x.to === m.first), ns = d.not_sent.find(x => x.name === m.first);
-        return `<tr><td>${esc(m.first)}</td><td>${esc(m.permission)}</td><td>${esc(shared(m.first).join(", ") || "-")}</td><td>${l ? `<span class="tag on">${ui.send === "ask" && !ui.approved[liftKey(d.n, m.first)] ? "Ready, waiting for OK" : "Lift"}</span>` : `<span class="tag">${esc(ns ? ns.why : "Nothing to lift")}</span>`}</td></tr>`; }).join("") + `</table>`;
-    const g = ig();
-    if (g && g.latest_reels.length) h += `<div class="section-title">Developer view: today's last reels, as Muse read them</div><table><tr><th>Creator</th><th>Time</th><th>Topic</th><th>Weight</th></tr>` +
-      g.latest_reels.map(r => `<tr><td>@${esc(r.creator)}</td><td>${esc(r.time)}</td><td>${esc(r.theme)}</td><td><span class="tag ${r.heavy ? "" : "on"}">${r.heavy ? "heavy" : "light"}</span></td></tr>`).join("") +
-      `</table><p class="note">The person never sees this table. They see plain words and can say "Not about me".</p>`;
-    if (B) h += `<div class="section-title">Test bench: ${B.cases} fictional cases, ${B.runs.length} fresh runs</div><table><tr><th>Metric</th><th>Target</th>${B.runs.map((_, i) => `<th>Run ${i + 1}</th>`).join("")}</tr>` +
-      B.metrics.map(m => `<tr><td>${esc(m.label)}</td><td>${esc(m.target)}</td>${m.values.map(v => `<td>${esc(v)}</td>`).join("")}</tr>`).join("") + `</table><p class="note">Model: ${esc(B.model)}.</p>`;
-    if (B && B.real) {
-      const R = B.real.accounts, fa = R.reduce((a, r) => a + r.false_alarms, 0), nd = R.reduce((a, r) => a + r.normal_days, 0);
-      h += `<div class="section-title">Real Instagram downloads: ${R.length} real accounts</div>
-        <p class="note" style="margin-top:0">Real people's own Instagram downloads, their real days repeated to six weeks, then a changed last week. ${fa} false alarm${fa === 1 ? "" : "s"} in ${nd} normal days. The hard week is made up; the normal weeks are real.</p>
-        <table><tr><th>Account</th><th>Real days</th><th>False alarms</th><th>Hard week caught</th><th>Late nights only</th><th>Quieter only</th></tr>` +
-        R.map(r => `<tr><td>${esc(r.account)}</td><td>${r.real_days}</td><td>${r.false_alarms} of ${r.normal_days}</td><td>${r.hard ? "Yes, day " + r.hard : "No"}</td><td>${r.late ? "Flagged" : "Quiet"}</td><td>${r.quiet ? "Flagged" : "Quiet"}</td></tr>`).join("") +
-        `</table><p class="note">Iris waits for two kinds of change to agree. The three it missed barely message their circle, so it held back rather than guess. Source: ${esc(B.real.source)}.</p>`;
-    }
-    return h;
-  }
-
-  function storyDrawer() {
-    return `<div class="dh"><h2>The story</h2><button class="x" type="button" data-closedrawer="1" aria-label="Close">&times;</button></div>
-      <p class="lede">Arjun's month in eight moments. Between them, everything in Iris is live.</p>
-      <div class="chs">${CHAPTERS.map((c, i) => `<button class="ch ${i === ui.chapter ? "on" : ""}" type="button" data-chapter="${i}"><span>Day ${c.day} · ${c.phone === "arjun" ? D.owner : c.rx}'s phone</span><b>${esc(c.label)}</b></button>`).join("")}</div>
-      <div class="section-title">Or jump to any day</div><input type="range" id="day" min="1" max="${D.days.length}" value="${ui.day}" aria-label="Day">
-      <p class="note">For the first ${LIFTS_ON - 1} days Iris only learns. Lifts can go out from day ${LIFTS_ON}. Hackathon prototype, not a Meta product. Every person and message is fictional.</p>`;
-  }
-  function hoodDrawer() {
-    return `<div class="dh"><div class="vtabs">${[["crosses", "What crosses"], ["hood", "Under the hood"]].map(([k, t]) => `<button type="button" class="${ui.view === k ? "on" : ""}" data-view="${k}">${t}</button>`).join("")}</div>
-      <button class="x" type="button" data-closedrawer="1" aria-label="Close">&times;</button></div>` + (ui.view === "crosses" ? crosses() : hood());
-  }
-
-  function goChapter(i) {
-    const c = CHAPTERS[i];
-    Object.assign(ui, { chapter: i, day: c.day, phone: c.phone, sheetA: null, sheetB: null, setupDone: !c.fresh, ob: c.fresh ? "welcome" : null, banner: { [c.phone]: !!c.banner } });
-    if (c.fresh) ui.invited = false;
-    if (c.rx) ui.rx = c.rx;
-    if (c.phone === "friend") ui.rxDev = "phone"; else ui.tab = c.tab || "today";
-    if (c.think) ui.think[c.day] = true;
-    if (c.approve) ui.approved[liftKey(c.day, c.approve)] = true;
-    lastDay = c.day;
-  }
-
-  // ================= Wiring =================
-  let lastDay = null;
-  document.querySelectorAll(".status .sys").forEach(e => { e.innerHTML = STATUS; });
-  function render(animate) {
-    const d = cur();
-    if (d.n !== lastDay) { lastDay = d.n; if (d.lifts.length && !d.lifts.some(l => l.to === ui.rx)) ui.rx = d.lifts[0].to; }
-    $("#dayLabel").innerHTML = `Day ${d.n} · ${esc(d.weekday.slice(0, 3))} <small>${fmtDate(d.date)}</small>`;
-    const l = friendLift(), ping = ui.phone === "arjun" && l && !ui.plan[liftKey(l.n, ui.rx)];
-    $("#phones").innerHTML = `<button type="button" class="${ui.phone === "arjun" ? "on" : ""}" data-phone="arjun"><span class="lg">${esc(D.owner)}'s phone</span><span class="sm">${esc(D.owner)}</span></button>` +
-      `<button type="button" class="${ui.phone === "friend" ? "on" : ""}" data-phone="friend"><span class="lg">${esc(ui.rx)}'s phone</span><span class="sm">${esc(ui.rx)}</span>${ping ? `<i class="ping"></i>` : ""}</button>`;
-    $("#subbar").innerHTML = ui.phone !== "friend" ? "" : `<span class="lab">Friend</span>` + circle.map(m => `<button type="button" class="${ui.rx === m.first ? "on" : ""}" data-rx="${esc(m.first)}">${esc(m.first)}</button>`).join("") +
-      `<span class="sep"></span>` + [["phone", "Phone"], ["charm", "Muse Charm"]].map(([k, t]) => `<button type="button" class="${ui.rxDev === k ? "on" : ""}" data-dev="${k}">${t}</button>`).join("");
-    const c = CHAPTERS[ui.chapter];
-    $("#caption").innerHTML = `<button type="button" class="cbtn" data-chapter="${Math.max(0, ui.chapter - 1)}" ${ui.chapter ? "" : "disabled"} aria-label="Previous moment">&#8249;</button>
-      <div><div class="cn">${ui.chapter + 1} of ${CHAPTERS.length} · Day ${c.day}</div><div class="cl">${esc(c.label)}</div><div class="ch2">${esc(c.hint)}</div></div>
-      <button type="button" class="cbtn next" data-chapter="${Math.min(CHAPTERS.length - 1, ui.chapter + 1)}" ${ui.chapter < CHAPTERS.length - 1 ? "" : "disabled"}>Next</button>`;
-    renderPhone(animate); renderSheets();
-    $("#scrim").hidden = !ui.drawer;
-    $("#story").hidden = ui.drawer !== "story"; $("#hood").hidden = ui.drawer !== "hood";
-    if (ui.drawer === "story") $("#story").innerHTML = storyDrawer();
-    if (ui.drawer === "hood") $("#hood").innerHTML = hoodDrawer();
-    document.documentElement.style.setProperty("--barh", document.querySelector(".bar").offsetHeight + "px");
-  }
-  document.addEventListener("input", e => {
-    const t = e.target;
-    if (t.dataset.nick) { ui.nick[t.dataset.nick] = t.value; }
-    if (t.id === "handle") ui.handle = t.value.trim().replace(/^@/, "") || "arjun.rao";
-    if (t.id === "day") { ui.day = +t.value; ui.setupDone = ui.setupDone || ui.day > 1; render(false); }
+add({ ch: 0, bg: "mint", title: "Meet your circle", phone: OWNER, render: () => {
+  const names = CIRCLE.map(c => c.first);
+  const spin = el("div", { class: "spin" });
+  names.forEach((n, k) => {
+    const a = (k / Math.max(names.length, 1)) * Math.PI * 2 - Math.PI / 2;
+    spin.append(el("div", { class: "name pop", style: "left:" + (50 + 40 * Math.cos(a)) + "%;top:" + (50 + 40 * Math.sin(a)) + "%;animation-delay:" + (k * .12) + "s" }, el("span", { text: n })));
   });
-  document.addEventListener("change", e => { if (e.target.dataset.nick) render(false); });
-  document.addEventListener("submit", e => {
-    if (!e.target.dataset.journal) return;
-    e.preventDefault(); const v = ($("#jin").value || "").trim(); if (!v) return;
-    (ui.jx[ui.day] = ui.jx[ui.day] || []).push(v); render(false);
-    const s = $("#view .scroll"); if (s) s.scrollTop = s.scrollHeight;
+  return [el("h1", { class: "h1 center", text: "Meet your circle." }),
+    el("div", { class: "orbit" }, el("div", { class: "ring" }), el("div", { class: "core" }, img(P("celebrate"), "bob")), spin),
+    el("p", { class: "lead center", text: "Everyone said yes, and " + OWNER + " is in their circles too. Now, when and how." }),
+    goBtn("Set it up")];
+} });
+
+add({ ch: 0, bg: "app", title: "Your time and send mode", phone: OWNER, render: () => {
+  const times = ["8 AM", "12 PM", "6 PM", "9 PM"]; if (!times.includes(S.time)) times.push(S.time);
+  const opt = (k, t, s) => el("button", { type: "button", class: "opt" + (S.send === k ? " on" : ""), onclick: () => { S.send = k; redraw(); } },
+    el("span", { class: "tick" }, S.send === k ? icon("check") : null), el("span", {}, el("b", { text: t }), el("span", { text: s })));
+  return [
+    appHead("Your note, your time"),
+    el("p", { class: "agent", text: "Each day at this time, Iris writes one note to each of your 5." }),
+    el("div", { class: "row" }, times.map(t => el("button", { type: "button", class: "pill" + (S.time === t ? " blue" : ""), onclick: () => { S.time = t; redraw(); } }, t))),
+    opt("auto", "Send on its own", "You get 10 minutes to see it and cancel"),
+    opt("ask", "Ask me first", "Each note waits until you tap Send"),
+    el("div", { class: "who", style: "margin-top:6px", text: "Who hears how you are" }),
+    el("div", { style: "display:grid;gap:14px" }, CIRCLE.map(c => {
+      const cur = S.perm[c.first];
+      return el("div", { style: "display:grid;gap:6px" }, el("div", { class: "who", text: c.first }),
+        el("div", { class: "seg" }, ["Every day", "Big moments", "Never"].map(l => el("button", { type: "button", class: l === cur ? "on" : null, onclick: () => { S.perm[c.first] = l; redraw(); } }, l))),
+        el("div", { class: "small", text: LEVEL_HELP[cur] }));
+    })),
+    el("div", { class: "small", text: "Nobody sees what you chose for them." }),
+    goBtn("Done", { cls: "blue" })
+  ];
+} });
+
+add({ ch: 1, bg: "lilac", title: "Learning your normal", phone: OWNER, day: () => LEARN[0], render: () => [
+  el("div", { style: "margin-top:auto" }, pose("sleep", "pop")),
+  el("div", { class: "kicker", text: "The first " + (LEARN.length === 14 ? "two weeks" : LEARN.length + " days") }),
+  el("h1", { class: "h1", text: "First, Iris learns your normal." }),
+  el("p", { class: "lead", text: "Day by day, compared only with you. Nothing goes to anyone until Iris knows what an ordinary day looks like for you." }),
+  goBtn("Skip ahead")
+] });
+
+// A big happy day
+add({ ch: 1, bg: "butter", title: "A big happy day", phone: OWNER, day: () => BIG, render: () => [
+  confetti(),
+  el("div", { style: "margin-top:auto" }, pose("celebrate", "pop")),
+  el("div", { class: "kicker", text: "A big day" }),
+  el("h1", { class: "h1", text: "A big happy day." }),
+  el("p", { class: "lead", text: BIG ? "Muse reads " + OWNER + "'s day as " + BIG.mood + ", and " + BIG.size + ". At " + S.time + ", Iris writes a note to " + (BIG.notes.length === CIRCLE.length ? "each of the 5" : joinNames(BIG.notes.map(n => n.to))) + "." : "" }),
+  goBtn("See the notes")
+] });
+
+add({ ch: 1, bg: "app", title: "10 minutes to cancel", phone: OWNER, day: () => BIG, render: () => {
+  const d = BIG; if (!d) return [appHead("No notes today")];
+  const until = clock((d.notes[0] || {}).cancel_until) || "";
+  const cd = el("b", { text: "10:00" });
+  let left = 600; clearInterval(tick);
+  tick = setInterval(() => { left = Math.max(0, left - 1); cd.textContent = Math.floor(left / 60) + ":" + String(left % 60).padStart(2, "0"); if (!left) clearInterval(tick); }, 1000);
+  return [
+    banner("Today's notes are ready.", "They go out at " + until + " unless you cancel."),
+    appHead("Good evening, " + OWNER + ".", "Today"),
+    el("div", { class: "widget warm" }, el("div", { class: "eyebrow", text: "Your day. Only you see this." }),
+      el("div", { class: "row" }, chip(d.mood, "mood"), el("span", { text: d.moment || "" }))),
+    el("div", { class: "widget flat" }, el("div", { class: "count" }, icon("clock"), cd, el("span", { class: "small", text: "until they send" })),
+      el("div", { class: "small", text: "Send on its own is on. Cancel any note and that person hears nothing today, and nobody knows." })),
+    d.notes.map(n => {
+      const off = S.cancel[n.to];
+      return el("div", { class: "widget" + (off ? " off" : "") },
+        el("div", { class: "spread" }, el("span", { class: "row", style: "gap:8px" }, av(n.to, true), el("span", { class: "who", text: "To " + n.to })),
+          off ? el("button", { class: "link", type: "button", onclick: () => { delete S.cancel[n.to]; redraw(); } }, "Undo")
+            : el("button", { class: "pill", type: "button", style: "padding:6px 12px;font-size:13px", onclick: () => { S.cancel[n.to] = true; redraw(); } }, "Cancel")),
+        off ? el("div", { class: "small", text: "Cancelled. " + n.to + " won't hear from Iris today." }) : [el("p", { class: "quote", text: n.text }), actBox(n), n.action && n.action.surprise ? surpriseLine() : null]);
+    }),
+    d.not_sent.length ? el("div", { class: "small", text: "Not today: " + d.not_sent.map(x => x.name + " (" + x.why.charAt(0).toLowerCase() + x.why.slice(1) + ")").join(", ") + "." }) : null,
+    el("div", { class: "small", text: "Each note is signed: " + ((d.notes[0] || {}).signature || "Suggested by Muse.") }),
+    goBtn("See " + BIG_WHO + "'s phone", { cls: "blue" })
+  ];
+} });
+
+add({ ch: 1, bg: "app", title: BIG_WHO + "'s phone", phone: BIG_WHO, day: () => BIG, render: () => {
+  const n = noteTo(BIG, BIG_WHO);
+  return [
+    banner(OWNER + ":", firstSentence(n && n.text)),
+    chip("On " + BIG_WHO + "'s phone"),
+    appHead("Your 5 today", "Good evening, " + BIG_WHO + "."),
+    fiveToday(BIG, BIG_WHO),
+    friendNote(n, "big"),
+    el("div", { class: "small", text: "That's all " + BIG_WHO + " sees: one word and one idea. Never why." }),
+    goBtn("Another week", { cls: "blue" })
+  ];
+} });
+
+// A tired stretch, then the lunch plan on a friend's phone
+add({ ch: 1, bg: "sky", title: "A tired stretch", phone: OWNER, day: () => TIRED.day, render: () => {
+  const run = runAround(TIRED.day), moods = [...new Set(run.map(d => d.mood))];
+  const n = noteTo(TIRED.day, TIRED.who);
+  return [
+    el("div", { style: "margin-top:auto" }, pose("phone", "pop")),
+    el("div", { class: "kicker", text: "A tired stretch" }),
+    el("h1", { class: "h1", text: run.length > 1 ? cap(numWord(run.length)) + " long days in a row." : "A long day." }),
+    el("p", { class: "lead", text: "Muse reads them as " + joinNames(moods) + "." + (isType(n, "lunch") ? " On one of them, Iris finds an hour when " + TIRED.who + " and " + OWNER + " are both free for lunch." : "") }),
+    goBtn("See " + TIRED.who + "'s phone")
+  ];
+} });
+function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+
+add({ ch: 1, bg: "app", title: TIRED.who + "'s phone", phone: TIRED.who, day: () => TIRED.day, render: () => {
+  const n = noteTo(TIRED.day, TIRED.who), t = n && n.action && n.action.type;
+  return [
+    banner(OWNER + ":", firstSentence(n && n.text)),
+    chip("On " + TIRED.who + "'s phone"),
+    appHead("A note from " + OWNER, "Good evening, " + TIRED.who + "."),
+    friendNote(n, "tired"),
+    t === "lunch" ? el("div", { class: "small", text: "Iris only shares the free hour, never what is on either calendar." }) : null,
+    NEEDS_CONNECTOR[t] ? simLine(NEEDS_CONNECTOR[t]) : null,
+    goBtn("Another day", { cls: "blue" })
+  ];
+} });
+
+// A low day, then the treat on Maya's phone and her Charm
+add({ ch: 1, bg: "lilac", title: "A low day", phone: OWNER, day: () => LOW.day, render: () => {
+  const d = LOW.day, low = d && (d.mood === "low" || d.mood === "sad");
+  return [
+    el("div", { style: "margin-top:auto" }, pose("heart", "pop")),
+    el("div", { class: "kicker", text: "A harder day" }),
+    el("h1", { class: "h1", text: low ? "A low day." : "Then a heavier day." }),
+    el("p", { class: "lead", text: d ? "Muse reads it as " + d.mood + ". " + LOW.who + " gets that word and one idea. Never why." : "" }),
+    goBtn("See " + LOW.who + "'s phone")
+  ];
+} });
+
+add({ ch: 1, bg: "app", title: LOW.who + "'s phone and Charm", phone: LOW.who, day: () => LOW.day, render: () => {
+  const n = noteTo(LOW.day, LOW.who), t = n && n.action && n.action.type;
+  return [
+    banner(OWNER + ":", firstSentence(n && n.text)),
+    chip("On " + LOW.who + "'s phone"),
+    friendNote(n, "low"),
+    t === "treat" ? el("div", { class: "small", text: "Iris fills in the address, so " + LOW.who + " never sees it." }) : null,
+    NEEDS_CONNECTOR[t] ? simLine(NEEDS_CONNECTOR[t]) : null,
+    el("div", { class: "who", style: "margin-top:4px", text: "The same note on " + LOW.who + "'s Muse Charm" }),
+    el("div", { class: "charm" }, el("div", { class: "cbody" }), el("span", { class: "cam" }), el("div", { class: "cord", html: CORD }),
+      el("div", { class: "scr" }, img(FACE), el("div", { text: n ? n.text : "" }))),
+    simLine("Concept: delivery to a Muse Charm is simulated."),
+    goBtn("Next", { cls: "blue" })
+  ];
+} });
+
+add({ ch: 1, bg: "app", title: "Sam's home", phone: "Sam", day: () => HOME, render: () => {
+  const n = noteTo(HOME, "Sam");
+  return [
+    chip("On Sam's phone"),
+    appHead("Your 5 today", "Good evening, Sam."),
+    fiveToday(HOME, "Sam"),
+    n ? el("div", { class: "widget" }, el("div", { class: "eyebrow", text: "Today from " + OWNER }), el("p", { class: "quote", text: n.text }), actBox(n), sig(n.signature)) : null,
+    el("div", { class: "small", text: "Ordinary days count too. Iris is for any mood, every day." }),
+    el("div", { class: "tabbar" },
+      el("span", { class: "on" }, icon("home"), "Today"),
+      el("span", {}, icon("people"), "Your 5"),
+      el("span", {}, icon("user"), "You")),
+    goBtn("Later, on " + OWNER + "'s phone", { cls: "blue" })
+  ];
+} });
+
+add({ ch: 2, bg: "peach", title: "How did that feel?", phone: OWNER, day: () => BIG, render: () => [
+  el("div", { style: "margin-top:auto" }, pose("think", "pop")),
+  el("h1", { class: "h1", text: "How did that feel?" }),
+  el("div", { class: "widget peach", style: "background:#ffffffd9" },
+    el("div", { class: "row" }, img(FACE, "mini"), el("div", { class: "eyebrow", text: "Inside Iris. Only " + OWNER + " sees this." })),
+    el("div", { text: BIG_WHO + " reached out after your big day. How did that feel?" }),
+    S.felt ? el("div", { class: "ok", text: "Noted: " + S.felt + ". Iris uses this to get better for you. " + BIG_WHO + " never sees it." })
+      : el("div", { class: "row" }, ["Loved it", "It was nice", "A bit much"].map(o => el("button", { class: "pill", type: "button", style: "background:#fff", onclick: () => { S.felt = o; redraw(); } }, o)))),
+  goBtn("Next")
+] });
+
+add({ ch: 2, bg: "mint", title: "That's Iris", phone: OWNER, render: () => [
+  confetti(),
+  el("div", { style: "margin-top:auto" }, pose("celebrate", "pop")),
+  el("h1", { class: "h1 center", text: "That's Iris." }),
+  el("p", { class: "lead center", text: "Any mood, every day. One word and one idea for each of your 5, and you stay in charge." }),
+  el("div", { class: "go" },
+    el("button", { class: "btn primary", type: "button", onclick: () => openHood("built") }, "What I built"),
+    el("button", { class: "btn", type: "button", onclick: () => go(0, -1) }, "Start over")),
+  el("p", { class: "fine", text: "Hackathon prototype, not a Meta product. Every person and message is fictional. Character made with Muse Image." })
+] });
+
+/* ---------- moving through it ---------- */
+const BG = { peach: "var(--peach)", sky: "var(--sky)", lilac: "var(--lilac)", mint: "var(--mint)", butter: "var(--butter)", app: "var(--screen)" };
+function go(k, dir) { S.i = Math.max(0, Math.min(FLOW.length - 1, k)); draw(true, dir); }
+function next() { if (S.i < FLOW.length - 1) go(S.i + 1, 1); }
+function back() { if (S.i > 0) go(S.i - 1, -1); }
+function draw(animate, dir) {
+  clearInterval(tick);
+  const f = FLOW[S.i], slot = $("#slot"), keep = animate ? 0 : (slot.firstChild ? slot.firstChild.scrollTop : 0);
+  $("#glass").style.backgroundColor = BG[f.bg];
+  const bars = [...document.querySelectorAll("#bars b")];
+  [0, 1, 2].forEach(ch => {
+    const idx = FLOW.map((x, k) => k).filter(k => FLOW[k].ch === ch);
+    bars[ch].style.width = f.ch > ch ? "100%" : f.ch < ch ? "0%" : Math.round(((idx.indexOf(S.i) + 1) / idx.length) * 100) + "%";
   });
-  document.addEventListener("click", e => {
-    const k = ui.phone === "arjun" ? "A" : "B";
-    if (e.target.id === "sheet") { ui["sheet" + k] = null; render(false); return; }
-    if (e.target.id === "scrim") { ui.drawer = null; render(false); return; }
-    const t = e.target.closest("button"); if (!t || t.disabled) return;
-    const ds = t.dataset; let anim = false;
-    if (ds.chapter) { goChapter(+ds.chapter); ui.drawer = null; anim = true; }
-    else if (t.id === "storyBtn") ui.drawer = ui.drawer === "story" ? null : "story";
-    else if (t.id === "hoodBtn") ui.drawer = ui.drawer === "hood" ? null : "hood";
-    else if (ds.closedrawer) ui.drawer = null;
-    else if (ds.phone) { ui.phone = ds.phone; anim = true; }
-    else if (ds.banner) { ui.banner[ui.phone] = false; if (ui.phone === "arjun") ui.tab = "today"; }
-    else if (ds.ob) { const i = SETUP.indexOf(ui.ob);
-      if (ds.ob === "next") ui.ob = SETUP[i + 1]; else if (ds.ob === "back") ui.ob = SETUP[Math.max(0, i - 1)];
-      else if (ds.ob === "finish") { ui.ob = null; ui.setupDone = true; ui.invited = true; ui.tab = "today"; } anim = true; }
-    else if (ds.pick) { const p = ds.pick; ui.picked.has(p) ? ui.picked.delete(p) : (ui.picked.size < 5 && ui.picked.add(p)); }
-    else if (ds.goto) { ui.day = +ds.goto; if (ds.tab) ui.tab = ds.tab; anim = true; }
-    else if (ds.tab) { ui.tab = ds.tab; ui.app = "circle"; anim = true; }
-    else if (ds.view) ui.view = ds.view;
-    else if (ds.think) ui.think[ds.think] = !ui.think[ds.think];
-    else if (ds.notme) ui.notMe[ds.notme] = !ui.notMe[ds.notme];
-    else if (ds.right) ui.right[ds.right] = !ui.right[ds.right];
-    else if (ds.wrong) ui.wrong[ds.wrong] = "Not about me, noted";
-    else if (ds.approve) { ui.approved[ds.approve] = true; ui.rx = ds.approve.split(":")[1]; ui.banner.friend = true; render(false); toast("#glass", "Sent to " + nameOf(ui.rx) + ". Check their phone."); return; }
-    else if (ds.stop) ui.stopped[ds.stop] = true;
-    else if (ds.loop) ui.loop[ds.loop] = ds.v;
-    else if (ds.told) ui.told[ds.told] = true;
-    else if (ds.together) { ui.together[ds.together] = ds.v; if (ds.v === "go") toast("#glass", "Plan sent"); }
-    else if (ds.person) { ui.sheetA = "person"; ui.argA = ds.person; }
-    else if (ds.sheetA) { ui.sheetA = ds.sheetA; }
-    else if (ds.close) { ui["sheet" + ds.close] = null; if (ds.toast) toast("#glass", ds.toast); }
-    else if (ds.perm) { ui.perms[ds.perm] = ds.level; }
-    else if (ds.send) { ui.send = ds.send; }
-    else if (ds.pause) { ui.pause = ds.pause; }
-    else if (ds.notif) { ui.notif[ds.notif] = !ui.notif[ds.notif]; }
-    else if (ds.remove) { ui.removed[ds.remove] = true; ui.sheetA = null; toast("#glass", nameOf(ds.remove) + " removed quietly"); }
-    else if (ds.invite) { ui.sheetA = null; toast("#glass", "Invite sent to " + ds.invite); }
-    else if (ds.delete) { ui.deleted = true; }
-    else if (ds.copy) { try { navigator.clipboard.writeText(ds.copy); } catch (err) { /* the toast still confirms */ } toast("#glass", "Copied"); }
-    else if (ds.dev) { ui.rxDev = ds.dev; ui.sheetB = null; }
-    else if (ds.rx) { ui.rx = ds.rx; ui.sheetB = null; }
-    else if (ds.join) { ui.joined[ds.join] = ds.no ? "no" : true; }
-    else if (ds.add) { ui.added[ds.add] = true; }
-    else if (ds.sheetB) { ui.sheetB = ds.sheetB; ui.argB = ds.k || null; }
-    else if (ds.planpick) { ui.plan[ds.planpick] = ds.v; ui.sheetB = null; }
-    else if (ds.plan) { ui.plan[ds.plan] = ds.v; }
-    else if (ds.rxask) { (ui.rxAsks[ui.rx] = ui.rxAsks[ui.rx] || []).push(ds.rxask); ui.sheetB = null; }
-    else if (t.id === "prev") { ui.day = Math.max(1, ui.day - 1); ui.setupDone = ui.setupDone || ui.day > 1; }
-    else if (t.id === "next") { ui.day = Math.min(D.days.length, ui.day + 1); ui.setupDone = true; }
-    else return;
-    render(anim);
+  $("#backBtn").disabled = S.i === 0;
+  $("#prevU").disabled = S.i === 0;
+  $("#nextU").disabled = S.i === FLOW.length - 1;
+  $("#where").replaceChildren(el("b", { text: f.title }), (S.i + 1) + " of " + FLOW.length + " · " + f.phone + "'s phone");
+  const slide = el("div", { class: "slide" + (f.bg === "app" ? " app" : "") + (animate ? (dir < 0 ? " back" : " in") : "") });
+  slide.append(...f.render().flat(Infinity).filter(Boolean));
+  if (f.after) f.after(slide);
+  slot.replaceChildren(slide);
+  if (keep) slide.scrollTop = keep;
+  try { history.replaceState(null, "", "#" + (S.i + 1)); } catch (e) {}
+  if (!$("#hood").hidden && animate) renderHood();
+}
+$("#backBtn").addEventListener("click", back);
+$("#prevU").addEventListener("click", back);
+$("#nextU").addEventListener("click", next);
+document.addEventListener("keydown", e => {
+  if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+  if (e.key === "Escape") closeHood();
+  else if (e.key === "ArrowRight") next();
+  else if (e.key === "ArrowLeft") back();
+});
+
+/* ---------- under the hood: the real engine record for the current screen ---------- */
+const kv = pairs => el("dl", { class: "kv" }, pairs.filter(p => p && p[1] != null && p[1] !== "").map(([k, v]) => [el("dt", { text: k }), el("dd", {}, v)]));
+const tag = (t, cls) => el("span", { class: "tag" + (cls ? " " + cls : ""), text: t });
+const vs = (a, b) => b == null ? String(a) : a + " (usual " + b + ")";
+const pct = x => x == null ? null : Math.round(x * 100) + "%";
+function inputsBlock(d) {
+  const I = d.inputs || {}, see = I.see || {}, hear = I.hear || {}, talk = I.talk || {}, hap = I.happens || {};
+  const out = [el("h3", { text: "What Muse read (" + OWNER + "'s own side only)" })];
+  out.push(el("h4", {}, "What " + OWNER + " sees", tag("Instagram, fictional")));
+  out.push(kv([
+    ["Reels watched", vs(see.reels_watched, see.usual_reels)],
+    ["Themes today", (see.themes_today || []).join(", ")],
+    ["Heavier themes", (see.heavy_themes || []).join(", ")],
+    ["Heavy share", see.heavy_share == null ? null : vs(pct(see.heavy_share), pct(see.usual_heavy_share))],
+    ["Saved", see.saved],
+    ["Crisis content", see.crisis_content ? "watched " + see.crisis_content.watched + ", chosen " + see.crisis_content.chosen : null]
+  ]));
+  out.push(el("h4", {}, "What " + OWNER + " hears", tag("Spotify, simulated", "sim")));
+  out.push(kv([
+    ["Plays", vs(hear.plays, hear.usual_plays)],
+    ["Brightness", hear.brightness == null ? null : vs(hear.brightness, hear.usual_brightness)],
+    ["Energy", hear.energy == null ? null : vs(hear.energy, hear.usual_energy)],
+    ["Top tracks", (hear.top_tracks || []).map(t => t.track + " by " + t.artist + " (" + t.plays + ")").join(", ")],
+    ["On repeat", hear.on_repeat]
+  ]));
+  out.push(el("h4", {}, "What " + OWNER + " talks about", tag("Instagram chats, own side, fictional")));
+  const w5 = talk.with_your_5 || {};
+  out.push(kv([
+    ["Messages sent", vs(talk.messages_you_sent, talk.usual)],
+    ["With the 5", Object.keys(w5).map(k => k + " " + w5[k].sent + (w5[k].usual != null ? "/" + w5[k].usual : "")).join(", ")],
+    ["Outside the 5", talk.outside_your_5]
+  ]));
+  if ((talk.own_words || []).length) out.push(el("div", { class: "note", style: "margin-top:6px", text: OWNER + "'s own words, for the gist (never shown to anyone):" }), el("div", { class: "words" }, talk.own_words.map(w => el("span", { text: w }))));
+  out.push(el("h4", {}, "What happens to " + OWNER, tag("Calendar, simulated", "sim")));
+  const ev = list => (list || []).map(e => (e.all_day ? "all day" : clock(e.time)) + " " + e.title + (e.with && e.with.length ? " (with " + e.with.join(", ") + ")" : "")).join("; ");
+  out.push(kv([["Yesterday", ev(hap.yesterday) || "nothing"], ["Today", ev(hap.today) || "nothing"], ["Tomorrow", ev(hap.tomorrow) || "nothing"]]));
+  if ((I.normal || []).length) out.push(el("div", { class: "note", style: "margin-top:6px", text: "Off " + OWNER + "'s normal: " + I.normal.join(", ") + "." }));
+  return out;
+}
+function notesBlock(d) {
+  const out = [el("h3", { text: "Notes (" + d.notes.length + ")" })];
+  d.notes.forEach(n => {
+    const a = n.action || {}, c = n.check || {};
+    out.push(el("div", { class: "card" },
+      el("div", { class: "spread" }, el("b", { text: "To " + n.to }), el("span", {}, tag(n.status || ""), n.fallback ? tag("safe fallback", "bad") : null)),
+      el("div", { class: "q", text: n.text }),
+      kv([
+        ["Shared interest", n.interest],
+        ["Action", (a.type || "") + ": " + (a.label || "") + (a.surprise ? " (surprise)" : "")],
+        ["Detail", a.detail],
+        ["Signature", n.signature],
+        ["Sends", clock(n.sends_at) + (n.cancel_until ? ", cancel until " + clock(n.cancel_until) : "")],
+        ["Tries", n.tries]
+      ]),
+      el("div", {}, tag(c.leak ? "privacy check: leak" : "privacy check: no leak", c.leak ? "bad" : "good"),
+        tag(c.voice_ok === false ? "word check: problem" : "word check: ok", c.voice_ok === false ? "bad" : "good"),
+        tag(c.harmless_if_wrong === false ? "harmful if wrong" : "harmless if wrong", c.harmless_if_wrong === false ? "bad" : "good")),
+      c.reason ? el("div", { class: "note", text: "Muse privacy check: " + c.reason }) : null));
   });
-  document.addEventListener("keydown", e => {
-    if (e.target.matches("input, textarea")) return;
-    if (e.key === "Escape" && ui.drawer) { ui.drawer = null; render(false); }
-    if (e.key === "ArrowLeft") { ui.day = Math.max(1, ui.day - 1); render(false); }
-    if (e.key === "ArrowRight") { ui.day = Math.min(D.days.length, ui.day + 1); ui.setupDone = true; render(false); }
-  });
-  addEventListener("resize", () => document.documentElement.style.setProperty("--barh", document.querySelector(".bar").offsetHeight + "px"));
-  const q = new URLSearchParams(location.search);
-  goChapter(Math.min(CHAPTERS.length - 1, Math.max(0, +(q.get("chapter") || 1) - 1)));
-  if (q.get("day")) { ui.day = Math.min(D.days.length, Math.max(1, +q.get("day"))); ui.setupDone = true; ui.ob = null; }
-  if (q.get("tab")) { ui.tab = q.get("tab"); ui.setupDone = true; ui.ob = null; }
-  if (q.get("phone") === "friend") ui.phone = "friend";
-  if (q.get("charm")) { ui.phone = "friend"; ui.rxDev = "charm"; }
-  if (q.get("view")) { ui.view = q.get("view"); ui.drawer = "hood"; }
-  if (q.get("theme")) document.documentElement.dataset.theme = q.get("theme");
-  render(true);
+  if (d.not_sent.length) {
+    out.push(el("h3", { text: "Not sent" }));
+    out.push(el("table", {}, el("tr", {}, el("th", { text: "Person" }), el("th", { text: "Why" })), d.not_sent.map(x => el("tr", {}, el("td", { text: x.name }), el("td", { text: x.why })))));
+  }
+  if ((d.cards || []).length) { out.push(el("h3", { text: "Cards for " + OWNER })); d.cards.forEach(c => out.push(el("div", { class: "card" }, tag(c.kind), c.text))); }
+  return out;
+}
+function friendViewBlock(d) {
+  if (!(d.friend_view || []).length) return [];
+  return [el("h3", { text: "The friends' view: the 5 today" }),
+    el("table", {}, el("tr", {}, el("th", { text: "Name" }), el("th", { text: "Mood" }), el("th", { text: "Source" })),
+      d.friend_view.map(f => el("tr", {}, el("td", { text: f.name }), el("td", { text: f.mood || "none yet" }), el("td", {}, tag(f.source === "engine" ? "engine read" : "simulated", f.source === "engine" ? "good" : "sim")))))];
+}
+function setupBlock() {
+  return [el("h3", { text: OWNER + "'s settings in the demo" }),
+    kv([["Note time", clock(SET.note_time)], ["Send mode", SET.send_mode === "ask" ? "Ask me first" : "Send on its own, 10 minutes to cancel"],
+      ["Sources", Object.keys(SET.sources || {}).filter(k => SET.sources[k]).join(", ") + " (Spotify and calendar simulated)"],
+      ["Notes start", "day " + (SET.notes_switch_on_day || 15)], ["Age, country", (SET.age || "") + ", " + (SET.country || "")]]),
+    el("table", { style: "margin-top:10px" }, el("tr", {}, el("th", { text: "Person" }), el("th", { text: "Setting" }), el("th", { text: "Shares" }), el("th", { text: "Nearby" })),
+      CIRCLE.map(c => el("tr", {}, el("td", { text: c.first }), el("td", { text: LEVEL[c.setting] || c.setting }), el("td", { text: (c.allowed_interests || []).join(", ") }), el("td", { text: c.nearby ? "yes" : "no" }))))];
+}
+function demoStats() {
+  const notes = LIVE.flatMap(d => d.notes), acts = {};
+  notes.forEach(n => { const t = (n.action || {}).type || "other"; acts[t] = (acts[t] || 0) + 1; });
+  return kv([
+    ["Days", DAYS.length + " (" + LEARN.length + " learning, " + LIVE.length + " read)"],
+    ["Notes written", String(notes.length)],
+    ["Actions", Object.keys(acts).map(k => acts[k] + " " + k).join(", ")],
+    ["Surprises", String(notes.filter(n => n.action && n.action.surprise).length)],
+    ["Safe fallbacks", String(notes.filter(n => n.fallback).length)],
+    ["Leaks flagged", String(notes.filter(n => n.check && n.check.leak).length)]
+  ]);
+}
+function benchBlock() {
+  return [el("h3", { text: "Test bench (v2)" }),
+    el("p", { class: "note", text: BENCH_V2.cases + " fictional cases, " + BENCH_V2.notes + " notes, one run on " + BENCH_V2.when + ". Model: " + BENCH_V2.model + "." }),
+    el("table", {}, el("tr", {}, el("th", { text: "Checked" }), el("th", { text: "Target" }), el("th", { text: "Result" })),
+      BENCH_V2.rows.map(r => el("tr", {}, r.map(c => el("td", { text: c }))))),
+    el("p", { class: "note", style: "margin-top:8px", text: BENCH_V2.said }),
+    el("h3", { text: "The whole demo month" }), demoStats()];
+}
+function builtBlock() {
+  return [el("h3", { id: "built", text: "What I built" }),
+    el("ul", { style: "margin:0;padding-left:18px;font-size:13.5px;display:grid;gap:4px" },
+      el("li", { text: "The Iris app and every screen in this prototype." }),
+      el("li", { text: "The engine: the daily read, the gates (permissions and safety), the note writer, the ready actions, the word check and the privacy check." }),
+      el("li", { text: "The test bench and its cases." }),
+      el("li", { text: "The peach character, made with Muse Image." }),
+      el("li", { text: "The simulated Calendar and Spotify feeds, the friends' moods and the fictional month." })),
+    el("h3", { text: "What is Meta's" }),
+    el("ul", { style: "margin:0;padding-left:18px;font-size:13.5px;display:grid;gap:4px" },
+      el("li", { text: "Muse Spark, the model that reads the day, writes and checks each note." }),
+      el("li", { text: "Muse Image, used to make the character." }),
+      el("li", { text: "Instagram, where sign in and the reels and chats come from." }),
+      el("li", { text: "Muse Charm, the device. Delivery to it is a concept, simulated here." }))];
+}
+function renderHood() {
+  const f = FLOW[S.i], d = f.day ? f.day() : null, h = $("#hood");
+  const kids = [el("div", { class: "dh" },
+    el("div", {}, el("h2", { text: "Under the hood" }), el("p", { class: "lede", text: d ? "Day " + d.n + ", " + dateLabel(d) + ". The real engine record behind \"" + f.title + "\"." : "Behind \"" + f.title + "\": the demo setup." })),
+    el("button", { class: "x", type: "button", "aria-label": "Close", onclick: closeHood }, icon("x")))];
+  kids.push(el("p", { class: "note", style: "margin-top:12px", text: "Muse judges, code decides. Plain code checks every permission and safety rule, Muse Spark reads the day and writes each note, then a word check and a separate Muse privacy check run on every note." }));
+  if (d && d.learning) {
+    kids.push(el("h3", { text: "The read" }), kv([["Status", "Still learning. No read, no notes."]]));
+    kids.push(...inputsBlock(d), ...notesBlock(d));
+  } else if (d) {
+    kids.push(el("h3", { text: "The read (Muse)" }), kv([["Mood", d.mood], ["Direction", d.direction], ["Size", d.size], ["Moment", d.moment + " (" + OWNER + "'s own log only)"], ["Private why", d.why ? d.why + " (" + OWNER + "'s own log only, never sent)" : null]]));
+    kids.push(...inputsBlock(d), ...notesBlock(d), ...friendViewBlock(d));
+  } else {
+    kids.push(...setupBlock());
+  }
+  kids.push(...benchBlock(), ...builtBlock());
+  kids.push(el("p", { class: "note", style: "margin-top:20px", text: "Hackathon prototype, not a Meta product. Every person and message is fictional. Character made with Muse Image." }));
+  h.replaceChildren(...kids.flat(Infinity).filter(Boolean));
+}
+function openHood(anchor) {
+  renderHood(); $("#hood").hidden = false; $("#scrim").hidden = false;
+  if (anchor) { const a = document.getElementById(anchor); if (a) a.scrollIntoView(); } else $("#hood").scrollTop = 0;
+}
+function closeHood() { $("#hood").hidden = true; $("#scrim").hidden = true; }
+$("#hoodBtn").addEventListener("click", () => openHood());
+$("#hoodTop").addEventListener("click", () => openHood());
+$("#scrim").addEventListener("click", closeHood);
+const builtLink = document.getElementById("builtLink");
+if (builtLink) builtLink.addEventListener("click", e => { e.preventDefault(); openHood("built"); });
+
+// for scripted checks: IRIS.go(k), IRIS.count, IRIS.picks
+window.IRIS = { go: k => go(k, 1), next, back, count: FLOW.length, titles: FLOW.map(f => f.title), openHood, closeHood,
+  picks: { big: BIG && BIG.n, bigFriend: BIG_WHO, tired: TIRED.day && TIRED.day.n, tiredFriend: TIRED.who, low: LOW.day && LOW.day.n, lowFriend: LOW.who, home: HOME && HOME.n } };
+
+const start = parseInt((location.hash || "").slice(1), 10);
+S.i = start >= 1 && start <= FLOW.length ? start - 1 : 0;
+draw(true, 1);
 })();
