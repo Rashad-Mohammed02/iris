@@ -130,7 +130,7 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .check{width:24px;height:24px;border-radius:50%;border:2px solid var(--fill-2);display:grid;place-items:center;color:#fff}
 .check.on{background:var(--accent);border-color:var(--accent)}
 .check svg.i{width:14px;height:14px;stroke-width:3}
-.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--fill);border-radius:12px;padding:3px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;background:var(--fill);border-radius:12px;padding:3px}
 .seg button{border:0;background:none;font-size:13px;padding:7px 4px;border-radius:9px;color:var(--ink-2)}
 .seg button.on{background:var(--screen);color:var(--ink);font-weight:600;box-shadow:0 1px 3px #0000001f}
 .opt{border:0;text-align:left;background:var(--fill);border-radius:16px;padding:14px;display:grid;grid-template-columns:24px 1fr;gap:8px;width:100%;align-items:start}
@@ -222,3 +222,19 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 /* content fades out as it scrolls up under the status bar and story bars */
 .slide{-webkit-mask-image:linear-gradient(to bottom, transparent 72px, #000 96px);mask-image:linear-gradient(to bottom, transparent 72px, #000 96px)}
 @media (max-width:560px){ .slide{-webkit-mask-image:linear-gradient(to bottom, transparent calc(40px + env(safe-area-inset-top, 0px)), #000 calc(60px + env(safe-area-inset-top, 0px)));mask-image:linear-gradient(to bottom, transparent calc(40px + env(safe-area-inset-top, 0px)), #000 calc(60px + env(safe-area-inset-top, 0px)))} }
+
+/* friend's optional line */
+.compose{display:grid;gap:8px}
+.linebox{width:100%;border:0;background:var(--fill);color:var(--ink);border-radius:12px;padding:10px 12px;font:inherit;font-size:14.5px;resize:none}
+.linebox:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.sentline{background:var(--fill);border-radius:14px;padding:8px 12px;display:grid;gap:2px}
+/* talk to Iris */
+.msgs{display:flex;flex-direction:column;gap:8px}
+.bub{max-width:84%;padding:9px 13px;border-radius:18px;font-size:15px;line-height:1.35}
+.bub.iris{background:var(--fill);align-self:flex-start;border-bottom-left-radius:6px}
+.bub.me{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:6px}
+.piece{align-self:flex-start;display:flex;gap:6px;align-items:center;background:var(--peach);color:var(--peach-ink);border-radius:12px;padding:6px 10px;font-size:13px;font-weight:650}
+.piece svg.i{width:15px;height:15px}
+.qr{display:flex;flex-wrap:wrap;gap:6px;align-self:flex-start}
+.qr button{border:1.5px solid var(--accent);background:none;color:var(--tone-ink);border-radius:99px;padding:6px 11px;font-size:13px;font-weight:650}
+.msgs .page{align-self:stretch;background:var(--mint);border-color:transparent;gap:4px}

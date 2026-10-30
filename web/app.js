@@ -135,9 +135,9 @@ const NUM = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eig
 const numWord = n => NUM[n] || String(n);
 
 /* ---------- state ---------- */
-const S = { i: 0, cancel: {}, done: {}, felt: "", time: clock(SET.note_time || "18:00") || "6 PM", send: SET.send_mode === "ask" ? "ask" : "auto", perm: {}, sources: { see: true, hear: true, talk: true, happens: true } };
-const LEVEL = { every_day: "Every day", big_moments: "Big moments", never: "Never" };
-const LEVEL_HELP = { "Every day": "A note every day at your time, whatever your mood", "Big moments": "Only on days that really stand out, good or hard", "Never": "Never gets a note about you" };
+const S = { i: 0, cancel: {}, done: {}, compose: {}, line: {}, reached: {}, talk: { mood: null, answers: [] }, blocks: { talkiris: true, actions: true, musesend: true, charm: true }, felt: "", time: clock(SET.note_time || "18:00") || "6 PM", send: SET.send_mode === "ask" ? "ask" : "auto", perm: {}, sources: { see: true, hear: true, talk: true, happens: true } };
+const LEVEL = { every_day: "Every day", few_a_week: "Few a week", big_moments: "Big moments", never: "Never" };
+const LEVEL_HELP = { "Every day": "A note every day at your time, whatever your mood", "Few a week": "Up to three a week, bigger days first", "Big moments": "Only on days that really stand out, good or hard", "Never": "Never gets a note about you" };
 CIRCLE.forEach(c => { S.perm[c.first] = LEVEL[c.setting] || "Every day"; });
 let tick = null;
 const redraw = () => draw(false);
@@ -156,22 +156,31 @@ function actBox(n) {
   const a = n.action || {};
   return el("div", { class: "act" }, icon(a.type || "message"), el("div", {}, el("b", { text: a.label || "" }), a.detail ? el("span", { text: a.detail }) : null));
 }
+const WITH_LINE = { song: true, reel: true, treat: true, message: true };   // gestures that can carry a line from the friend
 const surpriseLine = () => el("div", { class: "surprise" }, icon("gift"), el("span", { text: "Make it a surprise. Don't say Iris told you." }));
 
 // The friend's view of one note: mood word, one idea, a ready action. Never why.
 function friendNote(n, key) {
   if (!n) return el("div", { class: "widget flat" }, el("div", { class: "small", text: "No note today." }));
-  const a = n.action || {}, done = S.done[key];
+  const a = n.action || {}, done = S.done[key], line = S.line[key];
+  const send = () => { const t = document.getElementById("line-" + key); S.line[key] = t ? t.value.trim() : ""; S.done[key] = "yes"; delete S.compose[key]; redraw(); };
   return el("div", { class: "widget arrive" },
-    el("div", { class: "spread" }, el("div", { class: "eyebrow", text: "From " + OWNER }), chip(firstSentence(n.text).replace(/^[^,]*,\s*/, "").replace(/[.?!]$/, ""), "mood")),
+    el("div", { class: "spread" }, el("div", { class: "eyebrow", text: "From " + OWNER }), chip(n.shown || firstSentence(n.text).replace(/^[^,]*,\s*/, "").replace(/[.?!]$/, ""), "mood")),
     el("p", { class: "quote", text: n.text }),
     actBox(n),
     a.surprise ? surpriseLine() : null,
-    done ? el("div", { class: "ok", text: done === "no" ? "Okay. " + OWNER + " won't know." : done === "muse" ? "Muse is ordering it. You never see the address." : (ACT_DONE[a.type] || "Done.") + (a.surprise ? " " + OWNER + " won't know Iris suggested it." : "") })
+    done ? [el("div", { class: "ok", text: done === "no" ? "Okay. " + OWNER + " won't know." : done === "muse" ? "Muse is ordering it. You never see the address." : (ACT_DONE[a.type] || "Done.") + (line ? " Your line went with it." : "") + (a.surprise ? " " + OWNER + " won't know Iris suggested it." : "") }),
+        line ? el("div", { class: "sentline" }, el("span", { class: "small", text: "Your line" }), el("div", { text: line })) : null]
+      : S.compose[key] ? el("div", { class: "compose" },
+        el("label", { class: "small", for: "line-" + key, text: "Add a line, if you want. " + OWNER + " sees it with what you send." }),
+        el("textarea", { id: "line-" + key, class: "linebox", rows: "2", placeholder: "thought of you" }),
+        el("div", { class: "row" },
+          el("button", { class: "pill blue", type: "button", onclick: send }, "Send"),
+          el("button", { class: "pill", type: "button", onclick: () => { S.line[key] = ""; S.done[key] = "yes"; delete S.compose[key]; redraw(); } }, "Send without a line")))
       : el("div", { class: "row" },
-        el("button", { class: "pill blue", type: "button", onclick: () => { S.done[key] = "yes"; redraw(); } }, ACT_BTN[a.type] || "Do it"),
+        el("button", { class: "pill blue", type: "button", onclick: () => { if (WITH_LINE[a.type]) S.compose[key] = true; else S.done[key] = "yes"; redraw(); } }, ACT_BTN[a.type] || "Do it"),
         // A check-in can also hand off to Muse, which orders something small. Iris itself never orders or delivers.
-        a.type === "treat" ? el("button", { class: "pill", type: "button", onclick: () => { S.done[key] = "muse"; redraw(); } }, "Have Muse send something") : null,
+        a.type === "treat" && S.blocks.musesend ? el("button", { class: "pill", type: "button", onclick: () => { S.done[key] = "muse"; redraw(); } }, "Have Muse send something") : null,
         el("button", { class: "pill", type: "button", onclick: () => { S.done[key] = "no"; redraw(); } }, "Not now")),
     sig(n.signature));
 }
@@ -220,7 +229,7 @@ add({ ch: 0, bg: "app", title: "What Iris reads", phone: OWNER, render: () => {
   ];
   return [
     appHead("Your day, in four parts", "What Iris reads"),
-    el("p", { class: "agent", text: "How your day goes shapes how you feel. Iris reads it so your 5 can know, in one word." }),
+    el("p", { class: "agent", text: "How your day goes shapes how you feel. Iris reads it so your 5 can know, in a few words." }),
     el("div", { class: "widget flat", style: "gap:0" }, rows.map(([k, ic, t, s]) => el("div", { class: "readrow" },
       el("span", { class: "ri" }, icon(ic)),
       el("div", { class: "spread", style: "align-items:flex-start" }, el("div", {}, el("b", { text: t }), el("span", { text: s })),
@@ -268,13 +277,41 @@ add({ ch: 0, bg: "app", title: "Your time and send mode", phone: OWNER, render: 
     el("div", { style: "display:grid;gap:14px" }, CIRCLE.map(c => {
       const cur = S.perm[c.first];
       return el("div", { style: "display:grid;gap:6px" }, el("div", { class: "who", text: c.first }),
-        el("div", { class: "seg" }, ["Every day", "Big moments", "Never"].map(l => el("button", { type: "button", class: l === cur ? "on" : null, onclick: () => { S.perm[c.first] = l; redraw(); } }, l))),
+        el("div", { class: "seg" }, Object.values(LEVEL).map(l => el("button", { type: "button", class: l === cur ? "on" : null, onclick: () => { S.perm[c.first] = l; redraw(); } }, l))),
         el("div", { class: "small", text: LEVEL_HELP[cur] }));
     })),
     el("div", { class: "small", text: "Nobody sees what you chose for them." }),
     goBtn("Done", { cls: "blue" })
   ];
 } });
+
+// Iris is modular: one core that always runs, and blocks you switch on or off.
+const BLOCKS = [
+  ["see", "eye", "Reels", "What you watch, save and send", "source"],
+  ["talk", "talk", "Chats", "Your side of your chats, never anyone else's words", "source"],
+  ["hear", "hear", "Music", "What you play on Spotify", "source"],
+  ["happens", "cal", "Calendar", "Only if you use one. Plans in your chats count too.", "source"],
+  ["talkiris", "message", "Talk to Iris", "A short chat about your day. Only you see it.", "block"],
+  ["actions", "song", "Ready actions", "A song, a reel, lunch or two seats, ready for your friend", "block"],
+  ["musesend", "treat", "Muse sends something", "Your friend can have Muse send something small", "block"],
+  ["charm", "info", "Muse Charm", "Your note on your friend's Charm too", "block"]
+];
+const blockOn = k => (BLOCKS.find(b => b[0] === k) || [])[4] === "source" ? S.sources[k] : S.blocks[k];
+add({ ch: 0, bg: "app", title: "Your blocks", phone: OWNER, render: () => [
+  appHead("Your Iris, your blocks", "Settings"),
+  el("p", { class: "agent", text: "The core always runs. Everything else is a block you switch on or off, any time." }),
+  el("div", { class: "widget warm", style: "gap:4px" }, el("div", { class: "eyebrow", text: "Always on" }),
+    el("b", { text: "Read your day, and a note to your 5" }),
+    el("span", { class: "small", text: "A few words about how your day is going and one idea. Never why." })),
+  el("div", { class: "widget flat", style: "gap:0" }, BLOCKS.map(([k, ic, t, sub, kind]) => el("div", { class: "readrow" },
+    el("span", { class: "ri" }, icon(ic)),
+    el("div", { class: "spread", style: "align-items:flex-start" }, el("div", {}, el("b", { text: t }), el("span", { text: sub })),
+      el("button", { type: "button", class: "pill" + (blockOn(k) ? " dark" : ""), style: "font-size:12px;padding:5px 11px;flex:none", "aria-pressed": blockOn(k) ? "true" : "false",
+        onclick: () => { if (kind === "source") S.sources[k] = !S.sources[k]; else S.blocks[k] = !S.blocks[k]; redraw(); } }, blockOn(k) ? "On" : "Off"))))),
+  el("div", { class: "small", text: "Switch a part off and Iris reads you from the rest." }),
+  simLine("Calendar, Spotify, Muse sending and the Charm are simulated here."),
+  goBtn("Done", { cls: "blue" })
+] });
 
 add({ ch: 1, bg: "lilac", title: "Learning your normal", phone: OWNER, day: () => LEARN[0], render: () => [
   el("div", { style: "margin-top:auto" }, pose("sleep", "pop")),
@@ -290,7 +327,7 @@ add({ ch: 1, bg: "butter", title: "A big happy day", phone: OWNER, day: () => BI
   el("div", { style: "margin-top:auto" }, pose("celebrate", "pop")),
   el("div", { class: "kicker", text: "A big day" }),
   el("h1", { class: "h1", text: "A big happy day." }),
-  el("p", { class: "lead", text: BIG ? "Muse reads " + OWNER + "'s day as " + BIG.mood + ", and " + BIG.size + ". At " + S.time + ", Iris writes a note to " + (BIG.notes.length === CIRCLE.length ? "each of the 5" : joinNames(BIG.notes.map(n => n.to))) + "." : "" }),
+  el("p", { class: "lead", text: BIG ? "Muse reads " + OWNER + "'s day as " + BIG.mood + ", and " + BIG.size + ". His 5 hear " + (BIG.poke || BIG.mood) + ". At " + S.time + ", Iris writes a note to " + (BIG.notes.length === CIRCLE.length ? "each of the 5" : joinNames(BIG.notes.map(n => n.to))) + "." : "" }),
   goBtn("See the notes")
 ] });
 
@@ -304,7 +341,8 @@ add({ ch: 1, bg: "app", title: "10 minutes to cancel", phone: OWNER, day: () => 
     banner("Today's notes are ready.", "They go out at " + until + " unless you cancel."),
     appHead("Good evening, " + OWNER + ".", "Today"),
     el("div", { class: "widget warm" }, el("div", { class: "eyebrow", text: "Your day. Only you see this." }),
-      el("div", { class: "row" }, chip(d.mood, "mood"), el("span", { text: d.moment || "" }))),
+      el("div", { class: "row" }, chip(d.mood, "mood"), el("span", { text: d.moment || "" })),
+      d.poke ? el("div", { class: "small", text: "Your 5 hear: " + d.poke + "." }) : null),
     el("div", { class: "widget flat" }, el("div", { class: "count" }, icon("clock"), cd, el("span", { class: "small", text: "until they send" })),
       el("div", { class: "small", text: "Send on its own is on. Cancel any note and that person hears nothing today, and nobody knows." })),
     d.notes.map(n => {
@@ -329,7 +367,7 @@ add({ ch: 1, bg: "app", title: BIG_WHO + "'s phone", phone: BIG_WHO, day: () => 
     appHead("Your 5 today", "Good evening, " + BIG_WHO + "."),
     fiveToday(BIG, BIG_WHO),
     friendNote(n, "big"),
-    el("div", { class: "small", text: "That's all " + BIG_WHO + " sees: one word and one idea. Never why." }),
+    el("div", { class: "small", text: "That's all " + BIG_WHO + " sees: a few words and one idea. Never why." }),
     goBtn("Another week", { cls: "blue" })
   ];
 } });
@@ -357,6 +395,72 @@ add({ ch: 1, bg: "app", title: TIRED.who + "'s phone", phone: TIRED.who, day: ()
     friendNote(n, "tired"),
     t === "lunch" ? el("div", { class: "small", text: "Iris only shares the free hour, never what is on either calendar." }) : null,
     NEEDS_CONNECTOR[t] ? simLine(NEEDS_CONNECTOR[t]) : null,
+    goBtn("Later, on " + OWNER + "'s phone", { cls: "blue" })
+  ];
+} });
+
+// Talk to Iris: an optional chat for the person only. It guesses, asks about up to three real moments of the
+// day, then sums up a private page. Scripted from the engine's day record; nothing here reaches anyone.
+const ASK = {
+  exam: { tomorrow: ["Exam tomorrow", "Exam tomorrow. How are you feeling about it?", ["Ready", "Nervous", "Don't want to think about it"]],
+          today: ["Exam today", "Exam today. How did it go?", ["Went well", "Not sure", "Glad it's over"]] },
+  deadline: { tomorrow: ["A deadline tomorrow", "A deadline tomorrow. How's it looking?", ["Nearly there", "A lot left", "It'll be fine"]],
+              today: ["A deadline today", "Deadline day. Did it get done?", ["Done", "Almost", "Pushed it"]] },
+  trip: { tomorrow: ["A trip tomorrow", "Off somewhere tomorrow. Looking forward to it?", ["Can't wait", "Need it", "A bit tired for it"]],
+          today: ["A trip today", "Travel day. How's it going?", ["Good", "Long", "Glad to be away"]] },
+  study: { tomorrow: ["Studying tomorrow", "More studying tomorrow. How's it going?", ["Getting there", "A lot left", "Need a break"]],
+           today: ["Study day", "A study day. How's it going?", ["Getting there", "A lot left", "Need a break"]] },
+  show: { tomorrow: ["A show tomorrow", "A show tomorrow. Excited?", ["Very", "A bit", "Might skip it"]],
+          today: ["A show today", "A show today. Excited?", ["Very", "A bit", "Might skip it"]] }
+};
+function dayPieces(d) {
+  const I = (d && d.inputs) || {}, hap = I.happens || {}, out = [];
+  const evs = [].concat((hap.today || []).map(e => [e, "today"]), (hap.tomorrow || []).map(e => [e, "tomorrow"])).filter(([e]) => e.status !== "cancelled");
+  const ORDER = ["exam", "deadline", "trip", "show", "study"];
+  const big = evs.filter(([e]) => ASK[e.kind]).sort((x, y) => ORDER.indexOf(x[0].kind) - ORDER.indexOf(y[0].kind))[0];
+  if (big) { const [lab, q, a] = ASK[big[0].kind][big[1]]; out.push({ icon: "cal", lab, q, a }); }
+  const soc = evs.find(([e]) => e.kind === "social" && (e.with || []).some(w => CIRCLE.some(c => c.first === w)));
+  if (soc) { const who = soc[0].with.find(w => CIRCLE.some(c => c.first === w)); out.push({ icon: "people", lab: "Plans with " + who, q: "You've got plans with " + who + ". Looking forward to it?", a: ["Yes", "Need it", "Might skip"] }); }
+  if ((I.hear || {}).on_repeat) out.push({ icon: "song", lab: "One song on repeat", q: "You kept coming back to one song today. What was it doing for you?", a: ["Calming me down", "Keeping me going", "Just a good song"] });
+  const w5 = (I.talk || {}).with_your_5 || {}, top = Object.keys(w5).filter(k => w5[k].reels_sent > 0).sort((x, y) => w5[y].reels_sent - w5[x].reels_sent)[0];
+  if (top) out.push({ icon: "reel", lab: "Reels to " + top, q: "You sent " + top + " a few reels. Anything good?", a: ["Made me laugh", "Our usual", "Just passing time"] });
+  return out.slice(0, 3);
+}
+const TALK_FIX = { "More stressed": "stressed", "Actually okay": "okay", "A bit low": "low" };
+add({ ch: 1, bg: "app", title: "Talk to Iris", phone: OWNER, day: () => TIRED.day, render: () => {
+  const d = TIRED.day; if (!d) return [appHead("Talk to Iris")];
+  if (!S.blocks.talkiris) return [appHead("Talk to Iris", "Off"), el("p", { class: "agent", text: "Talk to Iris is switched off in your blocks. Iris still reads your day and writes your notes." }), goBtn("Next", { cls: "blue" })];
+  const T = S.talk, pieces = dayPieces(d), long = runAround(d).length > 1;
+  const msgs = [];
+  const iris = t => msgs.push(el("div", { class: "bub iris", text: t }));
+  const me = t => msgs.push(el("div", { class: "bub me", text: t }));
+  const qr = (opts, pick) => msgs.push(el("div", { class: "qr" }, opts.map(o => el("button", { type: "button", onclick: () => { pick(o); redraw(); } }, o))));
+  iris((long ? "Looks like a long week. " : "") + "I'd say today felt " + d.mood + ". Close?");
+  if (!T.mood) qr(["Yeah, " + d.mood, "More stressed", "Actually okay", "A bit low"].filter((o, k) => k === 0 || TALK_FIX[o] !== d.mood), o => { T.mood = o; });
+  else {
+    me(T.mood);
+    const fixed = TALK_FIX[T.mood];
+    iris(fixed ? "Thanks for telling me. " + cap(fixed) + " it is. I'll remember that for tomorrow's read." : "Thought so.");
+    pieces.forEach((p, k) => {
+      if (k > T.answers.length) return;
+      msgs.push(el("div", { class: "piece" }, icon(p.icon), el("span", { text: p.lab })));
+      iris(p.q);
+      if (T.answers[k] == null) qr(p.a, o => { T.answers[k] = o; });
+      else me(T.answers[k]);
+    });
+    if (T.answers.length >= pieces.length) {
+      const mood = fixed || d.mood;
+      msgs.push(el("div", { class: "widget flat page" }, el("div", { class: "eyebrow", text: "Today's page. Only you see it." }),
+        el("div", { text: cap(mood) + "." + pieces.map((p, k) => " " + p.lab + ": " + T.answers[k].toLowerCase() + ".").join("") }),
+        el("div", { class: "small", text: "Your 5 only hear: " + OWNER + ", " + (d.poke || mood) + "." })));
+      iris("That's today. Anything else, just tell me.");
+    }
+  }
+  return [
+    el("div", { class: "row", style: "gap:10px" }, img(FACE, "mini"), el("div", {}, el("b", { text: "Iris" }), el("div", { class: "small", text: "Only you see this chat" }))),
+    el("div", { class: "msgs" }, msgs),
+    el("div", { class: "row", style: "justify-content:space-between" }, el("button", { class: "link", type: "button", onclick: () => { S.talk = { mood: null, answers: [] }; redraw(); } }, "Start over"),
+      el("span", { class: "small", text: "Optional. Skip it any day." })),
     goBtn("Another day", { cls: "blue" })
   ];
 } });
@@ -368,8 +472,28 @@ add({ ch: 1, bg: "lilac", title: "A low day", phone: OWNER, day: () => LOW.day, 
     el("div", { style: "margin-top:auto" }, pose("heart", "pop")),
     el("div", { class: "kicker", text: "A harder day" }),
     el("h1", { class: "h1", text: low ? "A low day." : "Then a heavier day." }),
-    el("p", { class: "lead", text: d ? "Muse reads it as " + d.mood + ". " + LOW.who + " gets that word and one idea. Never why." : "" }),
-    goBtn("See " + LOW.who + "'s phone")
+    el("p", { class: "lead", text: d ? "Muse reads it as " + d.mood + ". " + LOW.who + " only hears " + (d.poke || d.mood) + ", and one idea. Never why." : "" }),
+    goBtn("Next")
+  ];
+} });
+
+// On a hard day Iris also talks to the person: no rescue, just less overthinking between the thought and the action.
+add({ ch: 1, bg: "app", title: "For " + OWNER, phone: OWNER, day: () => LOW.day, render: () => {
+  const d = LOW.day, crisis = d && (d.cards || []).some(c => /crisis/.test(c.kind));
+  if (crisis) return [appHead("For you"), el("div", { class: "widget warm", text: (d.cards[0] || {}).text || "" }), goBtn("Next", { cls: "blue" })];
+  const picked = CIRCLE.find(c => S.reached[c.first]);
+  return [
+    banner("A note for you.", "Only you see this."),
+    appHead("Hey, " + OWNER + ".", "Only you see this"),
+    el("div", { class: "widget peach", style: "gap:10px" },
+      el("div", { class: "row" }, img(FACE, "mini"), el("b", { text: "Iris" })),
+      el("p", { class: "quote", text: "It's okay. They're your people. If you want, you can reach out." })),
+    picked ? el("div", { class: "ok", text: "Chat with " + picked.first + " opened. Say as much or as little as you like." })
+      : el("div", { style: "display:grid;gap:8px" }, CIRCLE.slice(0, 5).map(c => el("button", { class: "li", type: "button", onclick: () => { S.reached[c.first] = true; redraw(); } },
+        av(c.first), el("div", { class: "who", text: "Message " + c.first }), icon("message")))),
+    el("div", { class: "small", text: "No pressure. Your notes to your 5 go out either way, and they never say why." }),
+    simLine("Opening the chat is simulated here. On a crisis day, Iris shows a help line instead and nothing goes out."),
+    goBtn("See " + LOW.who + "'s phone", { cls: "blue" })
   ];
 } });
 
@@ -381,10 +505,10 @@ add({ ch: 1, bg: "app", title: LOW.who + "'s phone and Charm", phone: LOW.who, d
     friendNote(n, "low"),
     t === "treat" ? simLine("Concept: Muse ordering a treat is simulated here. Muse fills in the address, so " + LOW.who + " never sees it.") : null,
     NEEDS_CONNECTOR[t] ? simLine(NEEDS_CONNECTOR[t]) : null,
-    el("div", { class: "who", style: "margin-top:4px", text: "The same note on " + LOW.who + "'s Muse Charm" }),
-    el("div", { class: "charm" }, el("div", { class: "cbody" }), el("span", { class: "cam" }), el("div", { class: "cord", html: CORD }),
-      el("div", { class: "scr" }, img(FACE), el("div", { text: n ? n.text : "" }))),
-    simLine("Concept: delivery to a Muse Charm is simulated."),
+    S.blocks.charm ? [el("div", { class: "who", style: "margin-top:4px", text: "The same note on " + LOW.who + "'s Muse Charm" }),
+      el("div", { class: "charm" }, el("div", { class: "cbody" }), el("span", { class: "cam" }), el("div", { class: "cord", html: CORD }),
+        el("div", { class: "scr" }, img(FACE), el("div", { text: n ? n.text : "" }))),
+      simLine("Concept: delivery to a Muse Charm is simulated.")] : null,
     goBtn("Next", { cls: "blue" })
   ];
 } });
@@ -401,7 +525,24 @@ add({ ch: 1, bg: "app", title: "Sam's home", phone: "Sam", day: () => HOME, rend
       el("span", { class: "on" }, icon("home"), "Today"),
       el("span", {}, icon("people"), "Your 5"),
       el("span", {}, icon("user"), "You")),
-    goBtn("Later, on " + OWNER + "'s phone", { cls: "blue" })
+    goBtn("Next", { cls: "blue" })
+  ];
+} });
+
+// The note grows with you: the family of a feeling first, the exact word only once Iris has earned it.
+const SPEC = LIVE.find(d => d.poke_level === "specific" && d.notes.length) || null;
+const EARLY = LIVE.find(d => d.poke_level === "family" && d.notes.length && (!SPEC || d.direction === SPEC.direction)) || LIVE.find(d => d.notes.length) || null;
+const sameFriend = SPEC && EARLY ? (SPEC.notes.find(n => noteTo(EARLY, n.to)) || SPEC.notes[0]).to : null;
+add({ ch: 2, bg: "sky", title: "It learns you", phone: OWNER, day: () => SPEC || EARLY, render: () => {
+  const e = EARLY && noteTo(EARLY, sameFriend || (EARLY.notes[0] || {}).to), l = SPEC && noteTo(SPEC, sameFriend);
+  return [
+    el("div", { class: "kicker", text: "Over time" }),
+    el("h1", { class: "h1", text: "The note grows with you." }),
+    el("p", { class: "lead", text: "At first Iris only says the family a feeling belongs to. Once it knows your normal, and two kinds of signs agree, it can say a little more. Never why." }),
+    e ? el("div", { class: "widget", style: "gap:6px" }, el("div", { class: "eyebrow", text: "In the first weeks" }), el("p", { class: "quote", text: e.text })) : null,
+    l ? el("div", { class: "widget", style: "gap:6px" }, el("div", { class: "eyebrow", text: "A month in, when the signs agree" }), el("p", { class: "quote", text: l.text }))
+      : el("div", { class: "small", text: "In this month, the exact word didn't show yet." }),
+    goBtn("Next")
   ];
 } });
 
@@ -420,7 +561,7 @@ add({ ch: 2, bg: "mint", title: "That's Iris", phone: OWNER, render: () => [
   confetti(),
   el("div", { style: "margin-top:auto" }, pose("celebrate", "pop")),
   el("h1", { class: "h1 center", text: "That's Iris." }),
-  el("p", { class: "lead center", text: "Any mood, every day. One word and one idea for each of your 5, and you stay in charge." }),
+  el("p", { class: "lead center", text: "Any mood, every day. A few words and one idea for each of your 5, and you stay in charge." }),
   el("div", { class: "go" },
     el("button", { class: "btn primary", type: "button", onclick: () => openHood("built") }, "What I built"),
     el("button", { class: "btn", type: "button", onclick: () => go(0, -1) }, "Start over")),
@@ -510,6 +651,7 @@ function notesBlock(d) {
       el("div", { class: "spread" }, el("b", { text: "To " + n.to }), el("span", {}, tag(n.status || ""), n.fallback ? tag("safe fallback", "bad") : null)),
       el("div", { class: "q", text: n.text }),
       kv([
+        ["Said", n.shown ? n.shown + " (" + (n.level === "specific" ? "exact word" : "family") + ")" : null],
         ["Shared interest", n.interest],
         ["Action", (a.type || "") + ": " + (a.label || "") + (a.surprise ? " (surprise)" : "")],
         ["Detail", a.detail],
@@ -588,7 +730,7 @@ function renderHood() {
     kids.push(el("h3", { text: "The read" }), kv([["Status", "Still learning. No read, no notes."]]));
     kids.push(...inputsBlock(d), ...notesBlock(d));
   } else if (d) {
-    kids.push(el("h3", { text: "The read (Muse)" }), kv([["Mood", d.mood], ["Direction", d.direction], ["Size", d.size], ["Moment", d.moment + " (" + OWNER + "'s own log only)"], ["Private why", d.why ? d.why + " (" + OWNER + "'s own log only, never sent)" : null]]));
+    kids.push(el("h3", { text: "The read (Muse)" }), kv([["Mood", d.mood], ["What the 5 hear", d.poke ? d.poke + " (" + (d.poke_level === "specific" ? "the exact word, earned" : "the family") + ")" : null], ["Direction", d.direction], ["Size", d.size], ["Moment", d.moment + " (" + OWNER + "'s own log only)"], ["Private why", d.why ? d.why + " (" + OWNER + "'s own log only, never sent)" : null]]));
     kids.push(...inputsBlock(d), ...notesBlock(d), ...friendViewBlock(d));
   } else {
     kids.push(...setupBlock());
