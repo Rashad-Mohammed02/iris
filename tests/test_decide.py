@@ -135,6 +135,36 @@ def test_sources_switched_off_never_reach_muse():
     assert "hear" not in got and "happens" not in got and "talk" in got
 
 
+def test_poke_family_then_specific():
+    c = [m("A")]
+    out = run(sit(c, use_day=20), mood="tired")
+    assert out["poke"] == "under the weather" and out["poke_level"] == "family"
+    assert run(sit(c, use_day=20), mood="stressed")["poke"] == "a lot on"
+    assert run(sit(c, use_day=20), mood="proud")["poke"] == "a good day"
+    assert run(sit(c, use_day=20), mood="calm")["poke"] == "an easy day"
+    s = sit(c, use_day=40)
+    assert run(s, mood="tired")["poke_level"] == "family"            # history alone is not enough
+    s["agreeing_families"] = 2
+    out = run(s, mood="tired")
+    assert out["poke"] == "tired" and out["poke_level"] == "specific" and out["notes"][0]["level"] == "specific"
+    s = sit(c, use_day=28)
+    s["agreeing_families"] = 3
+    assert run(s, mood="tired")["poke_level"] == "family"            # agreement alone is not enough
+
+
+def test_few_a_week():
+    c = [m("F", "few_a_week")]
+    s = sit(c)
+    assert to(run(s)) == ["F"]
+    s["recent_sends"] = {"F": ["2026-10-18", "2026-10-19"]}
+    assert to(run(s)) == []                                           # an ordinary day fills only the first 2
+    assert to(run(s, size="notable")) == ["F"]                        # a bigger day gets the room
+    s["recent_sends"] = {"F": ["2026-10-14", "2026-10-17", "2026-10-18", "2026-10-19"]}
+    assert to(run(s, size="big")) == []                               # at most 3 in any 7 days
+    s["recent_sends"] = {"F": ["2026-10-10", "2026-10-12", "2026-10-13"]}
+    assert to(run(s)) == ["F"]                                        # older sends fall out of the week
+
+
 if __name__ == "__main__":
     test_settings()
     test_mutual_adults_pause_learning()
@@ -144,4 +174,6 @@ if __name__ == "__main__":
     test_never_named_to_muse()
     test_send_mode_time_and_signature()
     test_sources_switched_off_never_reach_muse()
+    test_poke_family_then_specific()
+    test_few_a_week()
     print("decide tests passed")

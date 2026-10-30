@@ -1,8 +1,9 @@
 """Write one note for one friend, then prove it leaks nothing.
 
-The note is minimal: the person's name, how they feel today in a word or two,
-and a short nudge to connect with one idea ("Arjun, proud day. A song to keep it
-going?"). The nudge never repeats the name and never reads like a button label. The writer is blind on purpose: it
+The note is minimal: the person's name, the family their day belongs to
+("a good day", "under the weather"; the exact word only once Iris has earned it,
+see engine/decide.py), and a short nudge to connect with one idea ("Arjun, a good
+day. A song to keep it going?"). The nudge never repeats the name and never reads like a button label. The writer is blind on purpose: it
 only ever sees the person's first name, the friend's relation, the mood word,
 one shared interest and the action type. Not even the moment behind the mood. It cannot leak what it never saw. Two
 checks still run on every note: the plain-text word check (engine/voice.py)
@@ -46,6 +47,11 @@ CHECK_SCHEMA = {
 
 # Used only if every written option fails the checks twice. Safe by construction.
 FALLBACK = "{name}, {mood} today. Maybe a little {interest} plan this week?"
+
+
+def says(text, shown):
+    """The note must carry the phrase it was given, so a family never turns into an exact feeling."""
+    return shown.lower() in text.lower()
 OPTIONAL_INTEREST = {"song", "treat"}   # the action is the idea; forcing the interest in reads oddly
 
 
@@ -67,13 +73,14 @@ def write(situation, member, reading, action, recent=(), effort="low"):
     terms = private_terms(situation["day"], member.get("allowed_interests", []))
     facts = json.dumps({"day": situation["day"], "other_people": others}, ensure_ascii=False)
     lang = member.get("language", "en")
+    shown = reading.get("shown") or reading["mood"]
 
     attempts, echoing = [], set()
     for interest in options:
         feedback = []
         for _ in range(2):
             brief = {"person": user, "relation": member.get("relation", ""),
-                     "mood": reading["mood"], "interest": interest,
+                     "mood": shown, "interest": interest,
                      "action": action["type"], "language": lang, "recent_notes_to_this_friend": list(recent)}
             if feedback:
                 brief["avoid_these_problems"] = feedback
@@ -83,12 +90,14 @@ def write(situation, member, reading, action, recent=(), effort="low"):
                 text = text.strip()
                 need = None if action["type"] in OPTIONAL_INTEREST else interest
                 problems = lint(text, need, others, terms, lang, person=user)
+                if lang == "en" and reading.get("shown") and not says(text, shown):
+                    problems.append(f"does not say {shown!r} as given")
                 attempts.append({"text": text, "interest": interest, "lint": problems})
                 if problems:
                     feedback += problems
                     continue
                 check = muse.ask(CHECK_PROMPT.read_text(),
-                                 json.dumps({"note": text, "allowed": {"mood": reading["mood"], "interest": interest},
+                                 json.dumps({"note": text, "allowed": {"mood": shown, "interest": interest},
                                              "interest_required": need is not None,
                                              "private_day": facts}, ensure_ascii=False),
                                  schema=CHECK_SCHEMA, effort="low", label="note_check")
@@ -103,7 +112,7 @@ def write(situation, member, reading, action, recent=(), effort="low"):
             if interest in echoing:
                 break  # this interest points at the private reason; try the next one
         if interest not in echoing:
-            text = FALLBACK.format(name=user, mood=reading["mood"], interest=interest)
+            text = FALLBACK.format(name=user, mood=shown, interest=interest)
             if not lint(text, interest, others, terms, lang, person=user) and lang == "en":
                 return {"to": member["name"], "interest": interest, "text": text,
                         "attempts": attempts, "fallback": True}
