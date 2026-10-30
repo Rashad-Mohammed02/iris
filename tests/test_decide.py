@@ -138,10 +138,12 @@ def test_sources_switched_off_never_reach_muse():
 def test_poke_family_then_specific():
     c = [m("A")]
     out = run(sit(c, use_day=20), mood="tired")
-    assert out["poke"] == "under the weather" and out["poke_level"] == "family"
+    assert out["poke"] == "a bit low" and out["poke_level"] == "family"
     assert run(sit(c, use_day=20), mood="stressed")["poke"] == "a lot on"
     assert run(sit(c, use_day=20), mood="proud")["poke"] == "a good day"
+    assert run(sit(c, use_day=20), mood="proud", size="big")["poke"] == "a great day"
     assert run(sit(c, use_day=20), mood="calm")["poke"] == "an easy day"
+    assert run(sit(c, use_day=20), mood="busy")["poke"] == "a full day"
     s = sit(c, use_day=40)
     assert run(s, mood="tired")["poke_level"] == "family"            # history alone is not enough
     s["agreeing_families"] = 2

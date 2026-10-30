@@ -39,11 +39,14 @@ FEW_A_WEEK_ORDINARY = 2  # ...and an ordinary day only fills the first 2, so big
 # Edit the words here. Families come from the read's direction and, for down days, its energy.
 FAMILIES = {
     "up": "a good day",
-    "flat": "an easy day",
+    "up_big": "a great day",          # a big good day
+    "flat": "an easy day",            # calm, content, okay
+    "flat_full": "a full day",        # busy, focused
     "down_high": "a lot on",          # stressed, nervous, restless
-    "down_low": "under the weather",  # tired, low, sad
+    "down_low": "a bit low",          # tired, low, sad
 }
 HIGH_ENERGY_DOWN = {"stressed", "nervous", "restless"}
+FULL_FLAT = {"busy", "focused"}
 SPECIFIC_AFTER_LIVE_DAYS = 14   # live days after learning before the exact word may show
 SPECIFIC_NEEDS_FAMILIES = 2     # ...and only on a day the rule found at least this many signal families agreeing
 
@@ -73,10 +76,12 @@ def sources_on(situation):
     return day, feeds
 
 
-def family(mood, direction):
+def family(mood, direction, size=None):
     if direction == "down":
         return FAMILIES["down_high" if mood in HIGH_ENERGY_DOWN else "down_low"]
-    return FAMILIES.get(direction or "flat", FAMILIES["flat"])
+    if direction == "up":
+        return FAMILIES["up_big" if size == "big" else "up"]
+    return FAMILIES["flat_full" if mood in FULL_FLAT else "flat"]
 
 
 def poke(situation, reading):
@@ -85,7 +90,7 @@ def poke(situation, reading):
     agree = situation.get("agreeing_families", 0)
     if use_day > LEARNING_DAYS + SPECIFIC_AFTER_LIVE_DAYS and agree >= SPECIFIC_NEEDS_FAMILIES:
         return reading["mood"], "specific"
-    return family(reading["mood"], reading.get("direction")), "family"
+    return family(reading["mood"], reading.get("direction"), reading.get("size")), "family"
 
 
 def few_a_week_why(name, size, today, recent_sends):

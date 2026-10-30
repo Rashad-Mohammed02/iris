@@ -1,7 +1,7 @@
 """Write one note for one friend, then prove it leaks nothing.
 
 The note is minimal: the person's name, the family their day belongs to
-("a good day", "under the weather"; the exact word only once Iris has earned it,
+("a good day", "a bit low"; the exact word only once Iris has earned it,
 see engine/decide.py), and a short nudge to connect with one idea ("Arjun, a good
 day. A song to keep it going?"). The nudge never repeats the name and never reads like a button label. The writer is blind on purpose: it
 only ever sees the person's first name, the friend's relation, the mood word,
