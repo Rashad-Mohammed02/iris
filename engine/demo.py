@@ -212,7 +212,7 @@ class Demo:
             "normal": [SIGNAL_WORDS[s] for s in self.rule[i]["off_signals"] if s in SIGNAL_WORDS],
         }
 
-    def situation(self, i, recent_notes=None):
+    def situation(self, i, recent_notes=None, recent_sends=None):
         """The situation for engine/decide.py on day i (0-based)."""
         s = self.settings
         return {
@@ -226,6 +226,8 @@ class Demo:
             "day": self.day_input(i),
             "feeds": self.feeds,
             "recent_notes": recent_notes or {},
+            "recent_sends": recent_sends or {},
+            "agreeing_families": len(self.rule[i].get("families", [])),
         }
 
     def last_sent(self, name, upto):

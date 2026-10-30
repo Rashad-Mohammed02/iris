@@ -1,5 +1,5 @@
 {
-  "note": "Arjun's Iris v2 choices in the demo: his 5, how each person relates, each one's setting (every_day is the norm; big_moments and never are options), and what he shares with each. All fictional.",
+  "note": "Arjun's Iris v2 choices in the demo: his 5, how each person relates, each one's setting (every_day is the norm; few_a_week, big_moments and never are options), and what he shares with each. All fictional.",
   "age": 28,
   "country": "US",
   "note_time": "18:00",
@@ -48,7 +48,7 @@
     {
       "name": "Omar Haddad",
       "relation": "close friend",
-      "setting": "every_day",
+      "setting": "few_a_week",
       "mutual": true,
       "nearby": true,
       "allowed_interests": [
