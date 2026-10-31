@@ -22,7 +22,7 @@ CANNED = {
     "day": {"mood": "tired", "moment": "a long week", "size": "big", "crisis": "none", "why": "x",
             "fits": [{"name": n, "interest": "F1", "action": "song", "surprise": False}
                      for n in ("Maya", "Sam", "Dev", "Omar", "Priya")]},
-    "note_write": {"options": ["Arjun, tired today. A song for tonight?"]},
+    "note_write": {"options": ["Maybe send a song for tonight?"]},
     "note_check": {"leak": False, "harmless_if_wrong": True, "voice_ok": True, "interest_echoes": False, "reason": ""},
 }
 
@@ -68,7 +68,7 @@ def test_note_writer_is_blind():
     writes = [json.loads(p) for label, p in sent if label == "note_write"]
     assert writes
     for w in writes:
-        assert set(w) <= {"person", "relation", "mood", "interest", "action", "language",
+        assert set(w) <= {"person", "relation", "mood", "first_sentence", "interest", "action", "language",
                           "recent_notes_to_this_friend", "avoid_these_problems"}, set(w)
         blob = json.dumps(w).lower()
         for private in ("blood", "lab", "moment", "long week", "maya", "sam", "omar", "priya", "dev"):

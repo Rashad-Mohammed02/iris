@@ -1,9 +1,10 @@
 """Write one note for one friend, then prove it leaks nothing.
 
-The note is minimal: the person's name, the family their day belongs to
-("a good day", "a bit low"; the exact word only once Iris has earned it,
-see engine/decide.py), and a short nudge to connect with one idea ("Arjun, a good
-day. A song to keep it going?"). The nudge never repeats the name and never reads like a button label. The writer is blind on purpose: it
+The note is two plain sentences. Code writes the first from the family the day
+belongs to ("Arjun's having a good day."; the exact word only once Iris has earned
+it, see engine/decide.py), so it is always grammatical and never more specific than
+allowed. Muse writes only the second: one natural line to the friend with one idea
+("Maybe send a song to keep it going?"). It never repeats the name and never reads like a button label. The writer is blind on purpose: it
 only ever sees the person's first name, the friend's relation, the mood word,
 one shared interest and the action type. Not even the moment behind the mood. It cannot leak what it never saw. Two
 checks still run on every note: the plain-text word check (engine/voice.py)
@@ -12,6 +13,7 @@ note give any of it away?".
 """
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -46,12 +48,31 @@ CHECK_SCHEMA = {
 }
 
 # Used only if every written option fails the checks twice. Safe by construction.
-FALLBACK = "{name}, {mood} today. Maybe a little {interest} plan this week?"
+FALLBACK = "{opener} How about some {interest} talk this week?"
+
+# The first sentence, written by code so it always reads right.
+OPENERS = {
+    "a good day": "{name}'s having a good day.",
+    "a great day": "{name}'s having a great day.",
+    "an easy day": "{name}'s having an easy day.",
+    "a full day": "{name}'s having a full day.",
+    "a lot on": "{name} has a lot on today.",
+    "a bit low": "{name}'s feeling a bit low today.",
+}
+SOFTEN = {"tired": "a bit tired", "stressed": "a bit stressed", "nervous": "a bit nervous",
+          "restless": "a bit restless", "low": "a bit low", "sad": "a little sad"}
+PLAIN = {"busy", "focused"}   # "Arjun's busy today" reads better than "feeling busy"
 
 
-def says(text, shown):
-    """The note must carry the phrase it was given, so a family never turns into an exact feeling."""
-    return shown.lower() in text.lower()
+def opener(name, shown):
+    """'Arjun's feeling a bit low today.' A family phrase, or once earned, the exact word, softened on down days."""
+    if shown in OPENERS:
+        return OPENERS[shown].format(name=name)
+    if shown in PLAIN:
+        return f"{name}'s {shown} today."
+    return f"{name}'s feeling {SOFTEN.get(shown, shown)} today."
+
+
 OPTIONAL_INTEREST = {"song", "treat"}   # the action is the idea; forcing the interest in reads oddly
 
 
@@ -74,13 +95,14 @@ def write(situation, member, reading, action, recent=(), effort="low"):
     facts = json.dumps({"day": situation["day"], "other_people": others}, ensure_ascii=False)
     lang = member.get("language", "en")
     shown = reading.get("shown") or reading["mood"]
+    first = opener(user, shown) if lang == "en" else None
 
     attempts, echoing = [], set()
     for interest in options:
         feedback = []
         for _ in range(2):
             brief = {"person": user, "relation": member.get("relation", ""),
-                     "mood": shown, "interest": interest,
+                     "mood": shown, "first_sentence": first, "interest": interest,
                      "action": action["type"], "language": lang, "recent_notes_to_this_friend": list(recent)}
             if feedback:
                 brief["avoid_these_problems"] = feedback
@@ -88,10 +110,12 @@ def write(situation, member, reading, action, recent=(), effort="low"):
                             effort=effort, label="note_write").get("options", [])[:3]
             for text in opts:
                 text = text.strip()
+                if first and not text.startswith(user):
+                    text = first + " " + text   # Muse wrote only the second sentence
                 need = None if action["type"] in OPTIONAL_INTEREST else interest
                 problems = lint(text, need, others, terms, lang, person=user)
-                if lang == "en" and reading.get("shown") and not says(text, shown):
-                    problems.append(f"does not say {shown!r} as given")
+                if first and not text.startswith(first):
+                    problems.append(f"does not open with {first!r}")
                 attempts.append({"text": text, "interest": interest, "lint": problems})
                 if problems:
                     feedback += problems
@@ -112,8 +136,8 @@ def write(situation, member, reading, action, recent=(), effort="low"):
             if interest in echoing:
                 break  # this interest points at the private reason; try the next one
         if interest not in echoing:
-            text = FALLBACK.format(name=user, mood=shown, interest=interest)
-            if not lint(text, interest, others, terms, lang, person=user) and lang == "en":
+            text = FALLBACK.format(opener=first, interest=re.sub(r"^the ", "", interest))
+            if lang == "en" and not lint(text, None, others, terms, lang, person=user):
                 return {"to": member["name"], "interest": interest, "text": text,
                         "attempts": attempts, "fallback": True}
     return None

@@ -11,21 +11,31 @@ from engine.voice import lint, phrase_ok  # noqa: E402
 
 def test_mood_words_now_pass():
     for text, interest in [
-        ("Arjun, proud day. Two seats at the next F1 race to celebrate?", "F1"),
-        ("Arjun, tired. Your best highlight from the NBA might be just the thing.", "the NBA"),
-        ("Arjun, a bit low today. Lunch this week to swap film photography finds?", "film photography"),
-        ("Arjun, a bit stressed. A small F1 plan this weekend?", "F1"),
-        ("Arjun, a little sad. An F1 clip that made you laugh would fit right in.", "F1"),
-        ("Arjun, happy day. A song to keep it going?", None),
+        ("Arjun's feeling proud today. Two seats at the next F1 race would be a fun way to celebrate.", "F1"),
+        ("Arjun's feeling a bit tired today. A quick message about the NBA could make the day.", "the NBA"),
+        ("Arjun's feeling a bit low today. How about lunch this week to talk film photography?", "film photography"),
+        ("Arjun has a lot on today. Maybe plan a small F1 night this weekend?", "F1"),
+        ("Arjun's having a great day. An F1 clip that made you laugh would fit right in.", "F1"),
+        ("Arjun's having a good day. Maybe send a song to keep it going?", None),
     ]:
         assert lint(text, interest, person="Arjun") == [], (text, lint(text, interest, person="Arjun"))
 
 
 def test_house_style_name_once():
     # The name opens the note and is never repeated: the nudge talks like a friend, not a button.
-    assert "repeats the name Arjun in the nudge" in lint("Arjun, happy day. Send Arjun a song?", person="Arjun")
-    assert "does not open with Arjun" in lint("Happy day for Arjun. A song to keep it going?", person="Arjun")
-    assert lint("Arjun, tired. Lunch this week, your treat?", person="Arjun") == []
+    assert "repeats the name Arjun in the nudge" in lint("Arjun's having a good day. Send Arjun a song?", person="Arjun")
+    assert "does not open with Arjun" in lint("A good day for Arjun. Maybe send a song?", person="Arjun")
+    assert lint("Arjun's feeling a bit tired today. How about lunch this week?", person="Arjun") == []
+
+
+def test_opener_reads_right():
+    from engine.note import opener
+    assert opener("Arjun", "a bit low") == "Arjun's feeling a bit low today."
+    assert opener("Arjun", "a great day") == "Arjun's having a great day."
+    assert opener("Arjun", "a lot on") == "Arjun has a lot on today."
+    assert opener("Arjun", "tired") == "Arjun's feeling a bit tired today."
+    assert opener("Arjun", "busy") == "Arjun's busy today."
+    assert opener("Arjun", "excited") == "Arjun's feeling excited today."
 
 
 def test_private_things_still_fail():
@@ -58,15 +68,16 @@ def test_moment_check():
 
 
 def test_fallback_passes():
-    from engine.note import FALLBACK
-    for mood in ("happy", "tired", "low", "okay", "proud"):
-        text = FALLBACK.format(name="Arjun", mood=mood, interest="F1")
+    from engine.note import FALLBACK, opener
+    for mood in ("a good day", "a bit low", "a lot on", "tired", "proud"):
+        text = FALLBACK.format(opener=opener("Arjun", mood), interest="F1")
         assert lint(text, "F1", person="Arjun") == [], (text, lint(text, "F1", person="Arjun"))
 
 
 if __name__ == "__main__":
     test_mood_words_now_pass()
     test_house_style_name_once()
+    test_opener_reads_right()
     test_private_things_still_fail()
     test_names_and_private_terms()
     test_moment_check()

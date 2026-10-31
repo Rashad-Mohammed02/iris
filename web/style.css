@@ -171,8 +171,9 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 
 /* Bottom tab bar on the friend's home */
 .tabbar{margin-top:auto;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);padding-top:8px}
-.tabbar span{display:grid;justify-items:center;gap:2px;font-size:11px;color:var(--ink-3)}
-.tabbar span.on{color:var(--ink);font-weight:600}
+.tabbar span,.tabbar button{display:grid;justify-items:center;gap:2px;font-size:11px;color:var(--ink-3);border:0;background:none;padding:0}
+.tabbar span.on,.tabbar button.on{color:var(--ink);font-weight:600}
+.tabbar button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
 .tabbar svg.i{width:22px;height:22px}
 
 /* Muse Charm: a squircle with a thick dark rim, a camera dot and a knotted cord */
@@ -238,3 +239,14 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .qr{display:flex;flex-wrap:wrap;gap:6px;align-self:flex-start}
 .qr button{border:1.5px solid var(--accent);background:none;color:var(--tone-ink);border-radius:99px;padding:6px 11px;font-size:13px;font-weight:650}
 .msgs .page{align-self:stretch;background:var(--mint);border-color:transparent;gap:4px}
+
+/* free play: the sandbox strip sits above the app, dashed so it reads as a demo control */
+.sandbox{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1.5px dashed var(--line);border-radius:12px;padding:6px 8px;font-size:12px;color:var(--ink-2)}
+.sandbox .sbx{font-weight:750;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--ink-3)}
+.sandbox .sbsel{display:flex;align-items:center;gap:4px}
+.sandbox select{border:0;background:var(--fill);color:var(--ink);border-radius:8px;padding:4px 6px;font:inherit;font-size:12px}
+.sandbox .sbday{display:flex;align-items:center;gap:4px;margin-left:auto;font-weight:650;color:var(--ink)}
+.sandbox .sbday button{border:0;background:var(--fill);color:var(--ink);border-radius:8px;width:26px;height:26px;font-size:16px;line-height:1}
+.sandbox .sbday button:disabled{opacity:.35}
+.qr button.on{background:var(--accent);color:#fff}
+.tabbar:not(.still){position:sticky;bottom:-1px;background:var(--screen);padding-bottom:6px;z-index:2}

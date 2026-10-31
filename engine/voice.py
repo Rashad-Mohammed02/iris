@@ -56,6 +56,9 @@ BANNED = {
     # A good-day note must never hint that things were bad before ("doing well now", "back to himself").
     "recovery": ["back to", "better", "now that", "these days", "anymore", "otra vez", "de nuevo", "de vuelta",
                  "mejor", "va bien", "ya no"],
+    # The button under the note says how it's sent; the note saying it too reads like a form.
+    "clunky": ["by message", "in a message", "via message", "via", "by text", "over text", "suit", "suits", "nicely",
+               "what is your", "what's your", "which team"],
     # Names only: Muse never guesses anyone's pronouns.
     "pronoun": ["he", "she", "him", "her", "his", "hers", "he's", "she's", "himself", "herself"],
 }
@@ -113,6 +116,11 @@ def lint(text, interest=None, other_names=(), private_terms=(), language="en", p
         for m in pat.finditer(text):
             problems.append(f"{cat} word: {m.group(0)!r}")
     problems += _common(text, other_names, private_terms, MAX_WORDS)
+    if not re.search(r"[.?]$", text.strip()):
+        problems.append("does not end with . or ?")
+    last = re.split(r"(?<=[.?])\s+", text.strip())[-1].lower()
+    if re.match(r"(how about|what about|why not|want to)\b", last) and not last.endswith("?"):
+        problems.append("a question without a question mark")
     if interest and language == "en" and interest.lower() not in text.lower():
         problems.append(f"interest {interest!r} not named")
     return problems
