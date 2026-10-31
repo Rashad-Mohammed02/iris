@@ -86,6 +86,7 @@ function dateLabel(d) {
   const p = String(d.date || "").split("-");
   return (d.weekday || "").slice(0, 3) + " " + (+p[2] || "") + " " + (MON[(+p[1] || 1) - 1] || "");
 }
+const whyNot = x => x.name + ": " + (x.why.charAt(0).toLowerCase() + x.why.slice(1)).replace(/\s*\(([^)]*)\)/g, ", $1").replace(/[.]$/, "") + ".";
 const firstSentence = t => { const m = String(t || "").match(/^[^.?!]*[.?!]/); return m ? m[0] : String(t || ""); };
 // The first sentence of every note, as engine/note.py writes it.
 const OPENERS = { "a good day": "'s having a good day.", "a great day": "'s having a great day.", "an easy day": "'s having an easy day.",
@@ -141,7 +142,7 @@ const NUM = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eig
 const numWord = n => NUM[n] || String(n);
 
 /* ---------- state ---------- */
-const S = { i: 0, cancel: {}, done: {}, compose: {}, line: {}, reached: {}, chats: {}, fp: { who: OWNER, tab: "today", di: DAYS.length - 1 }, fpCancel: {}, blocks: { talkiris: true, actions: true, musesend: true, charm: true }, felt: "", time: clock(SET.note_time || "18:00") || "6 PM", send: SET.send_mode === "ask" ? "ask" : "auto", perm: {}, sources: { see: true, hear: true, talk: true, happens: true } };
+const S = { i: 0, cancel: {}, done: {}, compose: {}, line: {}, reached: {}, chats: {}, fp: {}, blocks: { talkiris: true, actions: true, musesend: true, charm: true }, felt: "", time: clock(SET.note_time || "18:00") || "6 PM", send: SET.send_mode === "ask" ? "ask" : "auto", perm: {}, sources: { see: true, hear: true, talk: true, happens: true } };
 const LEVEL = { every_day: "Every day", few_a_week: "Few a week", big_moments: "Big moments", never: "Never" };
 const LEVEL_HELP = { "Every day": "A note every day at your time, whatever your mood", "Few a week": "Up to three a week, bigger days first", "Big moments": "Only on days that really stand out, good or hard", "Never": "Never gets a note about you" };
 CIRCLE.forEach(c => { S.perm[c.first] = LEVEL[c.setting] || "Every day"; });
@@ -196,8 +197,8 @@ function fiveToday(day, viewer, opts) {
   return el("div", { class: "widget flat", style: "gap:2px" },
     fv.map(f => el("div", { class: "notice" },
       el("span", { class: "row", style: "gap:10px" }, av(f.name, true), el("span", { class: f.name === OWNER ? "who" : null, text: f.name })),
-      f.mood ? chip(f.mood, f.name === OWNER ? "mood" : null) : el("span", { class: "small", text: "no word yet" }))),
-    opts && opts.simLabel === false ? null : el("div", { style: "padding-top:6px" }, simLine("Friends' moods are simulated in this demo. " + OWNER + "'s word is the engine's real read.")));
+      f.mood ? chip(f.name === OWNER ? (day.poke || famOf(f.mood, f.direction)) : famOf(f.mood, f.direction), f.name === OWNER ? "mood" : null) : el("span", { class: "small", text: "no word yet" }))),
+    opts && opts.simLabel === false ? null : el("div", { style: "padding-top:6px" }, simLine("Friends' days are simulated in this demo. " + OWNER + "'s is the engine's real read.")));
 }
 
 /* ---------- the story ---------- */
@@ -361,7 +362,7 @@ add({ ch: 1, bg: "app", title: "10 minutes to cancel", phone: OWNER, day: () => 
             : el("button", { class: "pill", type: "button", style: "padding:6px 12px;font-size:13px", onclick: () => { S.cancel[n.to] = true; redraw(); } }, "Cancel")),
         off ? el("div", { class: "small", text: "Cancelled. " + n.to + " won't hear from Iris today." }) : [el("p", { class: "quote", text: n.text }), actBox(n), n.action && n.action.surprise ? surpriseLine() : null]);
     }),
-    d.not_sent.length ? el("div", { class: "small", text: "Not today: " + d.not_sent.map(x => x.name + " (" + x.why.charAt(0).toLowerCase() + x.why.slice(1) + ")").join(", ") + "." }) : null,
+    d.not_sent.length ? el("div", { class: "small", text: "Not today. " + d.not_sent.map(whyNot).join(" ") }) : null,
     el("div", { class: "small", text: "Each note is signed: " + ((d.notes[0] || {}).signature || "Suggested by Muse.") }),
     goBtn("See " + BIG_WHO + "'s phone", { cls: "blue" })
   ];
@@ -465,7 +466,7 @@ function drafts(d) {
   };
   const talk = ((d.inputs || {}).talk) || {};
   const quiet = way === "down" && talk.usual && talk.messages_you_sent < talk.usual * 0.75 ? "Haven't really talked to anyone much." : "";
-  const one = [LEAD[d.mood] || "Pretty easy day.", t ? ABOUT[t.kind] : (d.size === "ordinary" ? "" : "It's been " + d.moment + "."), quiet].filter(Boolean).join(" ");
+  const one = [LEAD[d.mood] || "Pretty easy day.", t ? ABOUT[t.kind] : (d.moment && d.size && d.size !== "ordinary" ? "It's been " + d.moment + "." : ""), quiet].filter(Boolean).join(" ");
   const noun = t ? { exam: "the exam", results: "the results", deadline: "work", trip: "the trip", show: "anything", study: "studying", social: "anything" }[t.kind] : "any of it";
   const two = way === "down" ? "Probably lunch with someone, and not talking about " + noun + "."
     : way === "up" ? "Telling my people about it, honestly." : "Just an easy evening, honestly.";
@@ -473,7 +474,7 @@ function drafts(d) {
 }
 function readChat(c, d) {
   const mine = c.msgs.filter(m => m.me).map(m => m.text.toLowerCase()), all = mine.join(" ");
-  const feel = c.fix || firstHit(FEEL, mine[0] || "") || firstHit(FEEL, all) || d.mood;
+  const feel = c.fix || firstHit(FEEL, mine[0] || "") || firstHit(FEEL, all) || d.mood || "okay";
   const topics = [...new Set(allHits(TOPIC, all))].slice(0, 2);
   CIRCLE.forEach(p => { if (new RegExp("\\b" + p.first.toLowerCase() + "\\b").test(all) && topics.length < 3) topics.push(p.first); });
   let needs = [...new Set(allHits(NEED, mine.slice(1).join(" ") || "").concat(MISSING.test(all) ? ["Time with people"] : []))];
@@ -484,7 +485,7 @@ function readChat(c, d) {
 function irisReply(c, d, text) {
   const t = text.toLowerCase(), mineCount = c.msgs.filter(m => m.me).length, r = readChat(c, d);
   if (mineCount === 1) {
-    const feel = c.fix || firstHit(FEEL, t) || d.mood, way = WAY[feel] || "flat", topic = firstHit(TOPIC, t);
+    const feel = c.fix || firstHit(FEEL, t) || d.mood || "okay", way = WAY[feel] || "flat", topic = firstHit(TOPIC, t);
     const echo = topic && ECHO[topic] ? ECHO[topic][way === "up" ? 1 : 0] : "";
     return [FEEL_LINE[feel] || "Thanks for telling me.", echo, way === "down" && MISSING.test(t) ? "And not seeing your people much makes everything heavier." : "", FOLLOW[way]].filter(Boolean).join(" ");
   }
@@ -502,7 +503,7 @@ function irisOpen(d) {
   return way === "up" ? "Hey. How was today?" : "How was your day?";
 }
 const FIX_TO = ["tired", "stressed", "low", "calm", "happy", "proud"];
-function talkChat(key, d) {
+function talkChat(key, d, opts) {
   if (!d) return [];
   const c = S.chats[key] || (S.chats[key] = { msgs: [], fix: null });
   const mine = c.msgs.filter(m => m.me).length, dr = drafts(d), id = "chat-" + key;
@@ -518,6 +519,10 @@ function talkChat(key, d) {
   const box = el("textarea", { id, class: "linebox", rows: "3", placeholder: mine >= 2 ? "Anything else?" : "Say anything" });
   box.value = mine < 2 ? dr[mine] : "";
   box.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
+  // Moments from the day, to tap into what you're writing. Optional, like everything here.
+  const KIND = ["exam", "results", "deadline", "trip", "show", "study", "social", "routine", "work"];
+  const moments = opts && opts.moments ? [...new Set(dayEvents(d).filter(([e]) => !/someone/i.test(e.title))
+    .sort((x, y) => KIND.indexOf(x[0].kind) - KIND.indexOf(y[0].kind)).map(([e]) => e.title))].slice(0, 3) : [];
   return [
     el("div", { class: "row", style: "gap:10px" }, img(FACE, "mini"), el("div", {}, el("b", { text: "Iris" }), el("div", { class: "small", text: "Only you see this chat" }))),
     el("div", { class: "msgs" },
@@ -527,9 +532,11 @@ function talkChat(key, d) {
         el("div", { class: "eyebrow", text: "What Iris took from this. Only you see it." }),
         kvRows([["Feeling", cap(r.feel)], ["Energy", ENERGY[r.feel] || "Steady"], ["On your mind", r.topics.length ? cap(joinNames(r.topics)) : "Nothing in particular"], r.needs.length ? ["Would help", joinNames(r.needs)] : null]),
         el("div", { class: "small", text: "Your words stay in this chat. Iris keeps only these few notes, to read you better tomorrow." }),
-        el("div", { class: "small", text: "Your 5 still only hear: " + hears(d) }),
+        el("div", { class: "small", text: hears(d) ? "Your 5 still only hear: " + hears(d) : "Nothing goes to your 5 yet." }),
         el("div", { class: "small", style: "margin-top:4px", text: "Not quite right? Pick the word." }),
         el("div", { class: "qr" }, FIX_TO.map(w => el("button", { type: "button", class: r.feel === w ? "on" : null, onclick: () => { c.fix = w; redraw(); } }, cap(w))))) : null),
+    moments.length ? el("div", { class: "moments" }, el("span", { class: "small", text: "From your day. Tap to bring one in." }),
+      el("div", { class: "qr" }, moments.map(m => el("button", { type: "button", onclick: () => { box.value = (box.value.trim() ? box.value.trim() + " " : "") + m + ": "; box.focus(); } }, m)))) : null,
     el("div", { class: "compose" }, mine < 2 ? el("label", { class: "small", for: id, text: mine ? "Iris wrote a start from your day. Change it or say anything." : "A start from your day. Change it, or say anything." }) : null, box,
       el("div", { class: "row", style: "justify-content:space-between" },
         el("button", { class: "pill blue", type: "button", onclick: send }, "Send"),
@@ -647,76 +654,294 @@ add({ ch: 2, bg: "mint", title: "That's Iris", phone: OWNER, render: () => [
   el("p", { class: "fine", text: "Hackathon prototype, not a Meta product. Every person and message is fictional. Character made with Muse Image." })
 ] });
 
-// Free play: the whole app, open. Switch whose phone you hold and which day of the month it is. Everything is the
-// engine's real output for that day; nothing is sent anywhere.
-const PHONES = [OWNER].concat(CIRCLE.map(c => c.first));
-const TABS_OWN = [["today", "home", "Today"], ["five", "people", "Your 5"], ["talk", "message", "Talk to Iris"], ["you", "user", "You"]];
-const TABS_FRIEND = [["today", "home", "Today"], ["five", "people", "Your 5"]];
+// Free play: Arjun's Iris app, open to use. Four tabs, and every control does something. Arjun's own reads and
+// notes are the engine's real output for the chosen day; his friends' notes, replies and bookings are simulated.
+const FAM_WAY = { "a good day": "up", "a great day": "up", "an easy day": "flat", "a full day": "flat", "a lot on": "down", "a bit low": "down" };
+function famOf(mood, dir) { // the kind of day, as engine/decide.py family() says it
+  if (!mood) return "";
+  const way = dir || WAY[mood] || "flat";
+  if (way === "down") return /^(stressed|nervous|restless)$/.test(mood) ? "a lot on" : "a bit low";
+  if (way === "up") return "a good day";
+  return /^(busy|focused)$/.test(mood) ? "a full day" : "an easy day";
+}
+const bare = i => String(i || "").replace(/^the /, "");
+const IN_LINE = {
+  song: { up: () => "How about a song to celebrate?", down: () => "Maybe send a quiet song tonight?", flat: () => "How about a song for the evening?" },
+  reel: { up: i => "A funny " + bare(i) + " clip would add to the fun.", down: i => "A light " + bare(i) + " clip could keep tonight easy.", flat: i => "A silly " + bare(i) + " clip would fit right in." },
+  message: { up: () => "A quick hello to celebrate might be nice.", down: () => "A quick hello might be nice tonight.", flat: i => "How about some " + bare(i) + " talk this week?" },
+  lunch: { up: () => "How about lunch this week to celebrate?", down: i => "How about lunch this week to talk " + bare(i) + "?", flat: i => "How about lunch this week to talk " + bare(i) + "?" }
+};
+const IN_TYPES = ["song", "reel", "message", "lunch"];
+// Notes Arjun gets from his friends' Iris. Simulated from their simulated moods, two a day.
+function incoming(d) {
+  const fv = (d.friend_view || []).filter(f => f.name !== OWNER && f.mood);
+  return fv.filter((f, k) => (d.n + k) % 2 === 0).slice(0, 2).map((f, k) => {
+    const c = CIRCLE.find(x => x.first === f.name) || { allowed_interests: [] }, ints = c.allowed_interests.length ? c.allowed_interests : ["music"];
+    const fam = famOf(f.mood, f.direction), type = IN_TYPES[(d.n * 3 + k + f.name.length) % 4], interest = ints[(d.n + k) % ints.length];
+    return { from: f.name, fam, type, interest, key: "in:" + d.n + ":" + f.name, text: f.name + OPENERS[fam] + " " + IN_LINE[type][FAM_WAY[fam]](interest) };
+  });
+}
+const REELS = {
+  "F1": ["Best overtakes of the season", "A pit stop in under two seconds", "Funniest team radio moments"],
+  "the NBA": ["Buzzer beaters of the week", "Top ten assists", "Best courtside reactions"],
+  "film photography": ["Developing film at home", "35mm street shots in the rain", "One roll, one city"],
+  "live music": ["A whole crowd sings the chorus", "A tiny living room set", "Soundcheck surprises"],
+  "stand-up comedy": ["The best crowd work this week", "A perfect three-minute set", "A bit that brought the house down"]
+};
+const FREE_HOURS = ["Thursday, 12 to 1 PM", "Saturday, 1 to 2 PM", "Friday, 12:30 to 1:30 PM", "Sunday, 12 to 1 PM", "Wednesday, 1 to 2 PM"];
+const freeHour = who => FREE_HOURS[Math.max(0, CIRCLE.findIndex(c => c.first === who)) % FREE_HOURS.length];
+const tracksFor = d => {
+  const t = (((d && d.inputs) || {}).hear || {}).top_tracks || [];
+  return (t.length ? t : [{ track: "Window Seat", artist: "Mabel Ortiz" }, { track: "Highway Skyline", artist: "June Harbor" }, { track: "Pit Lane Summer", artist: "Neon Paddock" }]).slice(0, 3).map(x => x.track + " by " + x.artist);
+};
+const REPLY = { reach: ["Hey, good to hear from you. Lunch this week?", "Sounds good. Talk soon."],
+  up: ["Ha, thank you. It's been a good one.", "Talk soon?"], down: ["That's sweet, thanks. Needed that.", "Talk soon."], flat: ["Ha, love it. Talk soon?", "Deal."],
+  any: ["Ha, love it.", "Yes. When are you free?", "This made my day."] };
+const freshFP = () => ({ di: (LIVE.length ? DAYS.indexOf(LIVE[LIVE.length - 1]) : DAYS.length - 1), tab: "today", person: null, sheet: null, toast: "", draft: "",
+  sendAt: {}, sent: {}, cancel: {}, acted: {}, chats: {}, log: [], fixed: {}, fixOpen: {}, deleted: {}, delAsk: {}, paused: {} });
+S.fp = freshFP();
+// The demo's own settings, so Reset puts everything back.
+const START = JSON.stringify({ time: S.time, send: S.send, blocks: S.blocks, sources: S.sources, perm: S.perm });
+const greet = () => /AM/.test(S.time) ? "Good morning" : /^12/.test(S.time) ? "Good afternoon" : "Good evening";
+function toast(t) { S.fp.toast = t; overlay(); setTimeout(() => { if (S.fp.toast === t) { S.fp.toast = ""; overlay(); } }, 1900); }
+function logIt(who, text, line) { S.fp.log.unshift({ who, day: S.fp.di, text, line: line || "" }); }
+const sourcesOn = () => Object.keys(S.sources).filter(k => S.sources[k]).length;
+
+/* the sheets: send a song or a reel, message a friend, book the free hour */
+function openSheet(o) { S.fp.sheet = o; S.fp.draft = ""; S.fp.pick = null; overlay(); }
+function closeSheet() { S.fp.sheet = null; redraw(); }
+function finishAct(o, done, toastText, logText) {
+  if (o.key) S.fp.acted[o.key] = done;
+  logIt(o.to, logText, S.fp.draft.trim());
+  S.fp.sheet = null; redraw(); toast(toastText);
+}
+function sheetBody(o) {
+  const d = DAYS[S.fp.di];
+  const lineBox = () => {
+    const t = el("textarea", { class: "linebox", rows: "2", placeholder: "Add a line, if you want", "aria-label": "Add a line" });
+    t.value = S.fp.draft; t.addEventListener("input", () => { S.fp.draft = t.value; }); return t;
+  };
+  const picker = list => el("div", { class: "picks" }, list.map(x => el("button", { type: "button", class: "pick" + (S.fp.pick === x ? " on" : ""), onclick: () => { S.fp.pick = x; overlay(); } },
+    el("span", { class: "tick" }, S.fp.pick === x ? icon("check") : null), el("span", { text: x }))));
+  if (o.kind === "song") return [el("div", { class: "h3", text: "Send " + o.to + " a song" }), el("div", { class: "small", text: "From what you've been playing." }), picker(tracksFor(d)), lineBox(),
+    el("button", { class: "btn blue", type: "button", disabled: S.fp.pick ? null : true, onclick: () => finishAct(o, "Song sent: " + S.fp.pick + ".", "Song sent to " + o.to + ".", "You sent a song: " + S.fp.pick) }, "Send"),
+    simLine("Spotify is simulated here.")];
+  if (o.kind === "reel") { const list = REELS[o.interest] || REELS["F1"];
+    return [el("div", { class: "h3", text: "Send " + o.to + " a reel" }), el("div", { class: "small", text: "Fresh " + bare(o.interest || "F1") + " reels. Pick one." }), picker(list), lineBox(),
+      el("button", { class: "btn blue", type: "button", disabled: S.fp.pick ? null : true, onclick: () => finishAct(o, "Reel sent: " + S.fp.pick + ".", "Reel sent to " + o.to + ".", "You sent a reel: " + S.fp.pick) }, "Send"),
+      simLine("Reels are simulated here.")]; }
+  if (o.kind === "lunch") return [el("div", { class: "h3", text: "Lunch with " + o.to }),
+    el("div", { class: "act" }, icon("lunch"), el("div", {}, el("b", { text: freeHour(o.to) }), el("span", { text: "You're both free then." }))),
+    el("div", { class: "small", text: "Iris only shares the free hour, never what is on either calendar." }),
+    el("button", { class: "btn blue", type: "button", onclick: () => finishAct(o, "Lunch booked for " + freeHour(o.to) + ".", "Lunch booked. Invite sent to " + o.to + ".", "You booked lunch: " + freeHour(o.to)) }, "Book the table"),
+    simLine("Calendars and the booking are simulated here.")];
+  // a chat with one friend
+  const thread = S.fp.chats[o.to] || (S.fp.chats[o.to] = []);
+  const send = () => {
+    const text = S.fp.draft.trim(); if (!text) return;
+    thread.push({ me: true, text }); S.fp.draft = "";
+    if (o.key && !S.fp.acted[o.key]) S.fp.acted[o.key] = "Message sent.";
+    if (thread.filter(m => m.me).length === 1) logIt(o.to, "You sent a message");
+    overlay();
+    o.n = (o.n || 0) + 1;   // replies follow this conversation, not the whole thread
+    const mineN = o.n, set = REPLY[o.mood || "any"] || REPLY.any;
+    setTimeout(() => { thread.push({ me: false, text: (mineN <= set.length ? set[mineN - 1] : REPLY.any[mineN % REPLY.any.length]) }); if (S.fp.sheet && S.fp.sheet.to === o.to) overlay(); else redraw(); }, 1100);
+  };
+  const box = el("textarea", { class: "linebox", rows: "2", placeholder: "Message " + o.to, "aria-label": "Message " + o.to });
+  box.value = S.fp.draft; box.addEventListener("input", () => { S.fp.draft = box.value; });
+  box.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
+  return [el("div", { class: "row", style: "gap:10px" }, av(o.to), el("div", {}, el("div", { class: "h3", text: o.to }), el("div", { class: "small", text: "Your chat" }))),
+    el("div", { class: "msgs", style: "min-height:120px" }, thread.length ? thread.map(m => el("div", { class: "bub " + (m.me ? "me" : "iris"), text: m.text }))
+      : el("div", { class: "small", style: "align-self:center;padding:24px 0", text: "Say as much or as little as you like." })),
+    box, el("button", { class: "btn blue", type: "button", onclick: send }, "Send"),
+    simLine("The chat and " + o.to + "'s replies are simulated here.")];
+}
+function overlay() {
+  const g = $("#glass"); if (!g) return;
+  g.querySelectorAll(".sheetwrap,.toast").forEach(x => x.remove());
+  if (!FLOW[S.i] || !FLOW[S.i].free) return;
+  if (S.fp.sheet) {
+    const prev = document.querySelector(".sheet"), keep = prev ? prev.scrollTop : 0;
+    const sh = el("div", { class: "sheet", role: "dialog", "aria-modal": "true" },
+      el("button", { class: "x", type: "button", "aria-label": "Close", onclick: closeSheet }, icon("x")), sheetBody(S.fp.sheet));
+    const wrap = el("div", { class: "sheetwrap", onclick: e => { if (e.target === wrap) closeSheet(); } }, sh);
+    g.append(wrap); sh.scrollTop = keep || (S.fp.sheet.kind === "chat" ? sh.scrollHeight : 0);
+  }
+  if (S.fp.toast) g.append(el("div", { class: "toast", role: "status", text: S.fp.toast }));
+}
+
+/* the four tabs */
 function sandboxBar(d) {
-  const step = k => { S.fp.di = Math.max(0, Math.min(DAYS.length - 1, S.fp.di + k)); redraw(); };
+  const step = k => { S.fp.di = Math.max(0, Math.min(DAYS.length - 1, S.fp.di + k)); S.fp.person = null; redraw(); };
   return el("div", { class: "sandbox" },
     el("span", { class: "sbx", text: "Sandbox" }),
-    el("label", { class: "sbsel" }, el("span", { text: "Phone" }),
-      el("select", { "aria-label": "Whose phone", onchange: e => { S.fp.who = e.target.value; S.fp.tab = "today"; redraw(); } },
-        PHONES.map(n => el("option", { value: n, selected: n === S.fp.who ? true : null }, n)))),
+    el("button", { type: "button", class: "sbreset", onclick: () => { Object.keys(S.chats).filter(k => /^fp-/.test(k)).forEach(k => delete S.chats[k]); S.fp = freshFP(); Object.assign(S, JSON.parse(START)); redraw(); toast("Sandbox reset."); } }, "Reset"),
     el("span", { class: "sbday" },
       el("button", { type: "button", "aria-label": "Day before", disabled: S.fp.di === 0 ? true : null, onclick: () => step(-1) }, "‹"),
-      el("span", { text: d ? dateLabel(d) : "" }),
-      el("button", { type: "button", "aria-label": "Day after", disabled: S.fp.di === DAYS.length - 1 ? true : null, onclick: () => step(1) }, "›")));
+      el("span", { text: "Day " + d.n + ", " + dateLabel(d) }),
+      el("button", { type: "button", "aria-label": "Next day", disabled: S.fp.di === DAYS.length - 1 ? true : null, onclick: () => step(1) }, "›")));
 }
-function tabBar(tabs) {
-  return el("div", { class: "tabbar", style: "grid-template-columns:repeat(" + tabs.length + ",1fr)" },
-    tabs.map(([k, ic, t]) => el("button", { type: "button", class: S.fp.tab === k ? "on" : null, onclick: () => { S.fp.tab = k; redraw(); } }, icon(ic), t)));
+const TABS = [["today", "home", "Today"], ["circle", "people", "My Circle"], ["journal", "message", "Journal"], ["you", "user", "You"]];
+const tabBar = () => el("div", { class: "tabbar", style: "grid-template-columns:repeat(4,1fr)" },
+  TABS.map(([k, ic, t]) => el("button", { type: "button", class: S.fp.tab === k ? "on" : null, "aria-current": S.fp.tab === k ? "page" : null,
+    onclick: () => { S.fp.tab = k; S.fp.person = null; redraw(); const sl = $("#slot").firstChild; if (sl) sl.scrollTop = 0; } }, icon(ic), t)));
+const sec = t => el("div", { class: "seclabel", text: t });
+const famChip = (fam, own) => fam ? chip(fam, own ? "mood" : null) : el("span", { class: "small", text: "no word yet" });
+
+function noteState(d, n) {
+  const k = d.n + ":" + n.to;
+  if (S.perm[n.to] === "Never") return "never";
+  if (S.fp.cancel[k]) return "cancelled";
+  if (S.fp.sent[k]) return "sent";
+  if (S.send === "auto" && S.fp.sendAt[d.n] && Date.now() >= S.fp.sendAt[d.n]) return "sent";
+  return "waiting";
 }
-function freeOwner(d) {
-  const tab = S.fp.tab;
-  if (tab === "talk") return S.blocks.talkiris ? talkChat("fp-" + d.n, d)
-    : [appHead("Talk to Iris", "Off"), el("p", { class: "agent", text: "Switched off in your blocks." }), el("button", { class: "pill", type: "button", onclick: () => { S.blocks.talkiris = true; redraw(); } }, "Switch it on")];
-  if (tab === "you") return [appHead("Your Iris", "You"),
-    el("div", { class: "who", text: "Your note time" }),
+function freeToday(d) {
+  const out = [appHead(greet() + ", " + OWNER + ".", "Today")];
+  const inc = incoming(d);
+  if (d.learning) out.push(el("div", { class: "widget warm", style: "gap:4px" }, el("div", { class: "eyebrow", text: "Learning your normal" }),
+    el("b", { text: "Day " + d.n + " of " + LEARN.length + "." }), el("span", { class: "small", text: "Iris compares each day only with you. Nothing goes to anyone until it knows what an ordinary day looks like." })));
+  else if (S.fp.paused[d.n] || S.fp.deleted[d.n] || !sourcesOn()) {
+    out.push(el("div", { class: "widget warm", style: "gap:6px" }, el("div", { class: "eyebrow", text: "Your day" }),
+      el("span", { text: S.fp.deleted[d.n] ? "Today's read is deleted. Nothing goes out today." : S.fp.paused[d.n] ? "Iris is paused today. Nothing goes out." : "Every part of your day is switched off, so Iris can't read it. Nothing goes out." }),
+      el("button", { class: "link", type: "button", style: "align-self:flex-start;justify-self:start", onclick: () => { S.fp.tab = "you"; redraw(); } }, "Change this in You")));
+  } else {
+    const fixed = S.fp.fixed[d.n];
+    out.push(el("div", { class: "widget warm", style: "gap:6px" }, el("div", { class: "eyebrow", text: "Your day. Only you see this." }),
+      el("div", { class: "row" }, chip(d.mood, "mood"), el("span", { text: d.moment || "" })),
+      el("div", { class: "small", text: "Your 5 hear: " + hears(d) }),
+      sourcesOn() < 4 ? el("div", { class: "small", text: "Reading from " + numWord(sourcesOn()) + " of the four parts of your day." }) : null,
+      fixed ? el("div", { class: "ok", text: "Thanks. You said " + fixed + ". Iris learns from this for tomorrow. If a note below feels off, cancel it." })
+        : S.fp.fixOpen[d.n] ? el("div", { class: "qr" }, ["tired", "stressed", "low", "okay", "happy", "proud"].map(w => el("button", { type: "button", onclick: () => { S.fp.fixed[d.n] = w; redraw(); } }, cap(w))))
+        : el("button", { class: "link", type: "button", style: "align-self:flex-start;justify-self:start", onclick: () => { S.fp.fixOpen[d.n] = true; redraw(); } }, "Not quite right?")));
+    if (d.direction === "down") {
+      const reached = CIRCLE.filter(c => (S.fp.chats[c.first] || []).some(m => m.me));
+      out.push(el("div", { class: "widget peach", style: "gap:8px" }, el("div", { class: "row" }, img(FACE, "mini"), el("b", { text: "Iris" })),
+        el("p", { class: "quote", text: "It's okay. They're your people. If you want, you can reach out." }),
+        el("div", { class: "row" }, CIRCLE.map(c => el("button", { class: "pill", type: "button", onclick: () => openSheet({ kind: "chat", to: c.first, mood: "reach" }) }, c.first))),
+        reached.length ? el("div", { class: "small", text: "You reached out to " + joinNames(reached.map(c => c.first)) + "." }) : el("div", { class: "small", text: "No pressure. Your notes go out either way." })));
+    }
+    // the notes going out
+    if (d.notes.length) {
+      if (S.send === "auto" && !S.fp.sendAt[d.n]) S.fp.sendAt[d.n] = Date.now() + 600000;
+      const waiting = d.notes.filter(n => noteState(d, n) === "waiting");
+      const cd = el("b");
+      const paint = () => { const left = Math.max(0, Math.round(((S.fp.sendAt[d.n] || 0) - Date.now()) / 1000)); cd.textContent = Math.floor(left / 60) + ":" + String(left % 60).padStart(2, "0"); return left; };
+      out.push(sec("Going to your 5"));
+      if (S.send === "auto" && waiting.length) {
+        paint(); clearInterval(tick); tick = setInterval(() => { if (!paint()) { clearInterval(tick); redraw(); } }, 1000);
+        out.push(el("div", { class: "widget flat" }, el("div", { class: "count" }, icon("clock"), cd, el("span", { class: "small", text: "until they send" })),
+          el("div", { class: "small", text: "Cancel any note and that person hears nothing today. Nobody knows." })));
+      } else if (S.send === "ask" && waiting.length) out.push(el("div", { class: "small", text: "Ask me first is on. Each note waits for you." }));
+      d.notes.forEach(n => {
+        const k = d.n + ":" + n.to, st = noteState(d, n);
+        if (st === "never") return;
+        const pill = st === "sent" ? chip("Sent") : st === "cancelled" ? chip("Cancelled") : null;
+        out.push(el("div", { class: "widget" + (st === "cancelled" ? " off" : "") },
+          el("div", { class: "spread" }, el("span", { class: "row", style: "gap:8px" }, av(n.to, true), el("span", { class: "who", text: "To " + n.to })), pill),
+          st === "cancelled" ? el("div", { class: "small", text: n.to + " won't hear from Iris today." }) : [el("p", { class: "quote", text: n.text }), S.blocks.actions ? actBox(n) : null],
+          st === "sent" ? el("div", { class: "small", text: n.to + " has it now." + (S.blocks.charm ? " It's on " + n.to + "'s Muse Charm too." : "") })
+            : st === "cancelled" ? el("button", { class: "link", type: "button", style: "align-self:flex-start;justify-self:start", onclick: () => { delete S.fp.cancel[k]; redraw(); } }, "Undo")
+            : el("div", { class: "row" },
+              el("button", { class: "pill blue", type: "button", onclick: () => { S.fp.sent[k] = true; redraw(); toast("Sent to " + n.to + "."); } }, S.send === "ask" ? "Send" : "Send now"),
+              el("button", { class: "pill", type: "button", onclick: () => { S.fp.cancel[k] = true; redraw(); } }, S.send === "ask" ? "Skip" : "Cancel"))));
+      });
+      out.push(el("div", { class: "small", text: "Each note is signed: " + ((d.notes[0] || {}).signature || "Suggested by Muse.") }));
+    }
+    const skipped = (d.not_sent || []).filter(x => S.perm[x.name] !== "Never").map(whyNot)
+      .concat(d.notes.filter(n => S.perm[n.to] === "Never").map(n => n.to + ": you chose Never."));
+    if (!d.notes.length) out.push(sec("Going to your 5"), el("div", { class: "widget flat", text: "No notes today." }));
+    if (skipped.length) out.push(el("div", { class: "small", text: "Not today. " + skipped.join(" ") }));
+  }
+  // notes from the 5
+  out.push(sec("From your 5"));
+  if (!inc.length) out.push(el("div", { class: "widget flat", text: "Nothing from your 5 today." }));
+  inc.forEach(x => {
+    const done = S.fp.acted[x.key], skip = S.fp.acted[x.key + ":no"];
+    const o = { to: x.from, key: x.key, interest: x.interest, mood: FAM_WAY[x.fam] };
+    const ACT = { song: ["Pick a song", () => openSheet(Object.assign({ kind: "song" }, o))], reel: ["Pick a reel", () => openSheet(Object.assign({ kind: "reel" }, o))],
+      message: ["Message " + x.from, () => openSheet(Object.assign({ kind: "chat" }, o))], lunch: ["See the free hour", () => openSheet(Object.assign({ kind: "lunch" }, o))] };
+    out.push(el("div", { class: "widget" },
+      el("div", { class: "spread" }, el("span", { class: "row", style: "gap:8px" }, av(x.from, true), el("span", { class: "who", text: "From " + x.from })), famChip(x.fam)),
+      el("p", { class: "quote", text: x.text }),
+      done ? el("div", { class: "ok", text: done }) : skip ? el("div", { class: "small", text: "Okay. " + x.from + " won't know." })
+        : el("div", { class: "row" }, el("button", { class: "pill blue", type: "button", onclick: ACT[x.type][1] }, ACT[x.type][0]),
+          el("button", { class: "pill", type: "button", onclick: () => { S.fp.acted[x.key + ":no"] = true; redraw(); } }, "Not now")),
+      sig("Suggested by Muse. " + x.from + " didn't ask.")));
+  });
+  out.push(simLine("Notes from your 5 are simulated. Your own read and notes are the engine's real output for this day."));
+  return out;
+}
+function freeCircle(d) {
+  const fvOf = name => (d.friend_view || []).find(f => f.name === name) || {};
+  if (S.fp.person) {
+    const c = CIRCLE.find(x => x.first === S.fp.person), f = fvOf(c.first), fam = famOf(f.mood, f.direction);
+    const o = t => Object.assign({ kind: t, to: c.first, interest: (c.allowed_interests || [])[0], mood: FAM_WAY[fam] || "any" });
+    const past = [];
+    for (let k = S.fp.di; k >= 0 && past.length < 4; k--) { const n = noteTo(DAYS[k], c.first); if (n) past.push([DAYS[k], n]); }
+    const mine = S.fp.log.filter(l => l.who === c.first);
+    return [el("button", { class: "link", type: "button", style: "align-self:flex-start;justify-self:start", onclick: () => { S.fp.person = null; redraw(); } }, "‹ My Circle"),
+      el("div", { class: "phead" }, av(c.first), el("div", {}, el("div", { class: "h2", text: c.first }), el("div", { class: "small", text: cap(c.relation || "") }))),
+      el("div", { class: "widget flat", style: "gap:4px" }, el("div", { class: "eyebrow", text: "Today" }), el("span", { text: fam ? c.first + OPENERS[fam] : "No word yet today." }),
+        el("span", { class: "small", text: "You two share " + joinNames(c.allowed_interests || []) + "." })),
+      el("div", { class: "acts" }, [["message", "Message"], ["song", "Song"], ["reel", "Reel"], ["lunch", "Lunch"]].map(([t, lab]) =>
+        el("button", { type: "button", onclick: () => openSheet(o(t === "message" ? "chat" : t)) }, icon(t), lab))),
+      sec("How often " + c.first + " hears about you"),
+      el("div", { class: "seg" }, Object.values(LEVEL).map(l => el("button", { type: "button", class: S.perm[c.first] === l ? "on" : null, onclick: () => { S.perm[c.first] = l; redraw(); toast(l === "Never" ? c.first + " won't get notes about you." : c.first + " hears about you: " + l.toLowerCase() + "."); } }, l))),
+      el("div", { class: "small", text: LEVEL_HELP[S.perm[c.first]] + ". " + c.first + " never sees what you chose." }),
+      sec("Between you two"),
+      mine.map(l => el("div", { class: "hist" }, el("span", { class: "small", text: dateLabel(DAYS[l.day]) }), el("div", { text: l.text + "." }), l.line ? el("div", { class: "small", text: "Your line: " + l.line }) : null)),
+      past.map(([day, n]) => el("div", { class: "hist" }, el("span", { class: "small", text: dateLabel(day) + ". Iris to " + c.first }), el("div", { text: n.text }))),
+      !mine.length && !past.length ? el("div", { class: "small", text: "Nothing yet." }) : null];
+  }
+  return [appHead("My Circle", "Your 5"),
+    el("div", { style: "display:grid;gap:8px" }, CIRCLE.map(c => { const f = fvOf(c.first);
+      return el("button", { class: "li", type: "button", onclick: () => { S.fp.person = c.first; redraw(); const sl = $("#slot").firstChild; if (sl) sl.scrollTop = 0; } },
+        av(c.first), el("div", { style: "text-align:left" }, el("div", { class: "who", text: c.first }), el("div", { class: "small", text: "You share " + joinNames((c.allowed_interests || []).slice(0, 2)) })),
+        famChip(famOf(f.mood, f.direction))); })),
+    el("div", { class: "small", text: CIRCLE.length + " of 5. Each word comes from that person's own Iris, and only says the kind of day." }),
+    simLine("Your friends' days are simulated in this demo.")];
+}
+function freeJournal(d) {
+  if (!S.blocks.talkiris) return [appHead("Journal", "Off"), el("p", { class: "agent", text: "Talk to Iris is switched off in your blocks. Iris still reads your day and writes your notes." }),
+    el("button", { class: "pill blue", type: "button", style: "align-self:flex-start;justify-self:start", onclick: () => { S.blocks.talkiris = true; redraw(); } }, "Switch it on")];
+  const pages = Object.keys(S.chats).filter(k => /^fp-\d+$/.test(k) && k !== "fp-" + d.n && S.chats[k].msgs.filter(m => m.me).length)
+    .map(k => DAYS.find(x => x.n === +k.slice(3))).filter(Boolean).sort((a, b) => b.n - a.n);
+  return [appHead("Journal", "Only you see this"), talkChat("fp-" + d.n, d, { moments: true }),
+    pages.length ? [sec("Earlier pages"), pages.map(p => el("button", { class: "li", type: "button", onclick: () => { S.fp.di = DAYS.indexOf(p); redraw(); } },
+      icon("message"), el("div", { style: "text-align:left" }, el("div", { class: "who", text: dateLabel(p) }), el("div", { class: "small", text: cap(readChat(S.chats["fp-" + p.n], p).feel) })), el("span", { class: "small", text: "Open" })))] : null];
+}
+function freeYou(d) {
+  const step = d.learning ? 0 : d.poke_level === "specific" ? 2 : 1;
+  return [
+    el("div", { class: "phead" }, av(OWNER), el("div", {}, el("div", { class: "h2", text: OWNER }), el("div", { class: "small", text: "Signed in with Instagram" }))),
+    sec("How well Iris knows you"),
+    el("div", { class: "meter" }, ["Learning your normal", "Says the kind of day", "Can say the exact word"].map((t, k) =>
+      el("div", { class: k < step ? "done" : k === step ? "on" : null }, el("i"), el("span", { text: t })))),
+    el("div", { class: "small", text: step === 0 ? "Day " + d.n + " of " + LEARN.length + ". Nothing goes out yet." : step === 1 ? "Your 5 hear the kind of day. The exact word comes later, and only when two kinds of signs agree." : "On days when the signs agree, Iris can say the exact word. Still never why." }),
+    sec("Your note time"),
     el("div", { class: "row" }, ["8 AM", "12 PM", "6 PM", "9 PM"].map(t => el("button", { type: "button", class: "pill" + (S.time === t ? " blue" : ""), onclick: () => { S.time = t; redraw(); } }, t))),
     el("div", { class: "seg" }, [["auto", "Send on its own"], ["ask", "Ask me first"]].map(([k, t]) => el("button", { type: "button", class: S.send === k ? "on" : null, onclick: () => { S.send = k; redraw(); } }, t))),
-    blocksList()];
-  if (tab === "five") return [appHead("Your 5", "Who hears how you are"),
-    CIRCLE.map(c => el("div", { style: "display:grid;gap:6px" },
-      el("div", { class: "spread" }, el("span", { class: "row", style: "gap:8px" }, av(c.first, true), el("b", { text: c.first })),
-        (() => { const f = (d.friend_view || []).find(x => x.name === c.first); return f && f.mood ? chip(f.mood) : el("span", { class: "small", text: "no word yet" }); })()),
-      el("div", { class: "seg" }, Object.values(LEVEL).map(l => el("button", { type: "button", class: S.perm[c.first] === l ? "on" : null, onclick: () => { S.perm[c.first] = l; redraw(); } }, l))))),
-    el("div", { class: "small", text: "Nobody sees what you chose for them. Their words are simulated in this demo." })];
-  if (d.learning) return [appHead("Good evening, " + OWNER + ".", "Today"),
-    el("div", { class: "widget warm", text: "Iris is still learning your normal. Day " + d.n + " of " + LEARN.length + ". No notes go out yet." })];
-  const down = d.direction === "down", picked = CIRCLE.find(c => S.reached[d.n + c.first]);
-  return [appHead("Good evening, " + OWNER + ".", "Today"),
-    el("div", { class: "widget warm" }, el("div", { class: "eyebrow", text: "Your day. Only you see this." }),
-      el("div", { class: "row" }, chip(d.mood, "mood"), el("span", { text: d.moment || "" })),
-      el("div", { class: "small", text: "Your 5 hear: " + hears(d) })),
-    down ? el("div", { class: "widget peach", style: "gap:8px" }, el("div", { class: "row" }, img(FACE, "mini"), el("b", { text: "Iris" })),
-      el("p", { class: "quote", text: "It's okay. They're your people. If you want, you can reach out." }),
-      picked ? el("div", { class: "ok", text: "Chat with " + picked.first + " opened." })
-        : el("div", { class: "row" }, CIRCLE.map(c => el("button", { class: "pill", type: "button", onclick: () => { S.reached[d.n + c.first] = true; redraw(); } }, c.first)))) : null,
-    d.notes.length ? d.notes.map(n => {
-      const k = d.n + ":" + n.to, off = S.fpCancel[k];
-      return el("div", { class: "widget" + (off ? " off" : "") },
-        el("div", { class: "spread" }, el("span", { class: "row", style: "gap:8px" }, av(n.to, true), el("span", { class: "who", text: "To " + n.to })),
-          el("button", { class: off ? "link" : "pill", type: "button", style: off ? null : "padding:6px 12px;font-size:13px", onclick: () => { S.fpCancel[k] = !off; redraw(); } }, off ? "Undo" : "Cancel")),
-        off ? el("div", { class: "small", text: "Cancelled. " + n.to + " won't hear from Iris today." }) : [el("p", { class: "quote", text: n.text }), actBox(n)]);
-    }) : el("div", { class: "widget flat", text: "No notes today." }),
-    (d.not_sent || []).length ? el("div", { class: "small", text: "Not today: " + d.not_sent.map(x => x.name + " (" + x.why.charAt(0).toLowerCase() + x.why.slice(1) + ")").join(", ") + "." }) : null];
+    el("div", { class: "small", text: S.send === "auto" ? "Notes go out on their own. You get 10 minutes to cancel." : "Each note waits until you tap Send." }),
+    el("button", { class: "link", type: "button", style: "align-self:flex-start;justify-self:start", onclick: () => { S.fp.tab = "circle"; redraw(); } }, "Choose how often each person hears, in My Circle"),
+    sec("Your blocks"), blocksList(),
+    sec("Your privacy"),
+    el("div", { class: "widget flat", style: "gap:10px" },
+      el("div", { class: "spread" }, el("div", {}, el("b", { text: "Pause Iris today" }), el("div", { class: "small", text: "Nothing goes out today." })),
+        el("button", { type: "button", class: "pill" + (S.fp.paused[d.n] ? " dark" : ""), "aria-pressed": S.fp.paused[d.n] ? "true" : "false", onclick: () => { S.fp.paused[d.n] = !S.fp.paused[d.n]; redraw(); } }, S.fp.paused[d.n] ? "Paused" : "Pause")),
+      el("div", { class: "spread" }, el("div", {}, el("b", { text: "Delete today's read" }), el("div", { class: "small", text: S.fp.deleted[d.n] ? "Deleted. Nothing goes out today." : "Iris forgets today. Today's notes don't go out." })),
+        S.fp.deleted[d.n] ? el("button", { class: "link", type: "button", onclick: () => { delete S.fp.deleted[d.n]; redraw(); } }, "Undo")
+          : S.fp.delAsk[d.n] ? el("span", { class: "row" }, el("button", { class: "pill dark", type: "button", onclick: () => { S.fp.deleted[d.n] = true; delete S.fp.delAsk[d.n]; redraw(); toast("Today's read is deleted."); } }, "Delete"),
+            el("button", { class: "pill", type: "button", onclick: () => { delete S.fp.delAsk[d.n]; redraw(); } }, "Keep"))
+          : el("button", { class: "pill", type: "button", onclick: () => { S.fp.delAsk[d.n] = true; redraw(); } }, "Delete"))),
+    el("div", { class: "small", text: "Never shared with your 5: why, the words in your messages, other people's names, money, or where you are." }),
+    el("button", { class: "link", type: "button", style: "align-self:flex-start;justify-self:start", onclick: () => go(0, -1) }, "Watch the story again")];
 }
-function freeFriend(d, who) {
-  if (S.fp.tab === "five") return [appHead("Your 5 today", "Good evening, " + who + "."), d.learning ? el("div", { class: "small", text: "No words yet." }) : fiveToday(d, who)];
-  const n = noteTo(d, who);
-  return [n ? banner(firstSentence(n.text), "") : null,
-    appHead(n ? "A note from " + OWNER : "Today", "Good evening, " + who + "."),
-    n ? friendNote(n, "fp" + d.n + who)
-      : el("div", { class: "widget flat", text: d.learning ? OWNER + "'s Iris is still learning. Nothing yet." : "No note from " + OWNER + " today." }),
-    n && NEEDS_CONNECTOR[(n.action || {}).type] ? simLine(NEEDS_CONNECTOR[n.action.type]) : null];
-}
-add({ ch: 2, bg: "app", title: "Free play", get phone() { return S.fp.who; }, day: () => DAYS[S.fp.di], render: () => {
-  const d = DAYS[S.fp.di], own = S.fp.who === OWNER;
+add({ ch: 2, bg: "app", title: "Your Iris", phone: OWNER, free: true, day: () => DAYS[S.fp.di], render: () => {
+  const d = DAYS[S.fp.di];
   if (!d) return [appHead("No days in this demo")];
-  if (!own && S.fp.tab !== "today" && S.fp.tab !== "five") S.fp.tab = "today";
-  return [sandboxBar(d), own ? freeOwner(d) : freeFriend(d, S.fp.who), tabBar(own ? TABS_OWN : TABS_FRIEND)];
+  const body = { today: freeToday, circle: freeCircle, journal: freeJournal, you: freeYou }[S.fp.tab] || freeToday;
+  return [sandboxBar(d), body(d), tabBar()];
 } });
 
 /* ---------- moving through it ---------- */
@@ -737,20 +962,21 @@ function draw(animate, dir) {
   $("#prevU").disabled = S.i === 0;
   $("#nextU").disabled = S.i === FLOW.length - 1;
   $("#where").replaceChildren(el("b", { text: f.title }), (S.i + 1) + " of " + FLOW.length + " · " + f.phone + "'s phone");
-  const slide = el("div", { class: "slide" + (f.bg === "app" ? " app" : "") + (animate ? (dir < 0 ? " back" : " in") : "") });
+  const slide = el("div", { class: "slide" + (f.bg === "app" ? " app" : "") + (f.free ? " free" : "") + (animate ? (dir < 0 ? " back" : " in") : "") });
   slide.append(...f.render().flat(Infinity).filter(Boolean));
   if (f.after) f.after(slide);
   slot.replaceChildren(slide);
   if (keep) slide.scrollTop = keep;
   try { history.replaceState(null, "", "#" + (S.i + 1)); } catch (e) {}
   if (!$("#hood").hidden && animate) renderHood();
+  overlay();
 }
 $("#backBtn").addEventListener("click", back);
 $("#prevU").addEventListener("click", back);
 $("#nextU").addEventListener("click", next);
 document.addEventListener("keydown", e => {
   if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
-  if (e.key === "Escape") closeHood();
+  if (e.key === "Escape") { if (S.fp.sheet) closeSheet(); else closeHood(); }
   else if (e.key === "ArrowRight") next();
   else if (e.key === "ArrowLeft") back();
 });

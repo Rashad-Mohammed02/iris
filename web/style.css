@@ -240,13 +240,43 @@ svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .qr button{border:1.5px solid var(--accent);background:none;color:var(--tone-ink);border-radius:99px;padding:6px 11px;font-size:13px;font-weight:650}
 .msgs .page{align-self:stretch;background:var(--mint);border-color:transparent;gap:4px}
 
-/* free play: the sandbox strip sits above the app, dashed so it reads as a demo control */
-.sandbox{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1.5px dashed var(--line);border-radius:12px;padding:6px 8px;font-size:12px;color:var(--ink-2)}
+/* free play: the sandbox strip sits above the app, dashed so it reads as a demo control, not part of Iris */
+.sandbox{display:flex;align-items:center;gap:8px;border:1.5px dashed var(--line);border-radius:12px;padding:6px 8px;font-size:12px;color:var(--ink-2)}
 .sandbox .sbx{font-weight:750;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--ink-3)}
-.sandbox .sbsel{display:flex;align-items:center;gap:4px}
-.sandbox select{border:0;background:var(--fill);color:var(--ink);border-radius:8px;padding:4px 6px;font:inherit;font-size:12px}
-.sandbox .sbday{display:flex;align-items:center;gap:4px;margin-left:auto;font-weight:650;color:var(--ink)}
+.sandbox .sbreset{border:0;background:var(--fill);color:var(--ink);border-radius:8px;padding:4px 8px;font-size:12px;font-weight:600}
+.sandbox .sbday{display:flex;align-items:center;gap:4px;margin-left:auto;font-weight:650;color:var(--ink);white-space:nowrap}
 .sandbox .sbday button{border:0;background:var(--fill);color:var(--ink);border-radius:8px;width:26px;height:26px;font-size:16px;line-height:1}
 .sandbox .sbday button:disabled{opacity:.35}
 .qr button.on{background:var(--accent);color:#fff}
-.tabbar:not(.still){position:sticky;bottom:-1px;background:var(--screen);padding-bottom:6px;z-index:2}
+.seclabel{font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-top:6px}
+.phead{display:flex;align-items:center;gap:12px}
+.phead .av2{width:52px;height:52px;font-size:22px}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.acts button{display:grid;justify-items:center;gap:4px;border:0;background:var(--fill);border-radius:14px;padding:10px 4px;font-size:12px;font-weight:600;color:var(--ink)}
+.acts svg.i{width:20px;height:20px;color:var(--accent)}
+.hist{display:grid;gap:2px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.meter{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.meter div{display:grid;gap:6px;font-size:12px;color:var(--ink-3);font-weight:600}
+.meter i{height:6px;border-radius:99px;background:var(--fill-2)}
+.meter .done i{background:var(--accent);opacity:.45}
+.meter .on i{background:var(--accent)}
+.meter .on{color:var(--ink)}
+.moments{display:grid;gap:6px}
+.sheetwrap{position:absolute;inset:0;background:#0000004d;display:flex;align-items:flex-end;z-index:20;animation:fadein .2s ease}
+.sheet{position:relative;width:100%;max-height:82%;overflow-y:auto;background:var(--screen);border-radius:24px 24px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom, 0px));display:grid;gap:12px;animation:sheetup .25s ease}
+.sheet .x{position:absolute;top:12px;right:12px;border:0;background:var(--fill);border-radius:99px;width:32px;height:32px;display:grid;place-items:center}
+.sheet .x svg.i{width:16px;height:16px}
+.sheet .h3{font-size:18px;font-weight:700;padding-right:36px}
+.picks{display:grid;gap:6px}
+.pick{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);background:none;border-radius:12px;padding:10px 12px;text-align:left;font-size:14px;color:var(--ink)}
+.pick.on{border-color:var(--accent);background:var(--tone)}
+.pick .tick{width:20px;height:20px;border-radius:99px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none}
+.pick.on .tick{background:var(--accent);border-color:var(--accent);color:#fff}
+.pick .tick svg.i{width:13px;height:13px}
+.btn:disabled{opacity:.4}
+.toast{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);background:#111112e6;color:#fff;font-size:13.5px;font-weight:600;padding:9px 16px;border-radius:99px;z-index:30;white-space:nowrap;animation:fadein .2s ease}
+@keyframes sheetup{from{transform:translateY(40px);opacity:.6}to{transform:none;opacity:1}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion: reduce){.sheet,.sheetwrap,.toast{animation:none}}
+.slide.free{padding-bottom:0}
+.tabbar:not(.still){position:sticky;bottom:0;background:var(--screen);padding-bottom:calc(10px + env(safe-area-inset-bottom, 0px));z-index:2}
