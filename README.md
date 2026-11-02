@@ -93,24 +93,33 @@ I didn't use Muse Wonder, SAM 3.1 or Meta's open-weight models. Iris needs one s
 
 ## How it works
 
-```
-Instagram export, calendar, Spotify ─▶ your side only ─▶ your normal (14 days)
-                                                              │
-                                                              ▼
-                      Muse reads today: one mood word, a size, a crisis check
-                                                              │
-       Gates in plain code: adults only, crisis, learning days, pause,
-       each friend's setting, mutual                          │
-                                                              ▼
-   One shared interest per friend ─▶ Muse writes the note ─▶ ready action (code)
-   ─▶ word check ─▶ Muse privacy check ─▶ 10 minutes to cancel, then it sends
+```mermaid
+flowchart TD
+    A("<b>Your day</b><br/>Instagram, calendar, Spotify") --> B("<b>Your side only</b><br/>everything other people wrote is dropped first")
+    B --> C("<b>Muse Spark reads today</b><br/>against your own normal from the last 14 days:<br/>one mood word, how big the day is, a crisis check")
+    C --> D("<b>Rules in plain code</b><br/>adults only, still learning, paused,<br/>each friend's setting, both said yes")
+    D -- crisis --> H("You see a help line.<br/>Nothing goes to anyone.")
+    D -- not today --> X("Nothing is sent")
+    D -- go --> E("<b>Muse Spark writes one note per friend</b><br/>around something the two of you share")
+    E --> F("<b>A ready action, built in code</b><br/>a song, a reel, a treat, lunch")
+    F --> G("<b>Every note must pass</b><br/>a word check, then Muse reads it<br/>with your whole day in view")
+    G -- gives away why --> E
+    G -- pass --> I("<b>You get 10 minutes to cancel</b><br/>then it sends")
+    classDef muse fill:#0866FF,stroke:#0866FF,color:#ffffff
+    classDef code fill:#eef0f3,stroke:#8a919c,color:#1f2328
+    classDef stop fill:#fff4e5,stroke:#d4a14a,color:#1f2328
+    class C,E,G muse
+    class A,B,D,F,I code
+    class H,X stop
 ```
 
-Three rules hold it together:
+<sub>Blue steps are Muse Spark. Grey steps are plain code.</sub>
 
-1. **Muse judges, code decides.** Muse reads the day. Every setting and safety rule is plain Python in [engine/decide.py](engine/decide.py), so nothing a model says can get past "Never".
-2. **The writer can't leak what it never saw.** It only gets your first name, the friend's relation, the words it's allowed to say about your day, one shared interest and the kind of action ([engine/note.py](engine/note.py)). The ready action is built in code, not by a model ([engine/actions.py](engine/actions.py)).
-3. **Every note is checked twice anyway.** A word check ([engine/voice.py](engine/voice.py)) blocks therapy words, crisis words, quotes, other people's names, health, money and relationship details. Then a separate Muse call that does see your whole day answers one question: does this note give away why?
+Three ideas hold it together:
+
+1. **Muse reads, code decides.** Muse does the hard part: reading a messy day the way a friend would. But every setting and safety rule is plain Python in [engine/decide.py](engine/decide.py), so nothing a model says can get past "Never".
+2. **The writer can't leak what it never saw.** The model that writes the note only gets your first name, how you know the friend, the words it's allowed to use about your day, one shared interest and the kind of action ([engine/note.py](engine/note.py)). The action itself is built in code, not by a model ([engine/actions.py](engine/actions.py)).
+3. **Nothing goes out until it passes.** A word check ([engine/voice.py](engine/voice.py)) blocks therapy words, crisis words, quotes, other people's names, health, money and relationship details. Then Muse reads the note with your whole day in view and answers one question: does this give away why? If it does, Muse rewrites it with the reason. If it still can't pass, Iris uses a simple safe line or sends nothing.
 
 **Safety comes first, in code.** Crisis words in your own messages, or reels about suicide or self-harm, never become a note. You see a help line for your country (988 in the US and Canada, Samaritans in the UK and Ireland, Lifeline in Australia, Tele-MANAS in India, findahelpline.com anywhere else) and nothing goes to anyone ([engine/safety.py](engine/safety.py)). Adults only. Teen Accounts are never eligible.
 
