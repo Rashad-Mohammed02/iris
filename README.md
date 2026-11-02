@@ -18,6 +18,8 @@ Everything in the app runs on Meta's Muse Spark 1.3 through the Meta Model API. 
 
 **Try it:** https://rashad-mohammed02.github.io/iris/ (or open `web/index.html`). It shows only Iris, on a phone, the way it would really look. Step through Arjun's month, see his friends' phones, or open "Under the hood" to see every decision the engine made.
 
+**Watch the film:** [Iris demo video](https://youtu.be/BEXYlnrwlVA). The Iris screens in it are my working prototype. Instagram, Muse delivery and the Charm are simulated (see [What isn't finished](#what-isnt-finished)).
+
 **Then use it yourself.** After the story, Arjun's Iris opens up with four tabs: Today, My Circle, Journal and You. Everything works: send or cancel notes, answer your friends' notes, message, book lunch, choose who hears what, and move through any day of the month.
 
 ---
