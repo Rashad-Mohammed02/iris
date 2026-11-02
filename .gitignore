@@ -10,3 +10,4 @@ web/assets/
 
 # Utrecht University example Instagram packages (fetch with scripts/fetch_real_exports.py)
 data/real_exports/
+scripts/check_key.py

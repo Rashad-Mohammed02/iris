@@ -4,6 +4,8 @@
 
 **Keeps you close to your 5 people, every day.**
 
+**[Watch the demo video](https://youtu.be/BEXYlnrwlVA)** · **[Try the app](https://rashad-mohammed02.github.io/iris/)** · [How it works](#how-it-works) · [How I tested it](#how-i-tested-it) · [What's in this repo](#whats-in-this-repo)
+
 Iris is a concept for Muse, Meta's AI agent. I built it for the Meta Global AI Developer Hackathon (Indie track). At a time you pick, and as often as you choose for each person, Iris tells your 5 closest people how your day is going, in a few words, and gives them one easy way to show up for you:
 
 > Arjun's having a great day. Two seats for a live music night could be fun.
@@ -149,6 +151,18 @@ These are numbers after tuning. I wrote the cases first, then adjusted the note 
 - **Where your data goes.** In this prototype, data goes to the Meta Model API. In a real product it would run inside Meta's private processing, never used for ads or training.
 - **Consent.** Iris would need your explicit opt-in. People outside your 5 are never named to Muse.
 - **Settings stay private.** Nobody can see what you set them to.
+
+## What's in this repo
+
+| Folder | What's in it |
+|---|---|
+| [web/](web) | The app you can try. One page, nothing to install |
+| [engine/](engine) | Iris itself: reads the day, decides who hears, and writes and checks every note with Muse Spark |
+| [prompts/](prompts) | The four prompts Iris sends to Muse |
+| [data/](data) | Arjun's fictional month and the Instagram download reader |
+| [bench/](bench) | The 28-case test bench, its grader and the results of every run |
+| [tests/](tests) | 9 test files for privacy, safety and the rules |
+| [scripts/](scripts) | The demo runner, the character maker and the safety check I run before making the repo public |
 
 ## Run it
 
